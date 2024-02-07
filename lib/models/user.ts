@@ -19,4 +19,5 @@ const userSchema = new mongoose.Schema({
 // Check if the 'User' model has already been compiled. If it has, use the existing model.
 // If it hasn't, create a new model from the 'userSchema'. This model provides methods to interact with the 'User' collection in the database.
 // The 'User' model is exported for use in other parts of the application.
-module.exports = mongoose.models.User || mongoose.model("User", userSchema);
+const UserModel = mongoose.models.User || mongoose.model("User", userSchema);
+export { UserModel };
