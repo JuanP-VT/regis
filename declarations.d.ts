@@ -1,3 +1,13 @@
+import "next-auth";
+//Extending the Session interface to include the id property
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+    };
+  }
+}
+//Extending the NodeJS namespace to include the process.env variables
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
