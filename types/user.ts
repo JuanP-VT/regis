@@ -1,0 +1,12 @@
+export enum Role {
+  USER = "user",
+  ADMIN = "admin",
+}
+
+export interface User {
+  googleId: string;
+  name: string;
+  role: Role;
+  profileImage: string;
+}
+export default User;
