@@ -11,7 +11,7 @@
  *                   the function logs the error and returns `false`.
  */
 
-import { User } from "../lib/models/user"; // Import the User model from the models directory
+import { UserModel } from "@/lib/models/user"; // Import the User model from the models directory
 import dbConnect from "./dbConnect"; // Import the dbConnect function that handles database connections
 
 export default async function isRegisteredUser(
@@ -19,7 +19,7 @@ export default async function isRegisteredUser(
 ): Promise<boolean> {
   try {
     await dbConnect(); // Connect to the database
-    const user = await User.findOne({ googleId }); // Try to find a user in the database with the given Google ID
+    const user = await UserModel.findOne({ googleId }); // Try to find a user in the database with the given Google ID
 
     // If a user was found, return true. If not, return false.
     return Boolean(user);
