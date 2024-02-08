@@ -11,12 +11,12 @@ import Link from "next/link";
 import SignInButton from "./SignInButton";
 export default function TopNav() {
   return (
-    <header className="flex items-center h-10 px-4 border-b lg:h-14 md:px-6 bg-gradient-to-l from-sky-100 to-pink-50">
-      <nav className="gap-4 md:flex lg:gap-8 text-sm lg:text-lg">
-        <Link className="font-semibold  uppercase underline-on-hover" href="#">
+    <header className="flex items-center h-10 px-4 border-b lg:h-14 md:px-6 bg-slate-100 ">
+      <nav className="gap-4 md:flex lg:gap-8 text-sm ">
+        <Link className="font-semibold  uppercase " href="/">
           Home
         </Link>
-        <Link className="font-semibold  uppercase underline-on-hover" href="#">
+        <Link className="font-semibold  uppercase " href="/store">
           Store
         </Link>
       </nav>

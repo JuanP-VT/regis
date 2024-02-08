@@ -4,7 +4,7 @@
 import { CutFileProduct } from "@/types/cutFileProduct";
 import { CloudDownload, Star } from "@mui/icons-material";
 import Image from "next/image";
-import { Button } from "../../button";
+import { Button } from "@/components/ui/button";
 
 // Defining the type for the props of the StoreCutFileProduct component
 type Props = {
