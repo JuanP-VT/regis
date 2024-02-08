@@ -6,8 +6,9 @@ import {
   SelectContent,
   Select,
 } from "@/components/ui/select";
-import TopNav from "@/components/ui/composed/TopNav";
+import TopNav from "@/components/composed/TopNav";
 import Image from "next/image";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -50,11 +51,11 @@ export default function Home() {
                 className="aspect-square overflow-hidden rounded-lg"
                 href="#"
               >
-                <img
+                <Image
                   alt="Thumbnail"
                   className="aspect-square object-cover"
                   height="180"
-                  src="/placeholder.svg"
+                  src="https://picsum.photos/600/1200"
                   width="180"
                 />
               </Link>
@@ -74,11 +75,11 @@ export default function Home() {
                 className="aspect-square overflow-hidden rounded-lg"
                 href="#"
               >
-                <img
+                <Image
                   alt="Thumbnail"
                   className="aspect-square object-cover"
                   height="180"
-                  src="/placeholder.svg"
+                  src="https://picsum.photos/900/1200"
                   width="180"
                 />
               </Link>
@@ -102,7 +103,7 @@ export default function Home() {
                   alt="Thumbnail"
                   className="aspect-square object-cover"
                   height="180"
-                  src="/placeholder.svg"
+                  src="https://picsum.photos/700/1100"
                   width="180"
                 />
               </Link>
@@ -120,19 +121,7 @@ export default function Home() {
           </div>
         </div>
       </main>
-      <footer className="flex items-center justify-center h-14 border-t sm:h-20 bg-slate-100">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          © 2024 Regis Design. All rights reserved.
-          <br />
-          Contact
-          <br />
-          Privacy Policy
-          <br />
-          Terms of Service
-          <br />
-          About
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
 }

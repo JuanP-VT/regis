@@ -1,11 +1,14 @@
 import { CutFileProductMocks } from "@/__test__/mocks/fileProductMocks";
 import { Button } from "@/components/ui/button";
-import StoreCutFileProductCard from "@/components/ui/composed/cards/StoreCutFileProductCard";
+import TopNav from "@/components/composed/TopNav";
+import StoreCutFileProductCard from "@/components/composed/cards/StoreCutFileProductCard";
 import { Input } from "@/components/ui/input";
+import Footer from "@/components/Footer";
 export default function Store() {
   return (
-    <div className="flex flex-col p-5 bg-gradient-to-r from-fuchsia-100 to-sky-100">
-      <div className="flex justify-around">
+    <div className="flex flex-col bg-gradient-to-l from-rose-100 to-sky-100">
+      <TopNav />
+      <div className="flex justify-around p-2">
         <div className="flex gap-10">
           <Button variant="outline" className="rounded-xl">
             Filtros
@@ -27,6 +30,7 @@ export default function Store() {
           />
         ))}
       </div>
+      <Footer />
     </div>
   );
 }
