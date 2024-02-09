@@ -8,10 +8,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import ProductReview from "../composed/cards/ProductReview";
 export default function IndividualCutFileProduct() {
   return (
     <div className="flex flex-col md:flex-row gap-5 md:justify-center min-h-screen">
-      <div className="">
+      <div className="flex flex-col">
         <ImageSlider
           images={[
             "https://picsum.photos/600/600",
@@ -20,6 +21,9 @@ export default function IndividualCutFileProduct() {
             "https://picsum.photos/900/900",
           ]}
         />
+        <div>
+          <ProductReview />
+        </div>
       </div>
       <div className="md:mt-5 md:ml-0 ml-3 flex flex-col">
         <PriceTag price={99.99} discountPercentage={1} />
@@ -35,11 +39,9 @@ export default function IndividualCutFileProduct() {
           Glasses Boot Jar Forest Nature Ornament Svg Dxf Ai Pdf Cdr INSTANT
           DOWNLOAD
         </p>
-        <Button variant={"outline"} className="rounded-full max-w-96 mt-2">
-          Add To Cart
-        </Button>
+        <Button className="rounded-full max-w-96 mt-2">Add To Cart</Button>
         <div className="flex flex-col mt-3">
-          <Accordion type="single" collapsible className="mt-2">
+          <Accordion type="single" collapsible className="mt-2 md:w-96">
             <AccordionItem value="item-1">
               <AccordionTrigger className="hover:bg-slate-300 text-xs font-semibold rounded-full pl-3">
                 Items Details
@@ -86,7 +88,7 @@ export default function IndividualCutFileProduct() {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-          <Accordion type="single" collapsible className="mt-2">
+          <Accordion type="single" collapsible className="mt-2 md:w-96">
             <AccordionItem value="item-1">
               <AccordionTrigger className="hover:bg-slate-300 text-xs font-semibold rounded-full pl-3">
                 Delivery
