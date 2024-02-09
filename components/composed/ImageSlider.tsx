@@ -1,5 +1,9 @@
 "use client";
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import {
+  FavoriteBorderOutlined,
+  KeyboardArrowLeft,
+  KeyboardArrowRight,
+} from "@mui/icons-material";
 import Image from "next/image";
 import { Dispatch, SetStateAction, useState } from "react";
 
@@ -9,7 +13,7 @@ type Props = {
 export default function ImageSlider({ images }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   return (
-    <div className="flex w-full p-1">
+    <div className="flex w-full p-1 border-b">
       <div className=" relative mr-2  flex flex-col border-r">
         <div className="sticky top-14 ">
           {images.map((str, index) => (
@@ -23,10 +27,11 @@ export default function ImageSlider({ images }: Props) {
           ))}
         </div>
       </div>
-      <div className=" relative flex h-full w-full">
+      <div className=" relative flex h-full w-full ">
+        <FavoriteBorderOutlined className="bg-slate-100 rounded-full border p-1 absolute top-0 m-3 right-0 z-20 cursor-pointer" />
         <KeyboardArrowRight
           data-testid="right-arrow"
-          className="bg-slate-100 rounded-full border p-1 absolute top-1/2 right-0 z-20"
+          className="bg-slate-100 rounded-full border p-1 absolute top-1/2 right-0 z-20 mr-2 cursor-pointer"
           onClick={() => {
             if (currentIndex === images.length - 1) {
               setCurrentIndex(0);
@@ -37,7 +42,7 @@ export default function ImageSlider({ images }: Props) {
         />
         <KeyboardArrowLeft
           data-testid="left-arrow"
-          className=" bg-slate-100 rounded-full border p-1  absolute top-1/2 left-0 z-20"
+          className=" bg-slate-100 rounded-full border p-1  absolute top-1/2 left-0 z-20 ml-2 cursor-pointer"
           onClick={() => {
             if (currentIndex === 0) {
               setCurrentIndex(images.length - 1);
@@ -51,7 +56,7 @@ export default function ImageSlider({ images }: Props) {
           height={700}
           src={images[currentIndex]}
           alt="product image"
-          className="sticky top-20 w-full object-fill rounded-lg lg:w-[650px]"
+          className="sticky top-20 w-full object-cover rounded-lg lg:w-[700px]"
         />
       </div>
     </div>

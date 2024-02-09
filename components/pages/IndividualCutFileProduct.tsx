@@ -9,10 +9,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import ProductReview from "../composed/cards/ProductReview";
+import StarIcon from "../ui/custom svg/StarIcon";
 export default function IndividualCutFileProduct() {
   return (
-    <div className="flex flex-col md:flex-row gap-5 md:justify-center min-h-screen">
-      <div className="flex flex-col">
+    <div className="flex lg:flex-row gap-5 md:justify-center min-h-screen flex-col-reverse">
+      <div className="flex flex-col max-w-3xl">
         <ImageSlider
           images={[
             "https://picsum.photos/600/600",
@@ -21,25 +22,31 @@ export default function IndividualCutFileProduct() {
             "https://picsum.photos/900/900",
           ]}
         />
-        <div>
-          <ProductReview />
+        <div className="p-2">
+          {Array(3)
+            .fill(0)
+            .map((_, index) => (
+              <ProductReview key={`pr${index}`} />
+            ))}
         </div>
       </div>
-      <div className="md:mt-5 md:ml-0 ml-3 flex flex-col">
+      <div className="lg:mt-5 lg:ml-0 ml-3 flex flex-col p-1">
         <PriceTag price={99.99} discountPercentage={1} />
         <div className="flex py-2 ">
-          <Star className="w-4 h-4 text-yellow-300" />
-          <Star className="w-4 h-4 text-yellow-300" />
-          <Star className="w-4 h-4 text-yellow-300" />
-          <Star className="w-4 h-4 text-yellow-300" />
-          <Star className="w-4 h-4 text-yellow-300" />
+          {Array(5)
+            .fill(0)
+            .map((_, index) => (
+              <StarIcon className="h-5 w-5 text-rose-400" key={index} />
+            ))}
         </div>
-        <p className="flex md:max-w-96 ">
+        <p className="md:max-w-2xl ">
           Сamping SVG Bundle. Laser cut file for Glowforge, Mountains Tent
           Glasses Boot Jar Forest Nature Ornament Svg Dxf Ai Pdf Cdr INSTANT
           DOWNLOAD
         </p>
-        <Button className="rounded-full max-w-96 mt-2">Add To Cart</Button>
+        <Button className="rounded-full max-w-96 mt-2 bg-rose-500">
+          Add To Cart
+        </Button>
         <div className="flex flex-col mt-3">
           <Accordion type="single" collapsible className="mt-2 md:w-96">
             <AccordionItem value="item-1">
