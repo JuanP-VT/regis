@@ -9,7 +9,7 @@ type Props = {
 export default function ImageSlider({ images }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   return (
-    <div className="flex w-96 p-5">
+    <div className="flex w-full p-1">
       <div className=" relative mr-2  flex flex-col border-r">
         <div className="sticky top-14 ">
           {images.map((str, index) => (
@@ -23,7 +23,7 @@ export default function ImageSlider({ images }: Props) {
           ))}
         </div>
       </div>
-      <div className=" relative flex h-full w-full object-contain">
+      <div className=" relative flex h-full w-full">
         <KeyboardArrowRight
           data-testid="right-arrow"
           className="bg-slate-100 rounded-full border p-1 absolute top-1/2 right-0 z-20"
@@ -47,11 +47,11 @@ export default function ImageSlider({ images }: Props) {
           }}
         />
         <Image
-          width={800}
-          height={800}
+          width={700}
+          height={700}
           src={images[currentIndex]}
           alt="product image"
-          className="sticky top-20  w-full h-full object-cover rounded-lg"
+          className="sticky top-20 w-full object-fill rounded-lg lg:w-[650px]"
         />
       </div>
     </div>
