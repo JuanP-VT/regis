@@ -1,6 +1,6 @@
 // Importing required modules and components
 import { render, screen } from "@testing-library/react";
-import { Price } from "../../../components/ui/composed/cards/StoreCutFileProductCard";
+import { Price } from "../../../components/composed/cards/StoreCutFileProductCard";
 // Test suite for the Price component
 describe("Price component", () => {
   // Test case: Check if the component correctly displays the discounted price
