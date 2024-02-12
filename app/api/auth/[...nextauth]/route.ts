@@ -54,7 +54,8 @@ export const OPTIONS: NextAuthOptions = {
     /* This function is triggered whenever a session is accessed. It adds the user's ID from the token to the session object. */
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.sub as string;
+        session.user.googleId = token.sub as string;
+        session.user.profileImage = token.picture ?? "";
       }
       return session;
     },
