@@ -13,6 +13,7 @@ import dbConnect from "@/lib/dbConnect";
 import createUser from "@/lib/factory/createUser";
 import isRegisteredUser from "@/lib/isRegisteredUser";
 import { UserModel } from "@/lib/models/user";
+import { Role } from "@/types/user";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import Google from "next-auth/providers/google";
 
@@ -51,11 +52,17 @@ export const OPTIONS: NextAuthOptions = {
         return false;
       }
     },
+    async jwt({ token }) {
+      const dbUser = await UserModel.findOne({ googleId: token.sub });
+      token.role = dbUser?.role; // Add the user role to the token
+      return token;
+    },
     /* This function is triggered whenever a session is accessed. It adds the user's ID from the token to the session object. */
     async session({ session, token }) {
       if (token) {
         session.user.googleId = token.sub as string;
         session.user.profileImage = token.picture ?? "";
+        session.user.role = token.role as Role.USER | Role.ADMIN;
       }
       return session;
     },
