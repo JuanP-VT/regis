@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { OPTIONS } from "../auth/[...nextauth]/route";
+import { OPTIONS } from "@/app/api/auth/[...nextauth]/nextAuthOptions";
 import { AwsS3Client } from "@/lib/awsS3Client";
 import { Upload } from "@aws-sdk/lib-storage";
 import { ValidateNewFileApi } from "@/lib/schema-validators/admin-cutfile-new";

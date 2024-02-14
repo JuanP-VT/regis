@@ -1,5 +1,6 @@
 import { getServerSession } from "next-auth";
-import { OPTIONS } from "../api/auth/[...nextauth]/route";
+import { OPTIONS } from "@/app/api/auth/[...nextauth]/nextAuthOptions";
+
 import { Role } from "@/types/user";
 import Link from "next/link";
 

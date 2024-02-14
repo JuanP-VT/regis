@@ -1,4 +1,4 @@
-import { OPTIONS } from "@/app/api/auth/[...nextauth]/route";
+import { OPTIONS } from "@/app/api/auth/[...nextauth]/nextAuthOptions";
 import NewCutFilePage from "@/components/pages/admin/NewFilePage";
 import { getServerSession } from "next-auth";
 import React from "react";
