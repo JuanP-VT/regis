@@ -4,9 +4,10 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import UnderLine from "@tiptap/extension-underline";
 import { Toolbar } from "./Toolbar";
+import { NewStoreItem } from "@/types/storeItem";
 
 type Props = {
-  onChange(richText: string): void;
+  onChange: React.Dispatch<React.SetStateAction<NewStoreItem>>;
 };
 
 //TODO : docs
@@ -25,7 +26,7 @@ const Tiptap = ({ onChange }: Props) => {
       UnderLine,
     ],
     onUpdate({ editor }) {
-      console.log(editor.getHTML());
+      onChange((prevState) => ({ ...prevState, details: editor.getHTML() }));
     },
     content: "<p>...</p>",
   });
