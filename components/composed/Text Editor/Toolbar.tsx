@@ -23,7 +23,7 @@ export function Toolbar({ editor }: Props) {
   }
 
   return (
-    <div className="border border-input bg-transparent rounded-br-md">
+    <div className=" bg-transparent rounded-br-md p-1">
       <Toggle
         size="xs"
         pressed={editor.isActive("bold")}
