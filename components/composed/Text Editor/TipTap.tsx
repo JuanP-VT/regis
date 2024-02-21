@@ -2,13 +2,7 @@
 
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
-import Bold from "@tiptap/extension-bold";
-import Italic from "@tiptap/extension-italic";
-import ListItem from "@tiptap/extension-list-item";
-import OrderedList from "@tiptap/extension-ordered-list";
-import BulletList from "@tiptap/extension-bullet-list";
-import Heading from "@tiptap/extension-heading";
+import UnderLine from "@tiptap/extension-underline";
 import { Toolbar } from "./Toolbar";
 
 type Props = {
@@ -20,34 +14,25 @@ type Props = {
 const Tiptap = ({ onChange }: Props) => {
   const editor = useEditor({
     extensions: [
-      StarterKit.configure(),
-      Underline,
-      Bold,
-      Italic,
-      BulletList.configure({
-        HTMLAttributes: {
-          class: "list-disc pl-8 ml-4",
+      StarterKit.configure({
+        heading: {
+          levels: [1, 2],
+          HTMLAttributes: { class: "text-xl font-bold" },
         },
+        bulletList: { HTMLAttributes: { class: "list-disc pl-8 ml-4" } },
+        orderedList: { HTMLAttributes: { class: "list-decimal pl-8 ml-4" } },
       }),
-      OrderedList.configure({
-        HTMLAttributes: {
-          class: "list-decimal pl-8 ml-4",
-        },
-      }),
-      ListItem,
-      Heading.configure({
-        HTMLAttributes: { class: "text-xl font-bold", levels: [1] },
-      }),
+      UnderLine,
     ],
     onUpdate({ editor }) {
-      console.log(editor.getText());
+      console.log(editor.getHTML());
     },
-    content: "<p>Hello World! 🌎️</p>",
+    content: "<p>...</p>",
   });
 
   if (editor) {
     return (
-      <div className="">
+      <div className="border ">
         <Toolbar editor={editor} />
         <EditorContent editor={editor} />
       </div>
