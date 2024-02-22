@@ -4,7 +4,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import UnderLine from "@tiptap/extension-underline";
 import { Toolbar } from "./Toolbar";
-import { NewStoreItem } from "@/types/storeItem";
+import { NewStoreItem } from "@/types/newStoreItem";
 
 type Props = {
   onChange: React.Dispatch<React.SetStateAction<NewStoreItem>>;

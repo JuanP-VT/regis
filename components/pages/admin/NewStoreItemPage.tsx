@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import Tiptap from "@/components/composed/Text Editor/TipTap";
-import { NewStoreItem } from "@/types/storeItem";
+import { NewStoreItem } from "@/types/newStoreItem";
 import { Button } from "@/components/ui/button";
 
 type Props = { filesKeyList: (string | undefined)[] | undefined };
@@ -45,7 +45,12 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
     formData.append("mainImageIndex", formValue.mainImageIndex.toString());
     formData.append("details", formValue.details);
     //Send the form data to the server
-    console.log(formData.getAll("images"));
+    const response = await fetch("/api/store", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await response.json();
+    console.log(data);
   }
   return (
     <div className="flex flex-col py-5 p-3 w-full mt-5 items-center">
