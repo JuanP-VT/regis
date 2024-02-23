@@ -8,13 +8,27 @@ import { AwsS3Client } from "@/lib/awsS3Client";
 import { StoreItemModel } from "@/lib/models/storeItem";
 import { StoreItemDB } from "@/types/storeItemDB";
 import { ObjectCannedACL } from "@aws-sdk/client-s3";
+//Fetch all store items from database
+export async function GET() {
+  try {
+    const storeItems = (await StoreItemModel.find({})) as StoreItemDB[];
 
+    return NextResponse.json(storeItems);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({
+      message: "An error occurred fetching the store items",
+      status: 500,
+    });
+  }
+}
 export async function POST(req: Request) {
   const session = await getServerSession(OPTIONS);
   if (!session) {
     return NextResponse.json({ message: "Unauthorized", status: 401 });
   }
   const body = await req.formData();
+  // We cast types to string because we are going to validate them anyway
   const fileName = body.get("fileName") as string;
   const storeItemName = body.get("storeItemName") as string;
   const price = body.get("price") as string;
