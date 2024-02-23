@@ -8,7 +8,7 @@ import { AwsS3Client } from "@/lib/awsS3Client";
 import { StoreItemModel } from "@/lib/models/storeItem";
 import { StoreItemDB } from "@/types/storeItemDB";
 import { ObjectCannedACL } from "@aws-sdk/client-s3";
-import * as DOMPurify from "dompurify";
+import xss from "xss";
 import mongoose from "mongoose";
 //Fetch all store items from database
 export async function GET() {
@@ -18,16 +18,18 @@ export async function GET() {
     return NextResponse.json(storeItems);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({
-      message: "An error occurred fetching the store items",
-      status: 500,
-    });
+    return NextResponse.json(
+      {
+        message: "An error occurred fetching the store items",
+      },
+      { status: 500 }
+    );
   }
 }
-export async function POST(req: Request) {
+export async function POST(req: Request, res: Response) {
   const session = await getServerSession(OPTIONS);
   if (!session) {
-    return NextResponse.json({ message: "Unauthorized", status: 401 });
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
   const body = await req.formData();
   // We cast types to string because we are going to validate them anyway
@@ -39,16 +41,19 @@ export async function POST(req: Request) {
   const mainImageIndex = body.get("mainImageIndex") as string;
   const details = body.get("details") as string;
   //Return response if a field is missing
+  console.log(Boolean(fileName));
+
   if (
-    !fileName ||
-    !storeItemName ||
+    !fileName.trim() ||
+    !storeItemName.trim() ||
     !price ||
     !images ||
     !mainImageIndex ||
-    !details ||
+    !details.trim() ||
     !discountPercentage
   ) {
-    return NextResponse.json({ message: "Missing fields", status: 400 });
+    console.log("bloock");
+    return NextResponse.json({ message: "Missing fields" }, { status: 400 });
   }
   //Validate the input
   const newStoreItem: StoreItemDB = {
@@ -65,18 +70,22 @@ export async function POST(req: Request) {
   const validationResult = validateNewStoreItem.safeParse(newStoreItem);
 
   if (!validationResult.success) {
-    return NextResponse.json({
-      message: validationResult.error.message,
-      status: 400,
-    });
+    return NextResponse.json(
+      {
+        message: validationResult.error.message,
+      },
+      { status: 400 }
+    );
   }
   //Verify that fileName is unique in the database
   const existingItem = await StoreItemModel.findOne({ fileName: fileName });
   if (existingItem) {
-    return NextResponse.json({
-      message: "File name already exists",
-      status: 400,
-    });
+    return NextResponse.json(
+      {
+        message: "File name already exists",
+      },
+      { status: 400 }
+    );
   }
   // Start transaction
   const databaseSession = await mongoose.startSession();
@@ -106,7 +115,7 @@ export async function POST(req: Request) {
     newStoreItem.imageUrlList = imageUrls;
 
     // Sanitize details
-    const clean = DOMPurify.sanitize(newStoreItem.details);
+    const clean = xss(newStoreItem.details);
     newStoreItem.details = clean;
 
     // Store item to database
@@ -115,13 +124,18 @@ export async function POST(req: Request) {
     // If everything is successful, commit the transaction
     await databaseSession.commitTransaction();
 
-    return NextResponse.json({ message: "success", status: 200 });
+    return NextResponse.json({ message: "success" });
   } catch (error) {
     // If there's an error, abort the transaction
     await databaseSession.abortTransaction();
 
     console.error(error);
-    return NextResponse.json({ message: "An error occurred storing the item" });
+    return NextResponse.json(
+      {
+        message: "An error occurred storing the item",
+      },
+      { status: 500 }
+    );
   } finally {
     databaseSession.endSession();
   }
