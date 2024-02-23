@@ -13,7 +13,7 @@ import {
 import { Label } from "@/components/ui/label";
 import Tiptap from "@/components/composed/Text Editor/TipTap";
 import { NewStoreItem } from "@/types/newStoreItem";
-import { Button } from "@/components/ui/button";
+import LoadingButton from "@/components/LoadingButton";
 
 type Props = { filesKeyList: (string | undefined)[] | undefined };
 
@@ -28,8 +28,13 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
     mainImageIndex: 0,
   });
   const [imagesUrl, setImagesUrl] = useState<String[]>([]);
+  //We need to show a loading button while the form is being submitted
+  const [isLoading, setIsLoading] = useState(false);
+  //We need to send the user feedback after the form is submitted
+  const [feedback, setFeedback] = useState("");
   async function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
+    setIsLoading(true);
     //Create form data to sent to the server
     const formData = new FormData();
     formData.append("fileName", formValue.fileName);
@@ -49,12 +54,28 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
       method: "POST",
       body: formData,
     });
-    const data = await response.json();
-    console.log(data);
+    console.log(response.status);
+    if (response.status === 200) {
+      setFeedback("Producto Agregado");
+      setTimeout(() => {
+        location.reload();
+      }, 2000);
+    }
+    if (response.status === 400) {
+      setFeedback("Solicitud incorrecta, verifica los campos");
+      setIsLoading(false);
+    }
+    if (response.status === 500) {
+      setFeedback("Hubo un error en el servidor");
+      setIsLoading(false);
+    }
   }
   return (
     <div className="flex flex-col py-5 p-3 w-full mt-5 items-center">
-      <div className="w-[900px] ">
+      <h1 className="text-2xl mb-10">
+        Formulario De Registro Para Nuevo Producto En Tienda
+      </h1>
+      <div className="w-full max-w-[900px] ">
         <form onSubmit={(ev) => handleSubmit(ev)}>
           <Label>Archivo a vender</Label>
           <Select
@@ -63,7 +84,13 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
             }
           >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Seleccionar archivo" />
+              <SelectValue
+                placeholder={`${
+                  filesKeyList?.length === 0
+                    ? "No hay Archivos Disponibles"
+                    : "Selecciona Un Archivo"
+                }`}
+              />
             </SelectTrigger>
             <SelectContent>
               {filesKeyList?.map((fileKey, index) => (
@@ -121,7 +148,7 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
             }}
           >
             {({ getRootProps, getInputProps }) => (
-              <section className="border cursor-pointer  rounded-lg mt-4">
+              <section className="border cursor-pointer  rounded-lg my-5 ">
                 <div {...getRootProps()}>
                   <input className="" {...getInputProps()} />
                   <p>
@@ -131,14 +158,18 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
                 <div className="text-xs mt-4 underline-offset-1 ">
                   <ol className="grid  md:grid-cols-3 lg:grid-cols-4">
                     {imagesUrl.map((url, index) => (
-                      <Image
-                        className="w-auto h-auto"
-                        alt="Imagen de archivo a vender"
-                        src={url.toString()}
-                        key={`rel${index}`}
-                        width={100}
-                        height={100}
-                      />
+                      <div className="relative" key={`rel${index}`}>
+                        <p className="absolute bottom-0 rounded-full bg-white text-xs p-2">
+                          {index}
+                        </p>
+                        <Image
+                          className="w-auto h-auto"
+                          alt="Imagen de archivo a vender"
+                          src={url.toString()}
+                          width={100}
+                          height={100}
+                        />
+                      </div>
                     ))}
                   </ol>
                 </div>
@@ -159,7 +190,8 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
           />
           <Label className="mt-5">Detalles del producto</Label>
           <Tiptap onChange={setFormValue} />
-          <Button className="mt-2">Agregar</Button>
+          <LoadingButton isLoading={isLoading} message="Agregar" />
+          <p className="text-sm"> {feedback}</p>
         </form>
       </div>
     </div>
