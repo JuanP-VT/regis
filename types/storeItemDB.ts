@@ -6,4 +6,5 @@ export interface StoreItemDB {
   imageNamesList: string[];
   price: number;
   discountPercentage: number;
+  imageUrlList: string[];
 }

@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { AwsS3Client } from "@/lib/awsS3Client";
 import { StoreItemModel } from "@/lib/models/storeItem";
 import { StoreItemDB } from "@/types/storeItemDB";
+import { ObjectCannedACL } from "@aws-sdk/client-s3";
 
 export async function POST(req: Request) {
   const session = await getServerSession(OPTIONS);
@@ -40,6 +41,7 @@ export async function POST(req: Request) {
     price: parseFloat(price),
     discountPercentage: parseInt(discountPercentage),
     imageNamesList: [],
+    imageUrlList: [],
     details: details,
     mainImageIndex: parseInt(mainImageIndex),
   };
@@ -61,31 +63,38 @@ export async function POST(req: Request) {
     });
   }
   //Upload images to s3 bucket and store their name into the database
-  const imagesUrl: string[] = [];
-
+  const imageNames: string[] = [];
+  const imageUrls: string[] = [];
   for (const image of images) {
+    const fileExtension = image.name.split(".").pop() as string;
     const uuid = uuidv4();
     const command = {
       Bucket: "regis-container",
-      Key: uuid,
+      Key: `${uuid}.${fileExtension}`,
       Body: image.stream(),
+      ACL: ObjectCannedACL.public_read,
     };
     try {
       const upload = new Upload({ client: AwsS3Client, params: command });
       await upload.done();
-      imagesUrl.push(uuid);
+      const imageUrl = `https://regis-container.s3.amazonaws.com/${uuid}.${fileExtension}`;
+      imageUrls.push(imageUrl);
+      imageNames.push(uuid);
     } catch (error) {
+      console.error(error);
       return NextResponse.json({
         message: "An error occurred uploading image",
       });
     }
   }
-  newStoreItem.imageNamesList = imagesUrl;
+  newStoreItem.imageNamesList = imageNames;
+  newStoreItem.imageUrlList = imageUrls;
   //Store item to database
   try {
     await StoreItemModel.create(newStoreItem);
     return NextResponse.json({ message: "success", status: 200 });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ message: "An error occurred storing the item" });
   }
 }
