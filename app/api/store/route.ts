@@ -8,6 +8,8 @@ import { AwsS3Client } from "@/lib/awsS3Client";
 import { StoreItemModel } from "@/lib/models/storeItem";
 import { StoreItemDB } from "@/types/storeItemDB";
 import { ObjectCannedACL } from "@aws-sdk/client-s3";
+import * as DOMPurify from "dompurify";
+import mongoose from "mongoose";
 //Fetch all store items from database
 export async function GET() {
   try {
@@ -76,39 +78,51 @@ export async function POST(req: Request) {
       status: 400,
     });
   }
-  //Upload images to s3 bucket and store their name into the database
-  const imageNames: string[] = [];
-  const imageUrls: string[] = [];
-  for (const image of images) {
-    const fileExtension = image.name.split(".").pop() as string;
-    const uuid = uuidv4();
-    const command = {
-      Bucket: "regis-container",
-      Key: `${uuid}.${fileExtension}`,
-      Body: image.stream(),
-      ACL: ObjectCannedACL.public_read,
-    };
-    try {
+  // Start transaction
+  const databaseSession = await mongoose.startSession();
+  databaseSession.startTransaction();
+
+  try {
+    // Upload images to S3 bucket and store their name into the database
+    const imageNames: string[] = [];
+    const imageUrls: string[] = [];
+    for (const image of images) {
+      const fileExtension = image.name.split(".").pop() as string;
+      const uuid = uuidv4();
+      const command = {
+        Bucket: "regis-container",
+        Key: `${uuid}.${fileExtension}`,
+        Body: image.stream(),
+        ACL: ObjectCannedACL.public_read,
+      };
+
       const upload = new Upload({ client: AwsS3Client, params: command });
       await upload.done();
       const imageUrl = `https://regis-container.s3.amazonaws.com/${uuid}.${fileExtension}`;
       imageUrls.push(imageUrl);
       imageNames.push(uuid);
-    } catch (error) {
-      console.error(error);
-      return NextResponse.json({
-        message: "An error occurred uploading image",
-      });
     }
-  }
-  newStoreItem.imageNamesList = imageNames;
-  newStoreItem.imageUrlList = imageUrls;
-  //Store item to database
-  try {
-    await StoreItemModel.create(newStoreItem);
+    newStoreItem.imageNamesList = imageNames;
+    newStoreItem.imageUrlList = imageUrls;
+
+    // Sanitize details
+    const clean = DOMPurify.sanitize(newStoreItem.details);
+    newStoreItem.details = clean;
+
+    // Store item to database
+    await StoreItemModel.create(newStoreItem, { session: databaseSession });
+
+    // If everything is successful, commit the transaction
+    await databaseSession.commitTransaction();
+
     return NextResponse.json({ message: "success", status: 200 });
   } catch (error) {
+    // If there's an error, abort the transaction
+    await databaseSession.abortTransaction();
+
     console.error(error);
     return NextResponse.json({ message: "An error occurred storing the item" });
+  } finally {
+    databaseSession.endSession();
   }
 }
