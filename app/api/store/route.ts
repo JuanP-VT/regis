@@ -7,9 +7,8 @@ import { v4 as uuidv4 } from "uuid";
 import { AwsS3Client } from "@/lib/awsS3Client";
 import { StoreItemModel } from "@/lib/models/storeItem";
 import { StoreItemDB } from "@/types/storeItemDB";
-import { ObjectCannedACL } from "@aws-sdk/client-s3";
+import { ObjectCannedACL, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import xss from "xss";
-import mongoose from "mongoose";
 //Fetch all store items from database
 export async function GET() {
   try {
@@ -26,7 +25,8 @@ export async function GET() {
     );
   }
 }
-export async function POST(req: Request, res: Response) {
+//Create a new store item
+export async function POST(req: Request) {
   const session = await getServerSession(OPTIONS);
   if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -41,7 +41,6 @@ export async function POST(req: Request, res: Response) {
   const mainImageIndex = body.get("mainImageIndex") as string;
   const details = body.get("details") as string;
   //Return response if a field is missing
-  console.log(Boolean(fileName));
 
   if (
     !fileName.trim() ||
@@ -52,7 +51,6 @@ export async function POST(req: Request, res: Response) {
     !details.trim() ||
     !discountPercentage
   ) {
-    console.log("bloock");
     return NextResponse.json({ message: "Missing fields" }, { status: 400 });
   }
   //Validate the input
@@ -87,14 +85,11 @@ export async function POST(req: Request, res: Response) {
       { status: 400 }
     );
   }
-  // Start transaction
-  const databaseSession = await mongoose.startSession();
-  databaseSession.startTransaction();
 
+  // Upload images to S3 bucket and store their name into the database
+  const imageNames: string[] = [];
+  const imageUrls: string[] = [];
   try {
-    // Upload images to S3 bucket and store their name into the database
-    const imageNames: string[] = [];
-    const imageUrls: string[] = [];
     for (const image of images) {
       const fileExtension = image.name.split(".").pop() as string;
       const uuid = uuidv4();
@@ -117,26 +112,33 @@ export async function POST(req: Request, res: Response) {
     // Sanitize details
     const clean = xss(newStoreItem.details);
     newStoreItem.details = clean;
+    //If mainImageIndex is out of bounds, modify it to be 0
+    if (
+      newStoreItem.mainImageIndex >= newStoreItem.imageNamesList.length ||
+      newStoreItem.mainImageIndex < 0
+    ) {
+      newStoreItem.mainImageIndex = 0;
+    }
 
     // Store item to database
-    await StoreItemModel.create(newStoreItem, { session: databaseSession });
-
-    // If everything is successful, commit the transaction
-    await databaseSession.commitTransaction();
+    await StoreItemModel.create(newStoreItem);
 
     return NextResponse.json({ message: "success" });
   } catch (error) {
-    // If there's an error, abort the transaction
-    await databaseSession.abortTransaction();
-
     console.error(error);
+    // Delete uploaded images from S3
+    for (const imageName of imageNames) {
+      const deleteParams = {
+        Bucket: "regis-container",
+        Key: imageName,
+      };
+      await AwsS3Client.send(new DeleteObjectCommand(deleteParams));
+    }
     return NextResponse.json(
       {
         message: "An error occurred storing the item",
       },
       { status: 500 }
     );
-  } finally {
-    databaseSession.endSession();
   }
 }
