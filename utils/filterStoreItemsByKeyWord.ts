@@ -5,6 +5,13 @@ export default function filterStoreItemsByKeyWord(
   storeItems: StoreItemDB_ID[],
   keyWord: string
 ) {
+  if (keyWord === "") {
+    return storeItems;
+  }
+
+  if (!keyWord || !storeItems) {
+    return [];
+  }
   return storeItems.filter((item) => {
     return (
       item.storeItemName

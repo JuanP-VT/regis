@@ -62,4 +62,20 @@ describe("filterStoreItemsByKeyWord", () => {
     expect(result[0].storeItemName).toEqual("item1");
     expect(result[0].fileName).toEqual("file1.png");
   });
+
+  it("should return an empty array if arguments are undefined", () => {
+    const keyword = undefined as any;
+    const items = undefined as any;
+    const result = filterStoreItemsByKeyWord(storeItems, keyword);
+
+    expect(result).toEqual([]);
+  });
+
+  it("should return the same input if keyword is an empty string", () => {
+    const keyword = "";
+
+    const result = filterStoreItemsByKeyWord(storeItems, keyword);
+
+    expect(result).toEqual(storeItems);
+  });
 });
