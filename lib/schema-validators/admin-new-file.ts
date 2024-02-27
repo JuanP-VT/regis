@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Define the allowed extensions
-const allowedExtensions = ["jpg", "png", "gif"];
+const allowedExtensions = ["zip"];
 
 export const ValidateNewFileApi = z.object({
   file: z
@@ -9,9 +9,7 @@ export const ValidateNewFileApi = z.object({
     .refine(
       (file) => allowedExtensions.includes(file.name.split(".").pop() || ""),
       {
-        message: `Solo se permiten las extensiones: ${allowedExtensions.join(
-          ", "
-        )}`,
+        message: "Solo se permite la extension .zip",
       }
     ),
 });
