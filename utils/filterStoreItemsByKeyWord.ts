@@ -2,11 +2,11 @@ import { StoreItemDB_ID } from "@/types/storeItemDB";
 
 //Return a filtered list that include items that have the keyword in their name or filename
 export default function filterStoreItemsByKeyWord(
-  storeItems: StoreItemDB_ID[],
+  storeItems: StoreItemDB_ID[] | undefined,
   keyWord: string
 ) {
   if (keyWord === "") {
-    return storeItems;
+    return storeItems ?? [];
   }
 
   if (!keyWord || !storeItems) {
