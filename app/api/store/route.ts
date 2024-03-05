@@ -7,7 +7,6 @@ import { v4 as uuidv4 } from "uuid";
 import { AwsS3Client } from "@/lib/awsS3Client";
 import { StoreItemModel } from "@/lib/models/storeItem";
 import { StoreItemDB } from "@/types/storeItemDB";
-import { ObjectCannedACL, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import xss from "xss";
 //Fetch all store items from database
 export async function GET() {
@@ -32,7 +31,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
   const body = await req.formData();
-  // We cast types to string because we are going to validate them anyway
+  // Casting types on this data form to circumvent TypeScript errors. The constructed object will undergo validation subsequently.
   const fileName = body.get("fileName") as string;
   const storeItemName = body.get("storeItemName") as string;
   const price = body.get("price") as string;
@@ -85,58 +84,57 @@ export async function POST(req: Request) {
       { status: 400 }
     );
   }
-
-  // Upload images to S3 bucket and store their name into the database
-  const imageNames: string[] = [];
-  const imageUrls: string[] = [];
+  //Upload images to S3
   try {
-    for (const image of images) {
+    const uploadPromises = images.map(async (image) => {
       const fileExtension = image.name.split(".").pop() as string;
       const uuid = uuidv4();
+      const name = `${uuid}.${fileExtension}`;
       const command = {
-        Bucket: "regis-container",
-        Key: `${uuid}.${fileExtension}`,
+        Bucket: process.env.S3_IMAGE_BUCKET_NAME,
+        Key: name,
         Body: image.stream(),
-        ACL: ObjectCannedACL.public_read,
       };
 
       const upload = new Upload({ client: AwsS3Client, params: command });
       await upload.done();
-      const imageUrl = `https://regis-container.s3.amazonaws.com/${uuid}.${fileExtension}`;
-      imageUrls.push(imageUrl);
-      imageNames.push(uuid);
-    }
-    newStoreItem.imageNamesList = imageNames;
-    newStoreItem.imageUrlList = imageUrls;
+      const imageUrl = `https://${process.env.CLOUDFRONT_URL}/${uuid}.${fileExtension}`;
 
-    // Sanitize details
-    const clean = xss(newStoreItem.details);
-    newStoreItem.details = clean;
-    //If mainImageIndex is out of bounds, modify it to be 0
-    if (
-      newStoreItem.mainImageIndex >= newStoreItem.imageNamesList.length ||
-      newStoreItem.mainImageIndex < 0
-    ) {
-      newStoreItem.mainImageIndex = 0;
-    }
+      return { imageUrl, name };
+    });
 
-    // Store item to database
+    const results = await Promise.all(uploadPromises);
+
+    newStoreItem.imageNamesList = results.map((result) => result.name);
+    newStoreItem.imageUrlList = results.map((result) => result.imageUrl);
+  } catch (error) {
+    console.error("Error uploading images:", error);
+    return NextResponse.json(
+      { message: "An error occurred uploading the images" },
+      { status: 500 }
+    );
+  }
+  // Sanitize details
+  const clean = xss(newStoreItem.details);
+  newStoreItem.details = clean;
+  //If mainImageIndex is out of bounds, modify it to be 0
+  if (
+    newStoreItem.mainImageIndex >= newStoreItem.imageNamesList.length ||
+    newStoreItem.mainImageIndex < 0
+  ) {
+    newStoreItem.mainImageIndex = 0;
+  }
+
+  //Finally Store item to database
+  try {
     await StoreItemModel.create(newStoreItem);
 
     return NextResponse.json({ message: "success" });
   } catch (error) {
     console.error(error);
-    // Delete uploaded images from S3
-    for (const imageName of imageNames) {
-      const deleteParams = {
-        Bucket: "regis-container",
-        Key: imageName,
-      };
-      await AwsS3Client.send(new DeleteObjectCommand(deleteParams));
-    }
     return NextResponse.json(
       {
-        message: "An error occurred storing the item",
+        message: "An error occurred storing the item in the database",
       },
       { status: 500 }
     );
