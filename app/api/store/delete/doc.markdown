@@ -5,7 +5,7 @@ Only authenticated ADMIN users can delete items from the store.
 
 ## Endpoint
 
-`DELETE /api/path-to-endpoint`
+`POST /api/path-to-endpoint`
 
 ## Request Body
 
