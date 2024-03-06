@@ -137,8 +137,8 @@ export async function POST(req: Request) {
   //Update item image names and urls
   const updatedItem: StoreItemDB = {
     ...newItem,
-    imageNamesList: [...findItem.imageNamesList, ...uploadedImageNamesList],
-    imageUrlList: [...findItem.imageUrlList, ...uploadedImageUrlList],
+    imageNamesList: [...imageNamesList, ...uploadedImageNamesList],
+    imageUrlList: [...imageUrlList, ...uploadedImageUrlList],
   };
 
   //Update item in database
