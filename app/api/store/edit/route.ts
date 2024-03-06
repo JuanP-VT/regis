@@ -140,7 +140,10 @@ export async function POST(req: Request) {
     imageNamesList: [...imageNamesList, ...uploadedImageNamesList],
     imageUrlList: [...imageUrlList, ...uploadedImageUrlList],
   };
-
+  //Update main image index if it is out of bounds
+  if (updatedItem.mainImageIndex >= updatedItem.imageNamesList.length) {
+    updatedItem.mainImageIndex = 0;
+  }
   //Update item in database
   try {
     await StoreItemModel.findByIdAndUpdate(storeItemID, updatedItem);
