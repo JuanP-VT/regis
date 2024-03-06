@@ -4,15 +4,15 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import UnderLine from "@tiptap/extension-underline";
 import { Toolbar } from "./Toolbar";
-import { NewStoreItem } from "@/types/newStoreItem";
 
 type Props = {
-  onChange: React.Dispatch<React.SetStateAction<NewStoreItem>>;
+  onChange: React.Dispatch<React.SetStateAction<string>>;
+  content?: string;
 };
 
 //TODO : docs
 
-const Tiptap = ({ onChange }: Props) => {
+const Tiptap = ({ onChange, content }: Props) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -26,16 +26,16 @@ const Tiptap = ({ onChange }: Props) => {
       UnderLine,
     ],
     onUpdate({ editor }) {
-      onChange((prevState) => ({ ...prevState, details: editor.getHTML() }));
+      onChange(editor.getHTML());
     },
-    content: "<p>...</p>",
+    content: content || "Detalles Del Producto...",
   });
 
   if (editor) {
     return (
       <div className="border ">
         <Toolbar editor={editor} />
-        <EditorContent editor={editor} />
+        <EditorContent editor={editor} content={content} className="p-1" />
       </div>
     );
   } else {

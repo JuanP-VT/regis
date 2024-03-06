@@ -1,54 +1,48 @@
-# Store Items API
+# Store Item API
 
-## GET /api/store
+## GET /store-item
 
-This endpoint is used to retrieve all store items.
-
-### Request
-
-The request should be a GET request. No parameters are required.
+Fetches all store items from the database.
 
 ### Response
 
-The response will be a JSON array containing all store items. Each item in the array is an object representing a store item.
+An array of store items. Each store item is an object with the following properties:
 
-### Errors
+- `fileName`: String
+- `storeItemName`: String
+- `price`: Number
+- `discountPercentage`: Number
+- `imageNamesList`: Array of Strings
+- `imageUrlList`: Array of Strings
+- `details`: String
+- `mainImageIndex`: Number
 
-- If there is an error while processing the request, the response will be `{ "message": "There was an error fetching store items", "status": 500 }`.
+## POST /store-item
 
-### Example
-
-```bash
-curl -X GET http://localhost:3000/api/store
-```
-
-## POST /api/store
-
-This endpoint is used to create a new store item.
+Creates a new store item.
 
 ### Request
 
-The request should be a `multipart/form-data` POST request with the following fields:
+The request should be a `multipart/form-data` with the following fields:
 
-- `fileName` (string): The name of the file.
-- `storeItemName` (string): The name of the store item.
-- `price` (string): The price of the store item.
-- `discountPercentage` (string): The discount percentage for the store item.
-- `images` (file array): The images for the store item.
-- `mainImageIndex` (string): The index of the main image in the images array.
-- `details` (string): The details of the store item.
+- `fileName`: String
+- `storeItemName`: String
+- `price`: String
+- `discountPercentage`: String
+- `images`: Array of Files
+- `mainImageIndex`: String
+- `details`: String
 
 ### Response
 
-The response will be a JSON object. If the request is successful, it will contain the newly created store item. If there is an error, it will contain a `message` field with a description of the error and a `status` field with the HTTP status code.
+If successful, returns a JSON object with a `message` property set to "success".
 
-### Errors
+If there are missing fields in the request, returns a 400 status code with a JSON object containing a `message` property set to "Missing fields".
 
-- If any of the fields are missing, the response will be `{ "message": "Missing fields", "status": 400 }`.
-- If there is an error while processing the request, the response will be `{ "message": "Error message", "status": 500 }`.
+If the input validation fails, returns a 400 status code with a JSON object containing a `message` property set to the validation error message.
 
-### Example
+If the `fileName` already exists in the database, returns a 400 status code with a JSON object containing a `message` property set to "File name already exists".
 
-```bash
-curl -X POST -H "Content-Type: multipart/form-data" -F "fileName=file.jpg" -F "storeItemName=Item" -F "price=100" -F "discountPercentage=10" -F "images=@image1.jpg" -F "images=@image2.jpg" -F "mainImageIndex=0" -F "details=Details" http://URL/api/store
-```
+If there's an error uploading the images, returns a 500 status code with a JSON object containing a `message` property set to "An error occurred uploading the images".
+
+If there's an error storing the item in the database, returns a 500 status code with a JSON object containing a `message` property set to "An error occurred storing the item in the database".

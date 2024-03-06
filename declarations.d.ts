@@ -17,6 +17,9 @@ declare global {
       AWS_ACCESS_KEY_ID: string;
       AWS_SECRET_ACCESS_KEY: string;
       URL: string;
+      CLOUDFRONT_URL: string;
+      S3_IMAGE_BUCKET_NAME: string;
+      S3_FILES_BUCKET_NAME: string;
     }
   }
 }

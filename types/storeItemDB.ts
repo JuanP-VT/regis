@@ -8,3 +8,7 @@ export interface StoreItemDB {
   discountPercentage: number;
   imageUrlList: string[];
 }
+
+export interface StoreItemDB_ID extends StoreItemDB {
+  _id: string;
+}

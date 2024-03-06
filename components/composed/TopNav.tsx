@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
 import SignInButton from "./SignInButton";
+import { signOut } from "next-auth/react";
 export default function TopNav() {
   return (
     <header className="flex items-center h-10 px-4 border-b lg:h-14 md:px-6 bg-slate-100 ">
@@ -35,6 +36,7 @@ export default function TopNav() {
           <span className="sr-only">Toggle account</span>
         </Button>
         <SignInButton />
+        <Button onClick={() => signOut()} />
       </div>
     </header>
   );

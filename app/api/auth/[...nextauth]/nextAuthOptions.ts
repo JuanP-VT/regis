@@ -37,6 +37,10 @@ export const OPTIONS: NextAuthOptions = {
       }
     },
     async jwt({ token }) {
+      if (!token.sub) {
+        return token;
+      }
+      await dbConnect();
       const dbUser = await UserModel.findOne({ googleId: token.sub });
       token.role = dbUser?.role; // Add the user role to the token
       return token;
