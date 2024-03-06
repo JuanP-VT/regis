@@ -24,7 +24,7 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
     price: 100,
     discountPercentage: 0,
     images: null,
-    details: "",
+    details: "", //Will be saved in other React state for type safety
     mainImageIndex: 0,
   });
   const [imagesUrl, setImagesUrl] = useState<String[]>([]);
@@ -32,6 +32,7 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   //We need to send the user feedback after the form is submitted
   const [feedback, setFeedback] = useState("");
+  const [details, setDetails] = useState("");
   async function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
     setIsLoading(true);
@@ -48,13 +49,12 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
       formData.append("images", image);
     });
     formData.append("mainImageIndex", formValue.mainImageIndex.toString());
-    formData.append("details", formValue.details);
+    formData.append("details", details);
     //Send the form data to the server
     const response = await fetch("/api/store", {
       method: "POST",
       body: formData,
     });
-    console.log(response.status);
     if (response.status === 200) {
       setFeedback("Producto Agregado");
       setTimeout(() => {
@@ -83,7 +83,7 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
               setFormValue({ ...formValue, fileName: value })
             }
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="">
               <SelectValue
                 placeholder={`${
                   filesKeyList?.length === 0
@@ -113,11 +113,12 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
           <Label className="mt-4">Precio del producto</Label>
           <Input
             type="number"
+            step="0.1"
             value={formValue.price.toString()}
             onChange={(ev) =>
               setFormValue((prevState) => ({
                 ...prevState,
-                price: ev.target.value === "" ? 0 : parseInt(ev.target.value),
+                price: ev.target.value === "" ? 0 : parseFloat(ev.target.value),
               }))
             }
             placeholder="$MX"
@@ -148,14 +149,15 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
             }}
           >
             {({ getRootProps, getInputProps }) => (
-              <section className="border cursor-pointer  rounded-lg my-5 ">
-                <div {...getRootProps()}>
-                  <input className="" {...getInputProps()} />
-                  <p>
-                    Deposita las imágenes aquí o da click para abrir el panel
-                  </p>
+              <section className="border cursor-pointer rounded-lg  w-full bg-slate-100 p-2 my-2">
+                <div
+                  {...getRootProps()}
+                  className={`${imagesUrl.length === 0 ? "h-20" : ""}`}
+                >
+                  <input {...getInputProps()} />
+                  <p>Imágenes a subir...</p>
                 </div>
-                <div className="text-xs mt-4 underline-offset-1 ">
+                <div className="text-xs ">
                   <ol className="grid  md:grid-cols-3 lg:grid-cols-4">
                     {imagesUrl.map((url, index) => (
                       <div className="relative" key={`rel${index}`}>
@@ -188,8 +190,8 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
             }
             placeholder="La primera imagen tiene indice 0"
           />
-          <Label className="mt-5">Detalles del producto</Label>
-          <Tiptap onChange={setFormValue} />
+          <Label className="my-3">Detalles del producto</Label>
+          <Tiptap onChange={setDetails} />
           <LoadingButton isLoading={isLoading} message="Agregar" />
           <p className="text-sm"> {feedback}</p>
         </form>

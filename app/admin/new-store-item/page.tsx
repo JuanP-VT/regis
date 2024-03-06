@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { AwsS3Client } from "@/lib/awsS3Client";
 import { ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { StoreItemDB } from "@/types/storeItemDB";
+import AdminNav from "@/components/composed/AdminNav";
 export default async function NewStoreItem() {
   const session = await getServerSession(OPTIONS);
   if (!session || session.user.role !== Role.ADMIN) {
@@ -15,7 +16,7 @@ export default async function NewStoreItem() {
   //We also have filters files that already associated with a store item to avoid duplicates
 
   const command = new ListObjectsV2Command({
-    Bucket: "regis-app-files",
+    Bucket: process.env.S3_FILES_BUCKET_NAME,
   });
   try {
     const response = await AwsS3Client.send(command);
@@ -29,7 +30,12 @@ export default async function NewStoreItem() {
         !storeItemsJson.some((storeItem) => storeItem.fileName === fileName)
     );
 
-    return <NewStoreItemPage filesKeyList={filteredKeyList} />;
+    return (
+      <>
+        <AdminNav />
+        <NewStoreItemPage filesKeyList={filteredKeyList} />;
+      </>
+    );
   } catch (err) {
     console.error(err);
     return <p>There was an error</p>;

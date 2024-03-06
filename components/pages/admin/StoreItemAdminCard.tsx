@@ -15,6 +15,7 @@ import { FileEditIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import LoadingButton from "@/components/LoadingButton";
 import { useState } from "react";
+import Link from "next/link";
 type Props = { item: StoreItemDB_ID };
 
 export default function StoreItemAdminCard({ item }: Props) {
@@ -58,12 +59,14 @@ export default function StoreItemAdminCard({ item }: Props) {
       <TableCell className="hidden md:table-cell">{item.price}$</TableCell>
       <TableCell>{item.discountPercentage}%</TableCell>
       <TableCell className="hidden md:table-cell">
-        {item.price - (item.price * item.discountPercentage) / 100}$
+        {(item.price - (item.price * item.discountPercentage) / 100).toFixed(2)}
+        $
       </TableCell>
       <TableCell className="">
-        <Button className="h-8 w-8" size="icon" variant="ghost">
-          <FileEditIcon className="w-4 h-4" />
-          <span className="sr-only">Edit</span>
+        <Button variant={"ghost"}>
+          <Link href={`/admin/store-edit/${item._id}`}>
+            <FileEditIcon className="w-4 h-4" />
+          </Link>
         </Button>
         <Dialog>
           <DialogTrigger asChild>
