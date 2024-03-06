@@ -26,7 +26,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Invalid request" }, { status: 400 });
     }
     //Check if filename already exist in s3 bucket
-    const listObjects = new ListObjectsV2Command({ Bucket: "regis-app-files" });
+    const listObjects = new ListObjectsV2Command({
+      Bucket: process.env.S3_FILES_BUCKET_NAME,
+    });
     const listObjectsResult = await AwsS3Client.send(listObjects);
     if (
       listObjectsResult.Contents?.find((object) => object.Key === file.name)
@@ -38,7 +40,7 @@ export async function POST(req: Request) {
     }
     // Upload the file to the S3 bucket
     const command = {
-      Bucket: "regis-app-files",
+      Bucket: process.env.S3_FILES_BUCKET_NAME,
       Key: file.name,
       Body: file.stream(),
       Metadata: {

@@ -44,7 +44,7 @@ export async function POST(req: Request) {
       imageFileName = find.imageNamesList;
       const keyList = imageFileName.map((name) => ({ Key: name }));
       const command = new DeleteObjectsCommand({
-        Bucket: "regis-container",
+        Bucket: process.env.S3_IMAGE_BUCKET_NAME,
         Delete: { Objects: keyList },
       });
       await AwsS3Client.send(command);
@@ -69,7 +69,7 @@ export async function POST(req: Request) {
   // Finally remove file from S3 bucket
   try {
     const command = new DeleteObjectCommand({
-      Bucket: "regis-app-files",
+      Bucket: process.env.S3_FILES_BUCKET_NAME,
       Key: fileName,
     });
     await AwsS3Client.send(command);
