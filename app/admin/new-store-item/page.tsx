@@ -7,9 +7,13 @@ import { ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { StoreItemDB } from "@/types/storeItemDB";
 import AdminNav from "@/components/composed/AdminNav";
 export default async function NewStoreItem() {
-  const session = await getServerSession(OPTIONS);
-  if (!session || session.user.role !== Role.ADMIN) {
-    return <div>Unauthorized</div>;
+  try {
+    const session = await getServerSession(OPTIONS);
+    if (!session || session.user.role !== Role.ADMIN) {
+      return <div>Unauthorized</div>;
+    }
+  } catch (error) {
+    return <div>Error en la autentificación</div>;
   }
 
   //We need to get the list of files from the s3 bucket so admin can select them

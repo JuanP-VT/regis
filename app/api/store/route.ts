@@ -8,6 +8,7 @@ import { AwsS3Client } from "@/lib/awsS3Client";
 import { StoreItemModel } from "@/lib/models/storeItem";
 import { StoreItemDB } from "@/types/storeItemDB";
 import xss from "xss";
+import { Role } from "@/types/user";
 //Fetch all store items from database
 export async function GET() {
   try {
@@ -27,7 +28,7 @@ export async function GET() {
 //Create a new store item
 export async function POST(req: Request) {
   const session = await getServerSession(OPTIONS);
-  if (!session) {
+  if (!session || session.user.role !== Role.ADMIN) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
   const body = await req.formData();

@@ -7,11 +7,13 @@ import { StoreItemDB_ID } from "@/types/storeItemDB";
 import AdminNav from "@/components/composed/AdminNav";
 
 export default async function Admin() {
-  const session = await getServerSession(OPTIONS);
-  const user = session?.user;
-
-  if (!session || user?.role !== Role.ADMIN) {
-    return <div>Unauthorized</div>;
+  try {
+    const session = await getServerSession(OPTIONS);
+    if (!session || session.user.role !== Role.ADMIN) {
+      return <div>Unauthorized</div>;
+    }
+  } catch (error) {
+    return <div>Error en la autentificación</div>;
   }
   //Fetch store items from the database
   const res = await fetch(`${process.env.URL}/api/store`);

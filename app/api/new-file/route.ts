@@ -5,6 +5,7 @@ import { Upload } from "@aws-sdk/lib-storage";
 import { ValidateNewFileApi } from "@/lib/schema-validators/admin-new-file";
 import { NextResponse } from "next/server";
 import { ListObjectsV2Command } from "@aws-sdk/client-s3";
+import { Role } from "@/types/user";
 /**
  * Pending, rate limit!!
  * Pending, Docs
@@ -12,7 +13,7 @@ import { ListObjectsV2Command } from "@aws-sdk/client-s3";
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(OPTIONS);
-    if (!session || session.user?.role !== "admin") {
+    if (!session || session.user?.role !== Role.ADMIN) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
     }
     // Extract the file from the request
