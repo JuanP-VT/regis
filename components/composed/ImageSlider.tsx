@@ -10,10 +10,14 @@ import { Dispatch, SetStateAction, useState } from "react";
 type Props = {
   images: string[];
 };
+/**
+ * This is an Image Slider component utilized within individual product pages in the store.
+ * It provides a dynamic and interactive way to view product images.
+ */
 export default function ImageSlider({ images }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   return (
-    <div className="flex w-full p-1 border-b">
+    <div className="flex w-full border-b p-1">
       <div className=" relative mr-2  flex flex-col border-r">
         <div className="sticky top-14 ">
           {images.map((str, index) => (
@@ -28,10 +32,10 @@ export default function ImageSlider({ images }: Props) {
         </div>
       </div>
       <div className=" relative flex h-full w-full ">
-        <FavoriteBorderOutlined className="bg-slate-100 rounded-full border p-1 absolute top-0 m-3 right-0 z-20 cursor-pointer" />
+        <FavoriteBorderOutlined className="absolute right-0 top-0 z-20 m-3 cursor-pointer rounded-full border bg-slate-100 p-1" />
         <KeyboardArrowRight
           data-testid="right-arrow"
-          className="bg-slate-100 rounded-full border p-1 absolute top-1/2 right-0 z-20 mr-2 cursor-pointer"
+          className="absolute right-0 top-1/2 z-20 mr-2 cursor-pointer rounded-full border bg-slate-100 p-1"
           onClick={() => {
             if (currentIndex === images.length - 1) {
               setCurrentIndex(0);
@@ -42,7 +46,7 @@ export default function ImageSlider({ images }: Props) {
         />
         <KeyboardArrowLeft
           data-testid="left-arrow"
-          className=" bg-slate-100 rounded-full border p-1  absolute top-1/2 left-0 z-20 ml-2 cursor-pointer"
+          className=" absolute left-0 top-1/2 z-20  ml-2 cursor-pointer rounded-full border bg-slate-100 p-1"
           onClick={() => {
             if (currentIndex === 0) {
               setCurrentIndex(images.length - 1);
@@ -56,7 +60,7 @@ export default function ImageSlider({ images }: Props) {
           height={700}
           src={images[currentIndex]}
           alt="product image"
-          className="sticky top-20 w-full object-cover rounded-lg lg:w-[700px]"
+          className="sticky top-20 w-full rounded-lg object-cover lg:w-[700px]"
         />
       </div>
     </div>
@@ -80,7 +84,7 @@ function FrameButton({
     <Image
       width={200}
       height={200}
-      className={`mb-2  h-16 w-16 cursor-pointer object-cover rounded-md border  hover:shadow-sm hover:border-sky-300
+      className={`mb-2  h-16 w-16 cursor-pointer rounded-md border object-cover  hover:border-sky-300 hover:shadow-sm
       ${currentIndex === index && " border-sky-500"}      `}
       src={image}
       onClick={() => setCurrentIndex(index)}

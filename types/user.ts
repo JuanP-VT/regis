@@ -1,3 +1,4 @@
+//Represents the structure of a user in the database
 export enum Role {
   USER = "user",
   ADMIN = "admin",

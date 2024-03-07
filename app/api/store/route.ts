@@ -8,6 +8,7 @@ import { AwsS3Client } from "@/lib/awsS3Client";
 import { StoreItemModel } from "@/lib/models/storeItem";
 import { StoreItemDB } from "@/types/storeItemDB";
 import xss from "xss";
+import { Role } from "@/types/user";
 //Fetch all store items from database
 export async function GET() {
   try {
@@ -20,14 +21,14 @@ export async function GET() {
       {
         message: "An error occurred fetching the store items",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 //Create a new store item
 export async function POST(req: Request) {
   const session = await getServerSession(OPTIONS);
-  if (!session) {
+  if (!session || session.user.role !== Role.ADMIN) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
   const body = await req.formData();
@@ -71,7 +72,7 @@ export async function POST(req: Request) {
       {
         message: validationResult.error.message,
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
   //Verify that fileName is unique in the database
@@ -81,7 +82,7 @@ export async function POST(req: Request) {
       {
         message: "File name already exists",
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
   //Upload images to S3
@@ -111,7 +112,7 @@ export async function POST(req: Request) {
     console.error("Error uploading images:", error);
     return NextResponse.json(
       { message: "An error occurred uploading the images" },
-      { status: 500 }
+      { status: 500 },
     );
   }
   // Sanitize details
@@ -136,7 +137,7 @@ export async function POST(req: Request) {
       {
         message: "An error occurred storing the item in the database",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

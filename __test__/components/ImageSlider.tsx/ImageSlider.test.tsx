@@ -36,7 +36,7 @@ describe("ImageSlider component", () => {
   test("displays the first image initially", () => {
     render(<ImageSlider images={images} />);
     const displayedImage = screen.getByAltText(
-      "product image"
+      "product image",
     ) as HTMLImageElement;
     // Check if the first image is displayed
     expect(displayedImage.src).toContain("600x400");
@@ -50,7 +50,7 @@ describe("ImageSlider component", () => {
     const rightArrow = screen.getByTestId("right-arrow");
     fireEvent.click(rightArrow);
     const displayedImage = screen.getByAltText(
-      "product image"
+      "product image",
     ) as HTMLImageElement;
     // Check if the second image is displayed after clicking the right arrow
     expect(displayedImage.src).toContain("600x600");
@@ -64,7 +64,7 @@ describe("ImageSlider component", () => {
     const leftArrow = screen.getByTestId("left-arrow");
     fireEvent.click(leftArrow);
     const displayedImage = screen.getByAltText(
-      "product image"
+      "product image",
     ) as HTMLImageElement;
     // Check if the last image is displayed after clicking the left arrow on the first image
     expect(displayedImage.src).toContain("600x900");
@@ -80,7 +80,7 @@ describe("ImageSlider component", () => {
       fireEvent.click(rightArrow);
     }
     const displayedImage = screen.getByAltText(
-      "product image"
+      "product image",
     ) as HTMLImageElement;
     // Check if the first image is displayed after clicking the right arrow on the last image
     expect(displayedImage.src).toContain("600x400");

@@ -5,8 +5,12 @@ import { DeleteObjectCommand, DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import { AwsS3Client } from "@/lib/awsS3Client";
 import { StoreItemModel } from "@/lib/models/storeItem";
 import { StoreItemDB } from "@/types/storeItemDB";
+import { getServerSession } from "next-auth";
+import { OPTIONS } from "../../auth/[...nextauth]/nextAuthOptions";
+import { Role } from "@/types/user";
 
 /**
+ * Route to handle delete file request
  * The deletion process involves three steps:
  * 1. Deleting the associated images in the S3 bucket.
  * 2. Deleting the file reference in the database. (optional, might not have)
@@ -15,13 +19,24 @@ import { StoreItemDB } from "@/types/storeItemDB";
  * This order is important to maintain consistency. If any step fails, the operation can be retried without losing references. This ensures that no orphaned images are left in the S3 bucket.
  */
 export async function POST(req: Request) {
+  try {
+    const session = await getServerSession(OPTIONS);
+    if (!session || session.user.role !== Role.ADMIN) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Error in authentication" },
+      { status: 500 },
+    );
+  }
   const body = await req.json();
   const { fileName } = body;
 
   if (!fileName && typeof fileName !== "string" && fileName !== "") {
     return NextResponse.json(
       { error: "File name is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
   // Find file reference in database
@@ -34,7 +49,7 @@ export async function POST(req: Request) {
   } catch (error) {
     return NextResponse.json(
       { message: "Error finding document in database" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
@@ -51,7 +66,7 @@ export async function POST(req: Request) {
     } catch (error) {
       return NextResponse.json(
         { error: "Error deleting images in bucket" },
-        { status: 500 }
+        { status: 500 },
       );
     }
     //Delete database reference
@@ -61,7 +76,7 @@ export async function POST(req: Request) {
       console.error(error);
       return NextResponse.json(
         { error: "Error deleting document in database" },
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
@@ -78,7 +93,7 @@ export async function POST(req: Request) {
     console.error(error);
     return NextResponse.json(
       { error: "Error deleting file in bucket" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

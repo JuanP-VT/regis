@@ -18,12 +18,15 @@ import { useState } from "react";
 import Link from "next/link";
 type Props = { item: StoreItemDB_ID };
 
+/**
+ * Card to display a store item in the admin panel
+ */
 export default function StoreItemAdminCard({ item }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState("");
   async function handleDelete(
     _id: string,
-    ev: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ev: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) {
     ev.preventDefault();
     setIsLoading(true);
@@ -48,7 +51,7 @@ export default function StoreItemAdminCard({ item }: Props) {
       <TableCell>
         <Image
           alt="File image"
-          className=" w-auto h-auto aspect-square rounded-md object-cover "
+          className=" aspect-square h-auto w-auto rounded-md object-cover "
           height="100"
           src={item.imageUrlList[item.mainImageIndex]}
           width="100"
@@ -65,7 +68,7 @@ export default function StoreItemAdminCard({ item }: Props) {
       <TableCell className="">
         <Button variant={"ghost"}>
           <Link href={`/admin/store-edit/${item._id}`}>
-            <FileEditIcon className="w-4 h-4" />
+            <FileEditIcon className="h-4 w-4" />
           </Link>
         </Button>
         <Dialog>
@@ -97,7 +100,7 @@ export default function StoreItemAdminCard({ item }: Props) {
                   Borrar
                 </Button>
               )}
-              <p className="text-sm py-2 text-slate-600">{feedback}</p>
+              <p className="py-2 text-sm text-slate-600">{feedback}</p>
             </DialogFooter>
           </DialogContent>
         </Dialog>

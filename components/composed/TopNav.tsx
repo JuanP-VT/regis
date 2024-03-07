@@ -1,19 +1,18 @@
 "use client";
-import {
-  ShoppingCart,
-  Favorite,
-  People,
-  FavoriteBorder,
-} from "@mui/icons-material";
+import { ShoppingCart, People, FavoriteBorder } from "@mui/icons-material";
 import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
 import SignInButton from "./SignInButton";
 import { signOut } from "next-auth/react";
+
+/* 
+  Navigation bar used in the store
+*/
 export default function TopNav() {
   return (
-    <header className="flex items-center h-10 px-4 border-b lg:h-14 md:px-6 bg-slate-100 ">
-      <nav className="gap-4 md:flex lg:gap-8 text-sm ">
+    <header className="flex h-10 items-center border-b bg-slate-100 px-4 md:px-6 lg:h-14 ">
+      <nav className="gap-4 text-sm md:flex lg:gap-8 ">
         <Link className="font-semibold  uppercase " href="/">
           Home
         </Link>
@@ -22,17 +21,17 @@ export default function TopNav() {
         </Link>
       </nav>
 
-      <div className="flex items-center gap-4 ml-auto lg:gap-8 lg:ml-auto">
+      <div className="ml-auto flex items-center gap-4 lg:ml-auto lg:gap-8">
         <Button size="sm" variant="outline">
-          <ShoppingCart className="w-4 h-4" />
+          <ShoppingCart className="h-4 w-4" />
           <span className="sr-only">Toggle cart</span>
         </Button>
         <Button size="sm" variant="outline">
-          <FavoriteBorder className="w-4 h-4" />
+          <FavoriteBorder className="h-4 w-4" />
           <span className="sr-only">Toggle favorite products</span>
         </Button>
         <Button size="sm" variant="outline">
-          <People className="w-4 h-4" />
+          <People className="h-4 w-4" />
           <span className="sr-only">Toggle account</span>
         </Button>
         <SignInButton />

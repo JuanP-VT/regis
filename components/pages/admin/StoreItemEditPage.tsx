@@ -11,7 +11,10 @@ import Dropzone from "react-dropzone";
 type Props = {
   storeItem: StoreItemDB_ID;
 };
-
+/**
+ * Page to edit store items in the admin panel
+ * Dynamic route : /admin/store/edit/[id]
+ */
 export default function StoreItemEditPage({ storeItem }: Props) {
   const [feedback, setFeedback] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -31,7 +34,7 @@ export default function StoreItemEditPage({ storeItem }: Props) {
     formData.append("price", formState.price.toString());
     formData.append(
       "discountPercentage",
-      formState.discountPercentage.toString()
+      formState.discountPercentage.toString(),
     );
     formData.append("details", details);
     formData.append("mainImageIndex", formState.mainImageIndex.toString());
@@ -116,14 +119,14 @@ export default function StoreItemEditPage({ storeItem }: Props) {
           </div>
           <div className="flex flex-col">
             <Label className="my-3 text-xl">Imágenes Guardadas</Label>
-            <div className="flex gap-2 border mb-5">
+            <div className="mb-5 flex gap-2 border">
               {formState.imageNamesList.map((imageName, index) => (
                 <div className="relative " key={imageName}>
-                  <p className="absolute bottom-0 rounded-full bg-white text-xs py-1 px-2 font-semibold">
+                  <p className="absolute bottom-0 rounded-full bg-white px-2 py-1 text-xs font-semibold">
                     {index}
                   </p>
                   <Button
-                    className="h-5 w-5 absolute top-0 rounded-full py-1 px-2 font-semibold text-red-500 bg-white"
+                    className="absolute top-0 h-5 w-5 rounded-full bg-white px-2 py-1 font-semibold text-red-500"
                     onClick={(ev) => {
                       ev.preventDefault();
                       //Delete image index from react state
@@ -141,7 +144,7 @@ export default function StoreItemEditPage({ storeItem }: Props) {
                     X
                   </Button>
                   <Image
-                    className="w-auto h-auto"
+                    className="h-auto w-auto"
                     src={formState.imageUrlList[index]}
                     alt={formState.storeItemName}
                     width={300}
@@ -156,13 +159,13 @@ export default function StoreItemEditPage({ storeItem }: Props) {
                 onDrop={(acceptedFiles) => {
                   setNewImageFiles(acceptedFiles);
                   const urls = acceptedFiles.map((file) =>
-                    URL.createObjectURL(file)
+                    URL.createObjectURL(file),
                   );
                   setNewImageUrl(urls);
                 }}
               >
                 {({ getRootProps, getInputProps }) => (
-                  <section className="border cursor-pointer  rounded-lg my-5 ">
+                  <section className="my-5 cursor-pointer  rounded-lg border ">
                     <div {...getRootProps()}>
                       <input className="" {...getInputProps()} />
                       <p>
@@ -170,15 +173,15 @@ export default function StoreItemEditPage({ storeItem }: Props) {
                         panel
                       </p>
                     </div>
-                    <div className="text-xs mt-4 underline-offset-1 ">
+                    <div className="mt-4 text-xs underline-offset-1 ">
                       <ol className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
                         {newImageUrl.map((url, index) => (
                           <div className="relative" key={`rel${index}`}>
-                            <p className="absolute bottom-0 rounded-full bg-white text-xs py-1 px-2 font-semibold">
+                            <p className="absolute bottom-0 rounded-full bg-white px-2 py-1 text-xs font-semibold">
                               {formState.imageNamesList.length + index}
                             </p>
                             <Image
-                              className="w-full h-full max-w-52 max-h-52"
+                              className="h-full max-h-52 w-full max-w-52"
                               alt="Imagen de archivo a vender"
                               src={url.toString()}
                               width={100}

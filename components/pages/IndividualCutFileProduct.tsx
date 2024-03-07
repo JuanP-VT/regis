@@ -1,5 +1,4 @@
 "use client";
-import { Star } from "@mui/icons-material";
 import ImageSlider from "../composed/ImageSlider";
 import { Button } from "../ui/button";
 import {
@@ -10,10 +9,15 @@ import {
 } from "@/components/ui/accordion";
 import ProductReview from "../composed/cards/ProductReview";
 import StarIcon from "../ui/custom svg/StarIcon";
+/**
+ *
+ *  Main component for individual cut file product page
+ *  Displayed in a dynamic route at /store/[id]
+ */
 export default function IndividualCutFileProduct() {
   return (
-    <div className="flex lg:flex-row gap-5 md:justify-center min-h-screen flex-col-reverse">
-      <div className="flex flex-col max-w-3xl">
+    <div className="flex min-h-screen flex-col-reverse gap-5 md:justify-center lg:flex-row">
+      <div className="flex max-w-3xl flex-col">
         <ImageSlider
           images={[
             "https://picsum.photos/600/600",
@@ -30,7 +34,7 @@ export default function IndividualCutFileProduct() {
             ))}
         </div>
       </div>
-      <div className="lg:mt-5 lg:ml-0 ml-3 flex flex-col p-1">
+      <div className="ml-3 flex flex-col p-1 lg:ml-0 lg:mt-5">
         <PriceTag price={99.99} discountPercentage={1} />
         <div className="flex py-2 ">
           {Array(5)
@@ -44,13 +48,13 @@ export default function IndividualCutFileProduct() {
           Glasses Boot Jar Forest Nature Ornament Svg Dxf Ai Pdf Cdr INSTANT
           DOWNLOAD
         </p>
-        <Button className="rounded-full max-w-96 mt-2 bg-rose-500">
+        <Button className="mt-2 max-w-96 rounded-full bg-rose-500">
           Add To Cart
         </Button>
-        <div className="flex flex-col mt-3">
+        <div className="mt-3 flex flex-col">
           <Accordion type="single" collapsible className="mt-2 md:w-96">
             <AccordionItem value="item-1">
-              <AccordionTrigger className="hover:bg-slate-300 text-xs font-semibold rounded-full pl-3">
+              <AccordionTrigger className="rounded-full pl-3 text-xs font-semibold hover:bg-slate-300">
                 Items Details
               </AccordionTrigger>
               <AccordionContent>
@@ -97,7 +101,7 @@ export default function IndividualCutFileProduct() {
           </Accordion>
           <Accordion type="single" collapsible className="mt-2 md:w-96">
             <AccordionItem value="item-1">
-              <AccordionTrigger className="hover:bg-slate-300 text-xs font-semibold rounded-full pl-3">
+              <AccordionTrigger className="rounded-full pl-3 text-xs font-semibold hover:bg-slate-300">
                 Delivery
               </AccordionTrigger>
               <AccordionContent>
@@ -119,7 +123,7 @@ function PriceTag({ price, discountPercentage }: PriceTagProps) {
   const priceAfterDiscount = price - (price * discountPercentage) / 100;
   if (discountPercentage === 0) {
     return (
-      <p className="text-4xl text-green-700 font-semibold">
+      <p className="text-4xl font-semibold text-green-700">
         USD${price.toFixed(2)}
       </p>
     );
@@ -127,14 +131,14 @@ function PriceTag({ price, discountPercentage }: PriceTagProps) {
   return (
     <div className="flex flex-col">
       <div className="flex">
-        <p className="text-4xl text-green-700 font-semibold">
+        <p className="text-4xl font-semibold text-green-700">
           USD${priceAfterDiscount.toFixed(2)}
         </p>
-        <p className="text-xs ml-2 text-gray-500 line-through flex items-center font-light">
+        <p className="ml-2 flex items-center text-xs font-light text-gray-500 line-through">
           ${price.toFixed(2)}
         </p>
       </div>
-      <div className="flex text-green-600 ml-1 ">
+      <div className="ml-1 flex text-green-600 ">
         {discountPercentage}% off sale for limited time!
       </div>
     </div>

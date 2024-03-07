@@ -15,7 +15,7 @@ import { UserModel } from "@/lib/models/user"; // Import the User model from the
 import dbConnect from "./dbConnect"; // Import the dbConnect function that handles database connections
 
 export default async function isRegisteredUser(
-  googleId: string
+  googleId: string,
 ): Promise<boolean> {
   try {
     await dbConnect(); // Connect to the database

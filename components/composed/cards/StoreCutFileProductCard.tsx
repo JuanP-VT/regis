@@ -6,7 +6,6 @@ import { CloudDownload, Star } from "@mui/icons-material";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
-// Defining the type for the props of the StoreCutFileProduct component
 type Props = {
   cutFileProduct: CutFileProduct;
 };
@@ -14,10 +13,10 @@ type Props = {
 // The StoreCutFileProduct component displays a product in a store
 export default function StoreCutFileProductCard({ cutFileProduct }: Props) {
   return (
-    <div className="max-w-[320px] border-b-2 border-slate-200  flex flex-col ml-2 p-2">
+    <div className="ml-2 flex max-w-[320px]  flex-col border-b-2 border-slate-200 p-2">
       {/* Displaying the product image */}
       <Image
-        className="rounded-lg shadow-lg h-80 w-80 object-cover"
+        className="h-80 w-80 rounded-lg object-cover shadow-lg"
         src="https://picsum.photos/600/1200"
         alt={cutFileProduct.name}
         width={500}
@@ -31,25 +30,25 @@ export default function StoreCutFileProductCard({ cutFileProduct }: Props) {
       />
 
       {/* Displaying the product name */}
-      <p className="text-sm py-1  ">
+      <p className="py-1 text-sm  ">
         {cutFileProduct.name.substring(0, 50)}...
       </p>
 
       {/* Displaying the product rating and download type */}
       <div className="flex items-center ">
-        <div className="flex items-center ml-2">
+        <div className="ml-2 flex items-center">
           <Star className="h-4 w-4 text-yellow-400" />
           <span className="text-xs ">4.8 Overall rating</span>
         </div>
-        <div className="flex items-center ml-2">
-          <CloudDownload className="text-blue-500 h-4 w-4" />
+        <div className="ml-2 flex items-center">
+          <CloudDownload className="h-4 w-4 text-blue-500" />
           <span className="text-xs  text-blue-500">Digital Download</span>
         </div>
       </div>
 
       {/* Displaying the Add To Cart button */}
       <Button
-        className="rounded-xl mt-1 w-32  text-sm"
+        className="mt-1 w-32 rounded-xl  text-sm"
         size="sm"
         variant="outline"
       >
@@ -77,11 +76,11 @@ export function Price({ price, discountPercentage }: PriceProps) {
           {realPrice > 0 && <p> USD${realPrice.toFixed(2)}</p>}
         </div>
         {/* Displaying the original price and discount percentage */}
-        <div className="flex  mt-1">
-          <span className="text-gray-500 text-xs ml-2 line-through">
+        <div className="mt-1  flex">
+          <span className="ml-2 text-xs text-gray-500 line-through">
             USD${price.toFixed(2)}
           </span>
-          <span className="text-red-500 font-bold text-xs ml-1 ">
+          <span className="ml-1 text-xs font-bold text-red-500 ">
             {discountPercentage}%off
           </span>
         </div>

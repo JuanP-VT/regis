@@ -20,7 +20,7 @@ export async function POST(req: Request) {
   ) {
     //This would return a 500 error, as the server would not be able to function without these environment variables.
     throw new Error(
-      "Environment variables not set: S3_IMAGE_BUCKET_NAME, CLOUDFRONT_URL, S3_FILES_BUCKET_NAME"
+      "Environment variables not set: S3_IMAGE_BUCKET_NAME, CLOUDFRONT_URL, S3_FILES_BUCKET_NAME",
     );
   }
   //Authenticate user
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     console.error(error);
     return NextResponse.json(
       { message: "Error al autenticar" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
   } catch (error) {
     return NextResponse.json(
       { message: "Error de validación" },
-      { status: 400 }
+      { status: 400 },
     );
   }
   //Find item in database
@@ -79,7 +79,7 @@ export async function POST(req: Request) {
   if (!findItem) {
     return NextResponse.json(
       { message: "Item no encontrado" },
-      { status: 404 }
+      { status: 404 },
     );
   }
   // For security purposes, the filename of the item in the request will be changed to match the one stored in the database.
@@ -89,7 +89,7 @@ export async function POST(req: Request) {
   //The 'ImageNamesList' and 'ImagesUrlList' represent the images that are currently stored in the S3 bucket.
   //If these lists contain fewer elements than before, it indicates that the user wants to delete some images.
   const imagesToDelete = findItem.imageNamesList.filter(
-    (imageName) => !imageNamesList.includes(imageName)
+    (imageName) => !imageNamesList.includes(imageName),
   );
 
   if (imagesToDelete.length > 0) {
@@ -104,7 +104,7 @@ export async function POST(req: Request) {
       console.error(error);
       return NextResponse.json(
         { error: "Error al borrar imágenes del bucket" },
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
@@ -149,12 +149,12 @@ export async function POST(req: Request) {
     await StoreItemModel.findByIdAndUpdate(storeItemID, updatedItem);
     return NextResponse.json(
       { message: "Producto actualizado" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return NextResponse.json(
       { message: "Error al actualizar en base de datos" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

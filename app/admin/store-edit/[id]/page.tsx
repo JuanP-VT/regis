@@ -13,9 +13,13 @@ export default async function EditStoreItem({
 }: {
   params: { id: string };
 }) {
-  const session = await getServerSession(OPTIONS);
-  if (!session || session.user.role !== Role.ADMIN) {
-    return <div>Unauthorized</div>;
+  try {
+    const session = await getServerSession(OPTIONS);
+    if (!session || session.user.role !== Role.ADMIN) {
+      return <div>Unauthorized</div>;
+    }
+  } catch (error) {
+    return <div>Error en la autentificación</div>;
   }
 
   //Search if param is valid item in db
@@ -27,7 +31,7 @@ export default async function EditStoreItem({
   try {
     await dbConnect();
     const findInDb: StoreItemDB_ID | null = await StoreItemModel.findById(
-      params.id
+      params.id,
     );
 
     const data = JSON.parse(JSON.stringify(findInDb)) as StoreItemDB_ID;

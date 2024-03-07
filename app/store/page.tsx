@@ -37,11 +37,11 @@ export default function Store() {
           </form>
         </div>
         <Input
-          className=" max-w-52 rounded-xl self-end "
+          className=" max-w-52 self-end rounded-xl "
           placeholder="Barra de búsqueda"
         />
       </div>
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-2  self-center gap-2">
+      <div className="grid gap-2 self-center p-2 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4">
         {CutFileProductMocks.map((cutFileProduct, index) => (
           <StoreCutFileProductCard
             cutFileProduct={cutFileProduct}

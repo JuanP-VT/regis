@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     console.error(error);
     return NextResponse.json(
       { message: "Error de autorización" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
   if (!_id && typeof _id !== "string" && _id !== "") {
     return NextResponse.json(
       { message: "No se ha enviado el id del producto" },
-      { status: 400 }
+      { status: 400 },
     );
   }
   const idIsValid = mongoose.isValidObjectId(_id);
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     console.error(error);
     return NextResponse.json(
       { message: "Error encontrado el documento en la base de datos" },
-      { status: 500 }
+      { status: 500 },
     );
   }
   if (find) {
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
       console.error(error);
       return NextResponse.json(
         { error: "Error borrando la imagen en el bucket" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -74,13 +74,13 @@ export async function POST(req: Request) {
       await StoreItemModel.deleteOne({ _id });
       return NextResponse.json(
         { message: "Producto eliminado" },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       console.error(error);
       return NextResponse.json(
         { error: "Error deleting document in database" },
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
