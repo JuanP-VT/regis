@@ -50,8 +50,8 @@ export default function RainbowText({ content }: Props) {
 
   return (
     <div
-      className={`${bgClassList[currentIndex]} transition-colors duration-1000 antialiased 
-      p-2 rounded-lg text-3xl font-bold tracking-tighter lg:text-6xl xl:text-[7.5rem]`}
+      className={`${bgClassList[currentIndex]} rounded-lg p-2 text-3xl 
+      font-bold tracking-tighter antialiased transition-colors duration-1000 lg:text-6xl xl:text-[7.5rem]`}
     >
       {content}
     </div>

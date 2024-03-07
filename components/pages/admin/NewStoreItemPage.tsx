@@ -43,7 +43,7 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
     formData.append("price", formValue.price.toString());
     formData.append(
       "discountPercentage",
-      formValue.discountPercentage.toString()
+      formValue.discountPercentage.toString(),
     );
     formValue.images?.forEach((image) => {
       formData.append("images", image);
@@ -71,8 +71,8 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
     }
   }
   return (
-    <div className="flex flex-col py-5 p-3 w-full mt-5 items-center">
-      <h1 className="text-2xl mb-10">
+    <div className="mt-5 flex w-full flex-col items-center p-3 py-5">
+      <h1 className="mb-10 text-2xl">
         Formulario De Registro Para Nuevo Producto En Tienda
       </h1>
       <div className="w-full max-w-[900px] ">
@@ -143,13 +143,13 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
                 images: acceptedFiles,
               }));
               const urls = acceptedFiles.map((file) =>
-                URL.createObjectURL(file)
+                URL.createObjectURL(file),
               );
               setImagesUrl(urls);
             }}
           >
             {({ getRootProps, getInputProps }) => (
-              <section className="border cursor-pointer rounded-lg  w-full bg-slate-100 p-2 my-2">
+              <section className="my-2 w-full cursor-pointer  rounded-lg border bg-slate-100 p-2">
                 <div
                   {...getRootProps()}
                   className={`${imagesUrl.length === 0 ? "h-20" : ""}`}
@@ -161,11 +161,11 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
                   <ol className="grid  md:grid-cols-3 lg:grid-cols-4">
                     {imagesUrl.map((url, index) => (
                       <div className="relative" key={`rel${index}`}>
-                        <p className="absolute bottom-0 rounded-full bg-white text-xs p-2">
+                        <p className="absolute bottom-0 rounded-full bg-white p-2 text-xs">
                           {index}
                         </p>
                         <Image
-                          className="w-auto h-auto"
+                          className="h-auto w-auto"
                           alt="Imagen de archivo a vender"
                           src={url.toString()}
                           width={100}

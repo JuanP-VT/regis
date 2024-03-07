@@ -27,7 +27,7 @@ export default function FileAdminCard({ file }: Props) {
   const [feedback, setFeedback] = useState("");
   const formattedDate = new Date(file.LastModified ?? "").toLocaleDateString(
     "es-ES",
-    { month: "short", year: "numeric", day: "numeric" }
+    { month: "short", year: "numeric", day: "numeric" },
   );
   const formattedFileSize = formatFileSize(file.Size);
 
@@ -80,7 +80,7 @@ export default function FileAdminCard({ file }: Props) {
               ) : (
                 <Button onClick={() => handleDelete(file.Key)}>Borrar</Button>
               )}
-              <p className="text-sm py-2 text-slate-600">{feedback}</p>
+              <p className="py-2 text-sm text-slate-600">{feedback}</p>
             </DialogFooter>
           </DialogContent>
         </Dialog>

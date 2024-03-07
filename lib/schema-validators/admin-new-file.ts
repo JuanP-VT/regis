@@ -10,6 +10,6 @@ export const ValidateNewFileApi = z.object({
       (file) => allowedExtensions.includes(file.name.split(".").pop() || ""),
       {
         message: "Solo se permite la extension .zip",
-      }
+      },
     ),
 });

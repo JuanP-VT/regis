@@ -70,14 +70,14 @@ export default function NewCutFilePage() {
   return (
     <div>
       <AdminNav />
-      <div className="flex flex-col p-2 items-center">
+      <div className="flex flex-col items-center p-2">
         <div>
           <h1 className="p-2 text-2xl">Agregar Archivo Para Vender</h1>
-          <p className="text-sm p-2">
+          <p className="p-2 text-sm">
             Solo se permiten archivos con la extensión <strong>.zip</strong>
           </p>
           <Input
-            className="cursor-pointer max-w-96"
+            className="max-w-96 cursor-pointer"
             lang="es"
             placeholder="Subir Archivo"
             type="file"
@@ -93,7 +93,7 @@ export default function NewCutFilePage() {
               }
             }}
           />
-          <div className="flex flex-col my-2 text-xs text-red-600 underline">
+          <div className="my-2 flex flex-col text-xs text-red-600 underline">
             <p className="text-sm">{feedback}</p>
 
             {errorMessage.map((error, index) => (

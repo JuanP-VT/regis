@@ -8,7 +8,7 @@ export default async function AllFiles({}: Props) {
 
   try {
     const command = await AwsS3Client.send(
-      new ListObjectsV2Command({ Bucket: process.env.S3_FILES_BUCKET_NAME })
+      new ListObjectsV2Command({ Bucket: process.env.S3_FILES_BUCKET_NAME }),
     );
     //get array of files
     const files = command.Contents;

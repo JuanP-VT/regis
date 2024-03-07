@@ -27,7 +27,7 @@ export default async function NewStoreItem() {
     //Return the list of files that are not associated with a store item
     const filteredKeyList = fileNameList?.filter(
       (fileName) =>
-        !storeItemsJson.some((storeItem) => storeItem.fileName === fileName)
+        !storeItemsJson.some((storeItem) => storeItem.fileName === fileName),
     );
 
     return (

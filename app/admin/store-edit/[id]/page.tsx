@@ -27,7 +27,7 @@ export default async function EditStoreItem({
   try {
     await dbConnect();
     const findInDb: StoreItemDB_ID | null = await StoreItemModel.findById(
-      params.id
+      params.id,
     );
 
     const data = JSON.parse(JSON.stringify(findInDb)) as StoreItemDB_ID;

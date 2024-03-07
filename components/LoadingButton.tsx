@@ -8,7 +8,7 @@ type Props = {
 
 export default function LoadingButton({ message, isLoading }: Props) {
   if (isLoading) {
-    return <RotateCwIcon className="animate-spin text-slate-700 my-1" />;
+    return <RotateCwIcon className="my-1 animate-spin text-slate-700" />;
   }
   return <Button className="my-1">{message}</Button>;
 }

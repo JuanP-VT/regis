@@ -26,20 +26,20 @@ export default function StoreItemsDisplay({ storeItems }: Props) {
   }
   return (
     <main className="flex flex-1 flex-col gap-4 md:gap-8 md:p-6">
-      <h1 className="font-semibold text-2xl">Productos En La Tienda</h1>
+      <h1 className="text-2xl font-semibold">Productos En La Tienda</h1>
       <Input
         onChange={(ev) => {
           setFilteredList(
-            filterStoreItemsByKeyWord(storeItems, ev.target.value)
+            filterStoreItemsByKeyWord(storeItems, ev.target.value),
           );
         }}
       />
-      <div className="border shadow-sm rounded-lg">
+      <div className="rounded-lg border shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[80px] ">Imagen</TableHead>
-              <TableHead className="overflow-hidden max-w-[500px]">
+              <TableHead className="max-w-[500px] overflow-hidden">
                 Nombre en tienda
               </TableHead>
               <TableHead className="hidden md:table-cell">Archivo</TableHead>

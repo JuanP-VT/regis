@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     ) {
       return NextResponse.json(
         { message: "El nombre del archivo ya existe" },
-        { status: 409 }
+        { status: 409 },
       );
     }
     // Upload the file to the S3 bucket

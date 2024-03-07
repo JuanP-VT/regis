@@ -26,7 +26,7 @@ export const OPTIONS: NextAuthOptions = {
           const newUser = createUser(
             params.user.id,
             params.user.name ?? "",
-            params.user.image ?? ""
+            params.user.image ?? "",
           );
           await UserModel.create(newUser);
         }

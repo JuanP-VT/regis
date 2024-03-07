@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   if (!fileName && typeof fileName !== "string" && fileName !== "") {
     return NextResponse.json(
       { error: "File name is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
   // Find file reference in database
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
   } catch (error) {
     return NextResponse.json(
       { message: "Error finding document in database" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     } catch (error) {
       return NextResponse.json(
         { error: "Error deleting images in bucket" },
-        { status: 500 }
+        { status: 500 },
       );
     }
     //Delete database reference
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       console.error(error);
       return NextResponse.json(
         { error: "Error deleting document in database" },
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
@@ -78,7 +78,7 @@ export async function POST(req: Request) {
     console.error(error);
     return NextResponse.json(
       { error: "Error deleting file in bucket" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -18,7 +18,7 @@ import { Role, User } from "@/types/user";
 export default function createUser(
   googleId: string,
   name: string,
-  profileImage: string
+  profileImage: string,
 ): User {
   return {
     googleId,

@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 export default function SignInButton() {
   return (
     <Button
-      className="rounded-xl px-5 bg-rose-200 border-sky-100 "
+      className="rounded-xl border-sky-100 bg-rose-200 px-5 "
       size="sm"
       variant="outline"
       onClick={() => signIn()}
