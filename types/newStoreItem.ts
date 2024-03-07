@@ -1,3 +1,4 @@
+// Represents the structure that a new store item should have
 export interface NewStoreItem {
   fileName: string;
   storeItemName: string;
