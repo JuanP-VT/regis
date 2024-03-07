@@ -3,6 +3,7 @@ import AdminNav from "@/components/composed/AdminNav";
 import FilesPage from "@/components/pages/admin/FilesPage";
 import { AwsS3Client } from "@/lib/awsS3Client";
 import { ListObjectsV2Command } from "@aws-sdk/client-s3";
+
 export default async function AllFiles({}: Props) {
   //Fetch files from s3
 

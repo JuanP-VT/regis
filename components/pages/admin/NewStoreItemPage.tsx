@@ -16,7 +16,10 @@ import { NewStoreItem } from "@/types/newStoreItem";
 import LoadingButton from "@/components/LoadingButton";
 
 type Props = { filesKeyList: (string | undefined)[] | undefined };
-
+/**
+ * Page to display a form to add a new store item
+ * Route : /admin/new-store-item
+ */
 export default function NewStoreItemPage({ filesKeyList }: Props) {
   const [formValue, setFormValue] = useState<NewStoreItem>({
     fileName: "",

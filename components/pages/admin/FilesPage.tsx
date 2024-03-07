@@ -1,6 +1,6 @@
 "use client";
 import { _Object } from "@aws-sdk/client-s3";
-import FileAdminCard from "./FileAdminCard";
+import FileAdminCard from "../../composed/cards/FileAdminCard";
 import {
   Table,
   TableHeader,
@@ -12,6 +12,10 @@ type Props = {
   files: _Object[] | undefined;
 };
 
+/**
+ * Page to display all files in the admin panel
+ *  Route : /admin/files
+ */
 export default function FilesPage({ files }: Props) {
   if (!files) {
     return <div>Error al obtener archivos</div>;

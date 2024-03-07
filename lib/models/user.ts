@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { Role } from "@/types/user";
-// Define user roles as an enumeration for better type safety
 
 // Create a schema for the User model
 // This schema defines the structure of the documents in the User collection

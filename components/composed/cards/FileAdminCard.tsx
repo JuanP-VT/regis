@@ -4,7 +4,7 @@ import { _Object } from "@aws-sdk/client-s3";
 import { TableRow, TableCell } from "@/components/ui/table";
 import formatFileSize from "@/utils/formatFileSize";
 import { Button } from "@/components/ui/button";
-import { FileEditIcon, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -15,13 +15,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import LoadingButton from "@/components/LoadingButton";
-import { AwsS3Client } from "@/lib/awsS3Client";
 type Props = {
   file: _Object;
 };
 
+/**
+ * Card to display a file in the admin panel
+ */
 export default function FileAdminCard({ file }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState("");

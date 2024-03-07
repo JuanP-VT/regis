@@ -11,7 +11,10 @@ import Dropzone from "react-dropzone";
 type Props = {
   storeItem: StoreItemDB_ID;
 };
-
+/**
+ * Page to edit store items in the admin panel
+ * Dynamic route : /admin/store/edit/[id]
+ */
 export default function StoreItemEditPage({ storeItem }: Props) {
   const [feedback, setFeedback] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);

@@ -10,7 +10,10 @@ type Props = {
   content?: string;
 };
 
-//TODO : docs
+/**
+ * This is a text editor component that uses the Tiptap library.
+ * It provides a WYSIWYG editor with a toolbar for text formatting.
+ */
 
 const Tiptap = ({ onChange, content }: Props) => {
   const editor = useEditor({

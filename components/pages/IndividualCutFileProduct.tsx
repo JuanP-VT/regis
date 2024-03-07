@@ -1,5 +1,4 @@
 "use client";
-import { Star } from "@mui/icons-material";
 import ImageSlider from "../composed/ImageSlider";
 import { Button } from "../ui/button";
 import {
@@ -10,6 +9,11 @@ import {
 } from "@/components/ui/accordion";
 import ProductReview from "../composed/cards/ProductReview";
 import StarIcon from "../ui/custom svg/StarIcon";
+/**
+ *
+ *  Main component for individual cut file product page
+ *  Displayed in a dynamic route at /store/[id]
+ */
 export default function IndividualCutFileProduct() {
   return (
     <div className="flex min-h-screen flex-col-reverse gap-5 md:justify-center lg:flex-row">

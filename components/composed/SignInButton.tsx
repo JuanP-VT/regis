@@ -1,6 +1,9 @@
 import { Button } from "../ui/button";
 import { signIn } from "next-auth/react";
 
+/* 
+  Button to sign in with the next-auth library
+*/
 export default function SignInButton() {
   return (
     <Button

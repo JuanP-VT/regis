@@ -18,6 +18,9 @@ import { useState } from "react";
 import Link from "next/link";
 type Props = { item: StoreItemDB_ID };
 
+/**
+ * Card to display a store item in the admin panel
+ */
 export default function StoreItemAdminCard({ item }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState("");

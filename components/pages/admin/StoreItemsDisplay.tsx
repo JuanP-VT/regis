@@ -7,17 +7,19 @@ import {
   TableRow,
   TableHead,
   TableBody,
-  TableCell,
 } from "@/components/ui/table";
 
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import filterStoreItemsByKeyWord from "@/utils/filterStoreItemsByKeyWord";
-import StoreItemAdminCard from "./StoreItemAdminCard";
+import StoreItemAdminCard from "../../composed/cards/StoreItemAdminCard";
 type Props = {
   storeItems: StoreItemDB_ID[] | undefined;
 };
-
+/**
+ * Page to display all store items in the admin panel
+ *  Route : /admin
+ */
 export default function StoreItemsDisplay({ storeItems }: Props) {
   const [filteredList, setFilteredList] = useState(storeItems ?? []);
 

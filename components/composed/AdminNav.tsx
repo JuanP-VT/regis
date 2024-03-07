@@ -1,5 +1,9 @@
 "use client";
 import Link from "next/link";
+
+/**
+ * Navigation bar used in the admin panel
+ */
 export default function AdminNav() {
   return (
     <div className="flex w-full gap-4 rounded-lg border p-3 text-sm font-semibold  ">

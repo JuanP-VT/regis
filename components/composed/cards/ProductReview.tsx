@@ -3,6 +3,9 @@ import Image from "next/image";
 import { ThumbUp } from "@mui/icons-material";
 type Props = {};
 
+/**
+ * Component to display a review of a product
+ */
 export default function ProductReview({}: Props) {
   return (
     <div className="mt-5 flex flex-col rounded-lg border-b border-pink-100 p-3">

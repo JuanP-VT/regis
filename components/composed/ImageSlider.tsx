@@ -10,6 +10,10 @@ import { Dispatch, SetStateAction, useState } from "react";
 type Props = {
   images: string[];
 };
+/**
+ * This is an Image Slider component utilized within individual product pages in the store.
+ * It provides a dynamic and interactive way to view product images.
+ */
 export default function ImageSlider({ images }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   return (

@@ -1,15 +1,14 @@
 "use client";
-import {
-  ShoppingCart,
-  Favorite,
-  People,
-  FavoriteBorder,
-} from "@mui/icons-material";
+import { ShoppingCart, People, FavoriteBorder } from "@mui/icons-material";
 import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
 import SignInButton from "./SignInButton";
 import { signOut } from "next-auth/react";
+
+/* 
+  Navigation bar used in the store
+*/
 export default function TopNav() {
   return (
     <header className="flex h-10 items-center border-b bg-slate-100 px-4 md:px-6 lg:h-14 ">
