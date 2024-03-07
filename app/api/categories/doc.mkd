@@ -1,0 +1,51 @@
+# Category API Endpoints
+
+This document provides information about the Category API endpoints.
+
+## GET /category
+
+This endpoint retrieves all categories.
+
+**Request:**
+
+No parameters are required.
+
+**Response:**
+
+Returns a JSON array of all categories.
+
+Each category object includes:
+
+- `name`: The name of the category.
+- `description`: The description of the category.
+
+**Status Codes:**
+
+- `200 OK` on success
+- `500 Internal Server Error` if there is an error with the database
+
+## POST /category
+
+This endpoint creates a new category.
+
+**Request:**
+
+The request body should include:
+
+- `name`: The name of the new category (required).
+- `description`: The description of the new category (required).
+
+**Response:**
+
+Returns a JSON object with a `message` field indicating the result of the operation.
+
+**Status Codes:**
+
+- `201 Created` on success
+- `400 Bad Request` if the request body is invalid or fails validation
+- `401 Unauthorized` if the user is not authenticated or not an admin
+- `500 Internal Server Error` if there is an error with the database or the authentication process
+
+**Note:**
+
+Only users with the `ADMIN` role can create new categories.
