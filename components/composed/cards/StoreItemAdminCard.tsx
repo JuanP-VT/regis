@@ -16,12 +16,13 @@ import Image from "next/image";
 import LoadingButton from "@/components/LoadingButton";
 import { useState } from "react";
 import Link from "next/link";
-type Props = { item: StoreItemDB_ID };
+import { Category_ID } from "@/types/category";
+type Props = { item: StoreItemDB_ID; categoryList: Category_ID[] | undefined };
 
 /**
  * Card to display a store item in the admin panel
  */
-export default function StoreItemAdminCard({ item }: Props) {
+export default function StoreItemAdminCard({ item, categoryList }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState("");
   async function handleDelete(
@@ -46,6 +47,15 @@ export default function StoreItemAdminCard({ item }: Props) {
       setIsLoading(false);
     }
   }
+  const categoryNames = item.categoryIDList.map((itemCategory) => {
+    const name = categoryList?.find(
+      (category) => itemCategory === category._id,
+    );
+    return name?.name;
+  });
+  const categoryNamesString = categoryNames.join(", ");
+  console.log(item.categoryIDList, categoryList);
+  console.log(categoryNames);
   return (
     <TableRow>
       <TableCell>
@@ -59,6 +69,9 @@ export default function StoreItemAdminCard({ item }: Props) {
       </TableCell>
       <TableCell className="font-medium">{item.storeItemName}</TableCell>
       <TableCell className="hidden md:table-cell">{item.fileName}</TableCell>
+      <TableCell className="hidden md:table-cell">
+        {categoryNamesString}
+      </TableCell>
       <TableCell className="hidden md:table-cell">{item.price}$</TableCell>
       <TableCell>{item.discountPercentage}%</TableCell>
       <TableCell className="hidden md:table-cell">
@@ -66,15 +79,15 @@ export default function StoreItemAdminCard({ item }: Props) {
         $
       </TableCell>
       <TableCell className="">
-        <Button variant={"ghost"}>
+        <Button variant={"ghost"} className="group">
           <Link href={`/admin/store-edit/${item._id}`}>
-            <FileEditIcon className="h-4 w-4" />
+            <FileEditIcon className="h-4 w-4 group-hover:text-pink-500" />
           </Link>
         </Button>
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="ghost">
-              <TrashIcon className="h-4 w-4" />
+            <Button variant="ghost" className="group">
+              <TrashIcon className="h-4 w-4 group-hover:text-pink-500" />
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
