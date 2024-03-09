@@ -2,10 +2,9 @@ import { getServerSession } from "next-auth";
 import { OPTIONS } from "../../auth/[...nextauth]/nextAuthOptions";
 import { Role } from "@/types/user";
 import { NextResponse } from "next/server";
-import z from "zod";
-import mongoose, { isValidObjectId } from "mongoose";
 import { categoryModel } from "@/lib/models/category";
 import { Category_ID } from "@/types/category";
+import { StoreItemModel } from "@/lib/models/storeItem";
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(OPTIONS);
@@ -33,6 +32,35 @@ export async function POST(req: Request) {
       { status: 403 },
     );
   }
-  //Search in product collection, if a product contains a reference to this category update those documents
-  let findProducts;
+  //Search in product collection, if a product contains a reference to this category abort operation
+
+  try {
+    const result = await StoreItemModel.findOne({
+      categoryIDList: { $in: findCategory._id },
+    });
+    if (result !== null) {
+      return NextResponse.json(
+        { message: "La categoría está en uso" },
+        { status: 402 },
+      );
+    }
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      {
+        message: "Error conectado a la base de datos de productos",
+      },
+      { status: 500 },
+    );
+  }
+  try {
+    await categoryModel.findByIdAndDelete(id, { new: true });
+    return NextResponse.json(
+      { message: "Categoría eliminada" },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ message: "Error borrando documento" });
+  }
 }
