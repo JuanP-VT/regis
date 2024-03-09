@@ -3,8 +3,8 @@ import { getServerSession } from "next-auth";
 import { OPTIONS } from "../auth/[...nextauth]/nextAuthOptions";
 import { Role } from "@/types/user";
 import { NextResponse } from "next/server";
-import { validateNewStoreItem } from "@/lib/schema-validators/admin-new-storeitem";
 import { categoryModel } from "@/lib/models/category";
+import { validateNewCategory } from "@/lib/schema-validators/admin-new-category";
 
 export async function GET() {
   try {
@@ -37,11 +37,11 @@ export async function POST(req: Request) {
 
   //Validate
   const newCategory = {
-    name: body.name,
-    description: body.description,
+    name: body.name.trim().toLowerCase(),
+    description: body.description.trim().toLowerCase(),
   };
   try {
-    validateNewStoreItem.parse(newCategory);
+    validateNewCategory.parse(newCategory);
   } catch (error) {
     return NextResponse.json({ message: "Failed Validation" }, { status: 400 });
   }
