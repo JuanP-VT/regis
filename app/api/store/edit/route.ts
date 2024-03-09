@@ -49,7 +49,8 @@ export async function POST(req: Request) {
   const imageNamesList = body.getAll("imageNamesList") as string[];
   const imageUrlList = body.getAll("imageUrlList") as string[];
   const newImages = body.getAll("newImages") as File[];
-
+  const stringedCategoryIDList = (body.get("categoryIDList") ?? "[]") as string;
+  const categoryIDList = JSON.parse(stringedCategoryIDList);
   //Validate form data
   const isValidId = mongoose.Types.ObjectId.isValid(storeItemID);
   if (!isValidId) {
@@ -64,6 +65,7 @@ export async function POST(req: Request) {
     mainImageIndex: parseInt(mainImageIndex),
     imageNamesList,
     imageUrlList,
+    categoryIDList,
   };
   try {
     validateNewStoreItem.parse(newItem);
@@ -146,9 +148,15 @@ export async function POST(req: Request) {
   }
   //Update item in database
   try {
-    await StoreItemModel.findByIdAndUpdate(storeItemID, updatedItem);
+    const updatedProduct = await StoreItemModel.findByIdAndUpdate(
+      storeItemID,
+      updatedItem,
+      {
+        new: true,
+      },
+    );
     return NextResponse.json(
-      { message: "Producto actualizado" },
+      { message: "Producto actualizado", updatedProduct },
       { status: 200 },
     );
   } catch (error) {

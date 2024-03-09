@@ -14,13 +14,21 @@ import { Label } from "@/components/ui/label";
 import Tiptap from "@/components/composed/Text Editor/TipTap";
 import { NewStoreItem } from "@/types/newStoreItem";
 import LoadingButton from "@/components/LoadingButton";
+import { Category_ID } from "@/types/category";
+import CategorySelectMenu from "@/components/composed/CategorySelectMenu";
 
-type Props = { filesKeyList: (string | undefined)[] | undefined };
+type Props = {
+  filesKeyList: (string | undefined)[] | undefined;
+  categoryList: Category_ID[];
+};
 /**
  * Page to display a form to add a new store item
  * Route : /admin/new-store-item
  */
-export default function NewStoreItemPage({ filesKeyList }: Props) {
+export default function NewStoreItemPage({
+  filesKeyList,
+  categoryList,
+}: Props) {
   const [formValue, setFormValue] = useState<NewStoreItem>({
     fileName: "",
     storeItemName: "",
@@ -29,6 +37,7 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
     images: null,
     details: "", //Will be saved in other React state for type safety
     mainImageIndex: 0,
+    categoryIDList: [],
   });
   const [imagesUrl, setImagesUrl] = useState<String[]>([]);
   //We need to show a loading button while the form is being submitted
@@ -36,6 +45,8 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
   //We need to send the user feedback after the form is submitted
   const [feedback, setFeedback] = useState("");
   const [details, setDetails] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  console.log(selectedCategories);
   async function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
     setIsLoading(true);
@@ -43,6 +54,7 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
     const formData = new FormData();
     formData.append("fileName", formValue.fileName);
     formData.append("storeItemName", formValue.storeItemName);
+    formData.append("categoryIDList", JSON.stringify(selectedCategories));
     formData.append("price", formValue.price.toString());
     formData.append(
       "discountPercentage",
@@ -66,6 +78,10 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
     }
     if (response.status === 400) {
       setFeedback("Solicitud incorrecta, verifica los campos");
+      setIsLoading(false);
+    }
+    if (response.status === 409) {
+      setFeedback("File already exist");
       setIsLoading(false);
     }
     if (response.status === 500) {
@@ -103,6 +119,11 @@ export default function NewStoreItemPage({ filesKeyList }: Props) {
               ))}
             </SelectContent>
           </Select>
+          <CategorySelectMenu
+            categoryList={categoryList}
+            selectedCategories={selectedCategories}
+            setCategoryIDList={setSelectedCategories}
+          />
           <Label className="mt-4">Nombre del archivo en tienda</Label>
           <Input
             onChange={(ev) =>

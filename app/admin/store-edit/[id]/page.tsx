@@ -36,10 +36,12 @@ export default async function EditStoreItem({
 
     const data = JSON.parse(JSON.stringify(findInDb)) as StoreItemDB_ID;
 
+    const reqCategories = await fetch(`${process.env.URL}/api/categories`);
+    const categoryList = await reqCategories.json();
     return (
       <>
         <AdminNav />
-        <StoreItemEditPage storeItem={data} />;
+        <StoreItemEditPage storeItem={data} categoryList={categoryList} />;
       </>
     );
   } catch (error) {
