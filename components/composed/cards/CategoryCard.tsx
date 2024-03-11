@@ -75,7 +75,6 @@ export default function CategoryCard({ category }: Props) {
         method: "POST",
         body: JSON.stringify({ _id: formState._id }),
       });
-      console.log(deleteResponse.status);
       if (deleteResponse.ok) {
         setFeedback("Categoría eliminada");
         location.reload();

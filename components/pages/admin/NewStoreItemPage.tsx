@@ -48,7 +48,6 @@ export default function NewStoreItemPage({
   const [feedback, setFeedback] = useState("");
   const [details, setDetails] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  console.log(selectedCategories);
   async function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
     setIsLoading(true);

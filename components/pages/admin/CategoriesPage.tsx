@@ -21,20 +21,22 @@ export default function CategoriesPage({ categoryList }: Props) {
     <div className="">
       <div className="">
         <CreateNewCategory />
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="">Nombre</TableHead>
-              <TableHead className="">Descripción</TableHead>
-              <TableHead className="w-[100px]">Acciones</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {categoryList.map((category, index) => (
-              <CategoryCard category={category} key={`item${index}`} />
-            ))}
-          </TableBody>
-        </Table>
+        <div className="px-2">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="">Nombre</TableHead>
+                <TableHead className="">Descripción</TableHead>
+                <TableHead className="w-[100px]">Acciones</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {categoryList.map((category, index) => (
+                <CategoryCard category={category} key={`item${index}`} />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );

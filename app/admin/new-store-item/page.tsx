@@ -44,6 +44,7 @@ export default async function NewStoreItem() {
     const res = await fetch(`${process.env.URL}/api/categories`);
     const data = res.ok ? await res.json() : [];
     categoryList = [...data];
+    categoryList.sort((a, b) => a.name.localeCompare(b.name));
   } catch (error) {
     return <p>There was an error getting categories</p>;
   }

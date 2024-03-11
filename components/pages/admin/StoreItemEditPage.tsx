@@ -55,7 +55,6 @@ export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
     newImageFiles.forEach((file) => {
       formData.append("newImages", file);
     });
-    console.log(formData.get("imageNamesList"));
     //Send the form data to the server
     const req = await fetch("/api/store/edit", {
       method: "POST",
