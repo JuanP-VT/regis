@@ -16,6 +16,8 @@ import { NewStoreItem } from "@/types/newStoreItem";
 import LoadingButton from "@/components/LoadingButton";
 import { Category_ID } from "@/types/category";
 import CategorySelectMenu from "@/components/composed/CategorySelectMenu";
+import PulseLoader from "react-spinners/PulseLoader";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   filesKeyList: (string | undefined)[] | undefined;
@@ -216,7 +218,11 @@ export default function NewStoreItemPage({
           />
           <Label className="my-3">Detalles del producto</Label>
           <Tiptap onChange={setDetails} />
-          <LoadingButton isLoading={isLoading} message="Agregar" />
+          {isLoading ? (
+            <PulseLoader size={2} />
+          ) : (
+            <Button className="my-2">Agregar</Button>
+          )}
           <p className="text-sm"> {feedback}</p>
         </form>
       </div>

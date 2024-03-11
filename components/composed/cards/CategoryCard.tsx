@@ -31,10 +31,14 @@ export default function CategoryCard({ category }: Props) {
         <TableCell className="font-medium">{category.description}</TableCell>
         <TableCell className=" font-medium">
           <div className="flex justify-center gap-2 px-2">
-            <EditIcon
-              className="h-4 w-4 cursor-pointer hover:scale-105 hover:text-pink-500"
+            <Button
+              variant="ghost"
+              className="group"
+              size="sm"
               onClick={() => setIsOnEditMode(true)}
-            />
+            >
+              <EditIcon className="h-4 w-4 cursor-pointer hover:scale-105 group-hover:text-pink-500" />
+            </Button>
           </div>
         </TableCell>
       </TableRow>

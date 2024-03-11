@@ -54,8 +54,7 @@ export default function StoreItemAdminCard({ item, categoryList }: Props) {
     return name?.name;
   });
   const categoryNamesString = categoryNames.join(", ");
-  console.log(item.categoryIDList, categoryList);
-  console.log(categoryNames);
+
   return (
     <TableRow>
       <TableCell>
@@ -79,7 +78,7 @@ export default function StoreItemAdminCard({ item, categoryList }: Props) {
         $
       </TableCell>
       <TableCell className="">
-        <Button variant={"ghost"} className="group">
+        <Button variant={"ghost"} className="group" asChild>
           <Link href={`/admin/store-edit/${item._id}`}>
             <FileEditIcon className="h-4 w-4 group-hover:text-pink-500" />
           </Link>
