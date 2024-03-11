@@ -7,4 +7,5 @@ export interface NewStoreItem {
   images: File[] | null;
   price: number;
   discountPercentage: number;
+  categoryIDList: string[];
 }

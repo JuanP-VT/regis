@@ -1,0 +1,21 @@
+# Category Deletion Endpoint
+
+## Endpoint Description
+
+This endpoint allows for the deletion of a category from the database. It is protected and requires the requester to have an admin role. The operation checks if the category is in use by any store item before proceeding with the deletion.
+
+## HTTP Method
+
+`POST`
+
+## URL
+
+`/api/category/delete` (Note: Adjust the URL based on your actual API routing structure)
+
+## Request Body
+
+```json
+{
+  "_id": "categoryUniqueId"
+}
+```

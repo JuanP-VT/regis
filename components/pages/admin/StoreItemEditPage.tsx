@@ -1,28 +1,33 @@
 "use client";
 import LoadingButton from "@/components/LoadingButton";
+import CategorySelectMenu from "@/components/composed/CategorySelectMenu";
 import Tiptap from "@/components/composed/Text Editor/TipTap";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Category_ID } from "@/types/category";
 import { StoreItemDB_ID } from "@/types/storeItemDB";
 import Image from "next/image";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
 type Props = {
   storeItem: StoreItemDB_ID;
+  categoryList: Category_ID[];
 };
 /**
  * Page to edit store items in the admin panel
- * Dynamic route : /admin/store/edit/[id]
+ * Dynamic route : /admin/store-edit/[id]
  */
-export default function StoreItemEditPage({ storeItem }: Props) {
+export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
   const [feedback, setFeedback] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formState, setFormState] = useState<StoreItemDB_ID>(storeItem);
   const [details, setDetails] = useState<string>(storeItem.details);
   const [newImageFiles, setNewImageFiles] = useState<File[]>([]);
   const [newImageUrl, setNewImageUrl] = useState<string[]>([]);
-
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    storeItem.categoryIDList,
+  );
   async function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
     setIsLoading(true);
     ev.preventDefault();
@@ -30,6 +35,7 @@ export default function StoreItemEditPage({ storeItem }: Props) {
     //Append all the form data
     formData.append("storeItemID", formState._id);
     formData.append("fileName", formState.fileName);
+    formData.append("categoryIDList", JSON.stringify(selectedCategories));
     formData.append("storeItemName", formState.storeItemName);
     formData.append("price", formState.price.toString());
     formData.append(
@@ -49,7 +55,6 @@ export default function StoreItemEditPage({ storeItem }: Props) {
     newImageFiles.forEach((file) => {
       formData.append("newImages", file);
     });
-    console.log(formData.get("imageNamesList"));
     //Send the form data to the server
     const req = await fetch("/api/store/edit", {
       method: "POST",
@@ -73,6 +78,13 @@ export default function StoreItemEditPage({ storeItem }: Props) {
           <div className="flex flex-col">
             <Label className="mt-2">Archivo</Label>
             <Input value={formState.fileName || ""} disabled />
+          </div>
+          <div className="flex flex-col">
+            <CategorySelectMenu
+              categoryList={categoryList}
+              selectedCategories={selectedCategories}
+              setCategoryIDList={setSelectedCategories}
+            />
           </div>
           <div className="flex flex-col">
             <Label className="mt-2">Nombre En Tienda</Label>

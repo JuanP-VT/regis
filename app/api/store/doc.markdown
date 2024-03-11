@@ -32,6 +32,7 @@ The request should be a `multipart/form-data` with the following fields:
 - `images`: Array of Files
 - `mainImageIndex`: String
 - `details`: String
+- `categoryIDList`: Array of Strings
 
 ### Response
 

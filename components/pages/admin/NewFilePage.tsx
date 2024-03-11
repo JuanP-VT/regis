@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { ValidateNewFileApi } from "@/lib/schema-validators/admin-new-file";
 import { z } from "zod";
-import LoadingButton from "@/components/LoadingButton";
 import AdminNav from "@/components/composed/AdminNav";
+import PulseLoader from "react-spinners/PulseLoader";
 
 /**
  * This is the `NewCutFilePage` component.
@@ -56,7 +56,7 @@ export default function NewCutFilePage() {
       return;
     }
     if (response.status === 409) {
-      setFeedback("Archivo ya existe");
+      setFeedback("Archivo ya existe en la base de datos");
       setIsLoading(false);
       return;
     }
@@ -101,7 +101,7 @@ export default function NewCutFilePage() {
             ))}
           </div>
           {isLoading ? (
-            <LoadingButton isLoading={true} message="" />
+            <PulseLoader size={2} />
           ) : (
             <Button className="w-20" onClick={handleSubmit}>
               Agregar

@@ -1,4 +1,5 @@
 // Represents the structure of a store item  in the database
+
 export interface StoreItemDB {
   fileName: string;
   storeItemName: string;
@@ -8,6 +9,7 @@ export interface StoreItemDB {
   price: number;
   discountPercentage: number;
   imageUrlList: string[];
+  categoryIDList: string[];
 }
 
 export interface StoreItemDB_ID extends StoreItemDB {

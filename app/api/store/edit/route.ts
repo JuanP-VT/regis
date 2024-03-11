@@ -11,6 +11,7 @@ import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { OPTIONS } from "../../auth/[...nextauth]/nextAuthOptions";
 import { Role } from "@/types/user";
+import { Category_ID } from "@/types/category";
 export async function POST(req: Request) {
   //Check Environment Variables
   if (
@@ -49,11 +50,29 @@ export async function POST(req: Request) {
   const imageNamesList = body.getAll("imageNamesList") as string[];
   const imageUrlList = body.getAll("imageUrlList") as string[];
   const newImages = body.getAll("newImages") as File[];
-
+  const stringedCategoryIDList = (body.get("categoryIDList") ?? "[]") as string;
+  const categoryIDList = JSON.parse(stringedCategoryIDList) as string[];
   //Validate form data
   const isValidId = mongoose.Types.ObjectId.isValid(storeItemID);
   if (!isValidId) {
     return new NextResponse("Invalid ID", { status: 400 });
+  }
+  //Check if category list is valid, if an invalid id is found remove it
+  let validatedCategoryIDList: string[];
+  try {
+    const resCategoryList = await fetch(`${process.env.URL}/api/categories`);
+    const categoryList = (await resCategoryList.json()) as Category_ID[];
+    const allCategoriesIDList = categoryList.map((category) => {
+      return category._id;
+    });
+    validatedCategoryIDList = categoryIDList.filter((category) =>
+      allCategoriesIDList.includes(category),
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Error al acceder a la base de datos" },
+      { status: 500 },
+    );
   }
   const newItem: StoreItemDB = {
     fileName,
@@ -64,6 +83,7 @@ export async function POST(req: Request) {
     mainImageIndex: parseInt(mainImageIndex),
     imageNamesList,
     imageUrlList,
+    categoryIDList: validatedCategoryIDList,
   };
   try {
     validateNewStoreItem.parse(newItem);
@@ -146,9 +166,15 @@ export async function POST(req: Request) {
   }
   //Update item in database
   try {
-    await StoreItemModel.findByIdAndUpdate(storeItemID, updatedItem);
+    const updatedProduct = await StoreItemModel.findByIdAndUpdate(
+      storeItemID,
+      updatedItem,
+      {
+        new: true,
+      },
+    );
     return NextResponse.json(
-      { message: "Producto actualizado" },
+      { message: "Producto actualizado", updatedProduct },
       { status: 200 },
     );
   } catch (error) {

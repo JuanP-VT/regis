@@ -60,8 +60,8 @@ export default function FileAdminCard({ file }: Props) {
       <TableCell className="">
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="ghost">
-              <TrashIcon className="h-4 w-4" />
+            <Button variant="ghost" className="group">
+              <TrashIcon className="h-4 w-4 hover:scale-105 group-hover:text-pink-500" />
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">

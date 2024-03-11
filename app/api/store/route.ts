@@ -40,6 +40,9 @@ export async function POST(req: Request) {
   const images = body.getAll("images") as File[];
   const mainImageIndex = body.get("mainImageIndex") as string;
   const details = body.get("details") as string;
+  const unparsedCategoryList = (body.get("categoryIDList") ?? "[]") as string;
+  const categoryIDList = JSON.parse(unparsedCategoryList);
+
   //Return response if a field is missing
 
   if (
@@ -47,6 +50,7 @@ export async function POST(req: Request) {
     !storeItemName.trim() ||
     !price ||
     !images ||
+    !categoryIDList ||
     !mainImageIndex ||
     !details.trim() ||
     !discountPercentage
@@ -54,6 +58,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Missing fields" }, { status: 400 });
   }
   //Validate the input
+
   const newStoreItem: StoreItemDB = {
     fileName: fileName,
     storeItemName: storeItemName,
@@ -63,17 +68,23 @@ export async function POST(req: Request) {
     imageUrlList: [],
     details: details,
     mainImageIndex: parseInt(mainImageIndex),
+    categoryIDList: categoryIDList,
   };
 
-  const validationResult = validateNewStoreItem.safeParse(newStoreItem);
-
-  if (!validationResult.success) {
+  try {
+    validateNewStoreItem.parse(newStoreItem);
+  } catch (error) {
+    console.error(error);
     return NextResponse.json(
       {
-        message: validationResult.error.message,
+        message: error,
       },
       { status: 400 },
     );
+  }
+  const validationResult = validateNewStoreItem.safeParse(newStoreItem);
+
+  if (!validationResult.success) {
   }
   //Verify that fileName is unique in the database
   const existingItem = await StoreItemModel.findOne({ fileName: fileName });
@@ -82,7 +93,7 @@ export async function POST(req: Request) {
       {
         message: "File name already exists",
       },
-      { status: 400 },
+      { status: 409 },
     );
   }
   //Upload images to S3

@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
-
 const storeItemSchema = new mongoose.Schema({
   fileName: { type: String, required: true, unique: true },
+  categoryIDList: {
+    type: [String],
+    require: true,
+  },
   storeItemName: { type: String, required: true },
   details: { type: String, required: true }, // Detailed description as html of the product
   mainImageIndex: { type: Number, required: true }, // Index of the main image of the product
