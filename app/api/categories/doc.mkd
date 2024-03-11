@@ -32,6 +32,7 @@ This endpoint creates a new category.
 
 The request body should include:
 
+- `_id` : Valid mongodb ID (required)
 - `name`: The name of the new category (required).
 - `description`: The description of the new category (required).
 
