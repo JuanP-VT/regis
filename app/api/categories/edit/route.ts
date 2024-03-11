@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   try {
     const session = await getServerSession(OPTIONS);
     if (!session || session.user.role !== Role.ADMIN) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
   } catch (error) {
     return NextResponse.json({ message: "Server auth error" }, { status: 500 });
@@ -24,8 +24,11 @@ export async function POST(req: Request) {
   try {
     validateNewCategory.parse(unparsedCategory);
   } catch (error) {
-    return NextResponse.json({ message: "Validation error" }, { status: 401 });
+    return NextResponse.json({ message: "Validation error" }, { status: 400 });
   }
+  //Apply string format after validation
+  unparsedCategory.name = unparsedCategory.name.toLocaleLowerCase();
+  unparsedCategory.description = unparsedCategory.description.toLowerCase();
   //Save to database
 
   try {
