@@ -5,7 +5,6 @@ import { Role } from "@/types/user";
 import { NextResponse } from "next/server";
 import { categoryModel } from "@/lib/models/category";
 import { validateNewCategory } from "@/lib/schema-validators/admin-new-category";
-
 export async function GET() {
   try {
     const collection = await categoryModel.find({});
@@ -36,16 +35,21 @@ export async function POST(req: Request) {
   }
 
   //Validate
-  const newCategory = {
+  const newCategory: Category = {
     name: body.name.trim().toLowerCase(),
     description: body.description.trim().toLowerCase(),
+    subCategories: body.subCategories,
   };
   try {
     validateNewCategory.parse(newCategory);
   } catch (error) {
     return NextResponse.json({ message: "Failed Validation" }, { status: 400 });
   }
-
+  //After validation, filter subCategories that contain empty strings
+  const filterSubCategories = newCategory.subCategories.filter(
+    (subCategory) => subCategory !== "",
+  );
+  newCategory.subCategories = filterSubCategories;
   //Save to DB
   try {
     await categoryModel.create(newCategory);

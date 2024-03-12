@@ -22,7 +22,7 @@ export function CreateNewCategory() {
   const [formState, setFormState] = useState<Category>({
     name: "",
     description: "",
-    subCategories: [""],
+    subCategories: [],
   });
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState("");
