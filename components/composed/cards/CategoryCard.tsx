@@ -1,7 +1,14 @@
 import { Input } from "@/components/ui/input";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Category_ID } from "@/types/category";
-import { CheckIcon, EditIcon, TrashIcon, Undo2Icon } from "lucide-react";
+import {
+  CheckIcon,
+  DeleteIcon,
+  EditIcon,
+  PlusIcon,
+  TrashIcon,
+  Undo2Icon,
+} from "lucide-react";
 import SyncLoader from "react-spinners/SyncLoader";
 import { useState } from "react";
 import {
@@ -18,17 +25,24 @@ import { Button } from "@/components/ui/button";
 
 type Props = {
   category: Category_ID;
+  index: number;
 };
 
 // This component represents a category in the admin panel.
 // It has a default display mode and an edit mode for modifications.
-export default function CategoryCard({ category }: Props) {
+export default function CategoryCard({ category, index }: Props) {
+  console.log(index);
   const [isOnEditMode, setIsOnEditMode] = useState(false);
   function DefaultDisplayMode({ category }: { category: Category_ID }) {
+    const subCategoriesString = category.subCategories.join(", ");
     return (
-      <TableRow>
+      <TableRow
+        className={`${index % 2 === 0 ? "bg-slate-100" : "bg-zinc-100"}  `}
+      >
         <TableCell className="font-medium">{category.name}</TableCell>
         <TableCell className="font-medium">{category.description}</TableCell>
+        <TableCell className="font-medium">{subCategoriesString}</TableCell>
+
         <TableCell className=" font-medium">
           <div className="flex justify-center gap-2 px-2">
             <Button
@@ -49,6 +63,7 @@ export default function CategoryCard({ category }: Props) {
       _id: category._id,
       name: category.name,
       description: category.description,
+      subCategories: category.subCategories ?? [],
     });
     const [isLoading, setIsLoading] = useState(false);
     const [feedback, setFeedback] = useState("");
@@ -58,6 +73,7 @@ export default function CategoryCard({ category }: Props) {
         _id: formState._id,
         name: formState.name,
         description: formState.description,
+        subCategories: formState.subCategories,
       };
       await fetch("/api/categories/edit", {
         method: "POST",
@@ -108,8 +124,53 @@ export default function CategoryCard({ category }: Props) {
             }
           />
         </TableCell>
+        <TableCell className="relative font-medium">
+          {formState.subCategories?.map((subCategory, index) => (
+            <div className="flex items-center gap-2" key={`in${index}`}>
+              <Input
+                className="my-1"
+                value={formState.subCategories[index]}
+                size={1}
+                onChange={(ev) => {
+                  const updatedSubCategories = [...formState.subCategories];
+                  updatedSubCategories[index] = ev.currentTarget.value;
+                  setFormState((prev) => ({
+                    ...prev,
+                    subCategories: updatedSubCategories,
+                  }));
+                }}
+              />
+
+              <DeleteIcon
+                size={20}
+                className="cursor-pointer hover:text-pink-500"
+                onClick={() => {
+                  const updatedSubCategories = [...formState.subCategories];
+                  const indexToDelete =
+                    updatedSubCategories.indexOf(subCategory);
+                  updatedSubCategories.splice(indexToDelete, 1);
+                  setFormState((prev) => ({
+                    ...prev,
+                    subCategories: updatedSubCategories,
+                  }));
+                }}
+              />
+            </div>
+          ))}
+        </TableCell>
         <TableCell className="font-medium">
           <div className="flex justify-between px-2">
+            <PlusIcon
+              className="h-4 w-4 cursor-pointer hover:scale-105 hover:text-pink-500"
+              onClick={() => {
+                const updatedSubCategories = formState.subCategories;
+                updatedSubCategories.push("");
+                setFormState((prev) => ({
+                  ...prev,
+                  subCategories: updatedSubCategories,
+                }));
+              }}
+            />
             <Undo2Icon
               className="h-4 w-4 cursor-pointer hover:scale-105 hover:text-pink-500"
               onClick={() => setIsOnEditMode(false)}

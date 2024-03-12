@@ -1,7 +1,6 @@
 "use client";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -15,12 +14,24 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { DeleteIcon, PlusIcon } from "lucide-react";
+/* 
+   UI Component to allow user to register a new category to the system
+*/
 export function CreateNewCategory() {
+  const [formState, setFormState] = useState<Category>({
+    name: "",
+    description: "",
+    subCategories: [],
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [feedback, setFeedback] = useState("");
   async function handleSubmit() {
     setIsLoading(true);
     const newCategory: Category = {
       name: formState.name,
       description: formState.description,
+      subCategories: formState.subCategories,
     };
     const req = await fetch("/api/categories", {
       body: JSON.stringify(newCategory),
@@ -36,12 +47,6 @@ export function CreateNewCategory() {
       setIsLoading(false);
     }
   }
-  const [formState, setFormState] = useState<Category>({
-    name: "",
-    description: "",
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [feedback, setFeedback] = useState("");
   return (
     <div>
       <Sheet>
@@ -89,6 +94,53 @@ export function CreateNewCategory() {
                 value={formState.description}
                 className="col-span-3"
               />
+            </div>
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center gap-2">
+                <Label htmlFor="description" className="p-1">
+                  Sub Categorías
+                </Label>
+                <PlusIcon
+                  className="cursor-pointer hover:text-pink-500"
+                  onClick={() => {
+                    const updatedSubCategories = [...formState.subCategories];
+                    updatedSubCategories.push("");
+                    setFormState((prev) => ({
+                      ...prev,
+                      subCategories: updatedSubCategories,
+                    }));
+                  }}
+                />
+              </div>
+              {formState.subCategories.map((subCategory, index) => (
+                <div key={`sub${index}`} className="flex items-center gap-2">
+                  <Input
+                    onChange={(ev) => {
+                      const updatedSubCategories = [...formState.subCategories];
+                      updatedSubCategories[index] = ev.currentTarget.value;
+                      setFormState((prev) => ({
+                        ...prev,
+                        subCategories: updatedSubCategories,
+                      }));
+                    }}
+                    value={formState.subCategories[index]}
+                    className="col-span-3"
+                  />
+                  <DeleteIcon
+                    className="cursor-pointer hover:text-pink-500"
+                    onClick={() => {
+                      const updatedSubCategories = [...formState.subCategories];
+                      const indexToDelete =
+                        updatedSubCategories.indexOf(subCategory);
+                      updatedSubCategories.splice(indexToDelete, 1);
+                      setFormState((prev) => ({
+                        ...prev,
+                        subCategories: updatedSubCategories,
+                      }));
+                    }}
+                  />
+                </div>
+              ))}
             </div>
           </div>
           <SheetFooter>
