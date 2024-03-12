@@ -27,6 +27,7 @@ export default function CategoriesPage({ categoryList }: Props) {
               <TableRow>
                 <TableHead className="">Nombre</TableHead>
                 <TableHead className="">Descripción</TableHead>
+                <TableHead className="w-[500px]">Sub Categorías</TableHead>
                 <TableHead className="w-[100px]">Acciones</TableHead>
               </TableRow>
             </TableHeader>
