@@ -45,11 +45,12 @@ export async function POST(req: Request) {
   } catch (error) {
     return NextResponse.json({ message: "Failed Validation" }, { status: 400 });
   }
-  //After validation, filter subCategories that contain empty strings
-  const filterSubCategories = newCategory.subCategories.filter(
-    (subCategory) => subCategory !== "",
+  //Subcategories must be a list of unique elements and should not contain empty strings
+  newCategory.subCategories = Array.from(
+    new Set(
+      newCategory.subCategories.filter((subCategory) => subCategory !== ""),
+    ),
   );
-  newCategory.subCategories = filterSubCategories;
   //Save to DB
   try {
     await categoryModel.create(newCategory);
