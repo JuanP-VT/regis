@@ -25,16 +25,20 @@ import { Button } from "@/components/ui/button";
 
 type Props = {
   category: Category_ID;
+  index: number;
 };
 
 // This component represents a category in the admin panel.
 // It has a default display mode and an edit mode for modifications.
-export default function CategoryCard({ category }: Props) {
+export default function CategoryCard({ category, index }: Props) {
+  console.log(index);
   const [isOnEditMode, setIsOnEditMode] = useState(false);
   function DefaultDisplayMode({ category }: { category: Category_ID }) {
     const subCategoriesString = category.subCategories.join(", ");
     return (
-      <TableRow>
+      <TableRow
+        className={`${index % 2 === 0 ? "bg-slate-100" : "bg-zinc-100"}  `}
+      >
         <TableCell className="font-medium">{category.name}</TableCell>
         <TableCell className="font-medium">{category.description}</TableCell>
         <TableCell className="font-medium">{subCategoriesString}</TableCell>
