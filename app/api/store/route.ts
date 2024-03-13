@@ -42,7 +42,9 @@ export async function POST(req: Request) {
   const details = body.get("details") as string;
   const unparsedCategoryList = (body.get("categoryIDList") ?? "[]") as string;
   const categoryIDList = JSON.parse(unparsedCategoryList);
-
+  const unparsedSubCategoryList = (body.get("subCategoryIDList") ??
+    "[]") as string;
+  const subCategoryIDList = JSON.parse(unparsedSubCategoryList);
   //Return response if a field is missing
 
   if (
@@ -51,6 +53,7 @@ export async function POST(req: Request) {
     !price ||
     !images ||
     !categoryIDList ||
+    !subCategoryIDList ||
     !mainImageIndex ||
     !details.trim() ||
     !discountPercentage
@@ -69,6 +72,7 @@ export async function POST(req: Request) {
     details: details,
     mainImageIndex: parseInt(mainImageIndex),
     categoryIDList: categoryIDList,
+    subCategoryIDList,
   };
 
   try {
