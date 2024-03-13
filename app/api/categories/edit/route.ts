@@ -6,7 +6,8 @@ import { Category, Category_ID } from "@/types/category";
 import { validateNewCategory } from "@/lib/schema-validators/admin-new-category";
 import { categoryModel } from "@/lib/models/category";
 import { StoreItemModel } from "@/lib/models/storeItem";
-import { StoreItemDB_ID } from "@/types/storeItemDB";
+import dbConnect from "@/lib/dbConnect";
+import { v4 } from "uuid";
 
 export async function POST(req: Request) {
   try {
@@ -29,16 +30,51 @@ export async function POST(req: Request) {
   } catch (error) {
     return NextResponse.json({ message: "Validation error" }, { status: 400 });
   }
-  //TODO: abort operation if request wants to delete a in use category
+  //Compare request subcategories with the one in database, if there are missing elements it means the user wants to delete them
+  //Abort operation if request wants to delete a sub category that is being by a store item
+  await dbConnect();
+  const CategoryToEdit: Category_ID | null = await categoryModel.findById(
+    body._id,
+  );
+  if (!CategoryToEdit) {
+    return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
+  }
+  const subCategoryIDListInDB = CategoryToEdit.subCategoryList.map(
+    (subCategory) => subCategory.id,
+  );
+  const requestSubCategoryIDList = categoryToParse.subCategoryList.map(
+    (subCategory) => subCategory.id,
+  );
+  const categoryIDToDelete = subCategoryIDListInDB.filter(
+    (id) => !requestSubCategoryIDList.includes(id),
+  );
+  for (let i = 0; i < categoryIDToDelete.length; i++) {
+    const id = categoryIDToDelete[i];
+    const find = await StoreItemModel.findOne({
+      subCategoryIDList: { $in: id },
+    });
+    if (find) {
+      return NextResponse.json(
+        { message: "Sub categoría está en uso" },
+        { status: 409 },
+      );
+    }
+  }
+  //Check if the request is creating new subCategories, assign unique ID to new subCategories
+  const updateSubCategories = [...categoryToParse.subCategoryList];
+  updateSubCategories.forEach((subCategory, index) => {
+    if (subCategory.id === "" || !subCategory.id) {
+      const id = v4();
+      updateSubCategories[index].id = id;
+    }
+  });
   //Apply string format after validation
   categoryToParse.name = categoryToParse.name.toLocaleLowerCase();
   categoryToParse.description = categoryToParse.description.toLowerCase();
   //Subcategories must be a list of unique elements and should not contain empty strings
   categoryToParse.subCategoryList = Array.from(
     new Set(
-      categoryToParse.subCategoryList.filter(
-        (subCategory) => subCategory.name !== "",
-      ),
+      updateSubCategories.filter((subCategory) => subCategory.name !== ""),
     ),
   );
   //Save to database

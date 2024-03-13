@@ -76,14 +76,17 @@ export default function CategoryCard({ category, index }: Props) {
         description: formState.description,
         subCategoryList: formState.subCategoryList,
       };
-      await fetch("/api/categories/edit", {
+      const res = await fetch("/api/categories/edit", {
         method: "POST",
         body: JSON.stringify(reqBody),
       });
-
-      setIsLoading(false);
-      setIsOnEditMode(false);
-      location.reload();
+      if (res.ok) {
+        location.reload();
+      }
+      if (res.status === 409) {
+        window.alert("La SubCategoría está en uso");
+        setIsLoading(false);
+      }
     }
     async function handleDelete() {
       setIsLoading(true);

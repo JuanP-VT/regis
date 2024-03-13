@@ -46,6 +46,7 @@ Returns a JSON object with a `message` field indicating the result of the operat
 - `201 Created` on success
 - `400 Bad Request` if the request body is invalid or fails validation
 - `401 Unauthorized` if the user is not authenticated or not an admin
+- `409 Conflict` if attempting to delete a subcategory in use.
 - `500 Internal Server Error` if there is an error with the database or the authentication process
 
 **Note:**
