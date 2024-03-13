@@ -35,15 +35,14 @@ export default function CategorySelectMenu({
                     const SubCategoriesIDToRemove =
                       categoryList
                         .find(
-                          (category) =>
-                            category._id === selectedCategoriesID[index],
+                          (categoryItem) => categoryItem._id === category._id,
                         )
                         ?.subCategoryList.map(
                           (subCategory) => subCategory.id,
                         ) ?? [];
                     setSelectedSubCategoriesID((prev) => {
-                      const newSubCategories = [...prev];
-                      return newSubCategories.filter(
+                      const updateSubCategories = [...prev];
+                      return updateSubCategories.filter(
                         (subCategory) =>
                           !SubCategoriesIDToRemove.includes(subCategory),
                       );
