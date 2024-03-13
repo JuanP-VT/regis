@@ -43,6 +43,10 @@ export default function StoreItemsDisplay({ storeItems, categoryList }: Props) {
               </TableHead>
               <TableHead className="hidden md:table-cell">Archivo</TableHead>
               <TableHead className="hidden md:table-cell">Categorías</TableHead>
+              <TableHead className="hidden md:table-cell">
+                Sub-Categorías
+              </TableHead>
+
               <TableHead className="md:table-cell">Precio</TableHead>
               <TableHead className="hidden md:table-cell">Descuento</TableHead>
               <TableHead className="hidden md:table-cell">

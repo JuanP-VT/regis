@@ -47,14 +47,25 @@ export default function StoreItemAdminCard({ item, categoryList }: Props) {
       setIsLoading(false);
     }
   }
-  const categoryNames = item.categoryIDList.map((itemCategory) => {
-    const name = categoryList?.find(
-      (category) => itemCategory === category._id,
-    );
-    return name?.name;
-  });
-  const categoryNamesString = categoryNames.join(", ");
+  const categoryNames = item.categoryIDList
+    .map((itemCategory) => {
+      const find = categoryList?.find(
+        (category) => itemCategory === category._id,
+      );
+      return find?.name;
+    })
+    .join(", ");
 
+  const subCategoryList =
+    categoryList?.map((category) => category.subCategoryList).flat() ?? [];
+  const subCategoriesNames = item.subCategoryIDList
+    .map((subCategoryID) => {
+      const find = subCategoryList.find(
+        (subCategory) => subCategory.id === subCategoryID,
+      );
+      return find?.name;
+    })
+    .join(", ");
   return (
     <TableRow>
       <TableCell>
@@ -68,8 +79,9 @@ export default function StoreItemAdminCard({ item, categoryList }: Props) {
       </TableCell>
       <TableCell className="font-medium">{item.storeItemName}</TableCell>
       <TableCell className="hidden md:table-cell">{item.fileName}</TableCell>
+      <TableCell className="hidden md:table-cell">{categoryNames}</TableCell>
       <TableCell className="hidden md:table-cell">
-        {categoryNamesString}
+        {subCategoriesNames}
       </TableCell>
       <TableCell className="hidden md:table-cell">{item.price}$</TableCell>
       <TableCell>{item.discountPercentage}%</TableCell>
