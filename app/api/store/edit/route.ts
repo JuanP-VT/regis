@@ -51,6 +51,9 @@ export async function POST(req: Request) {
   const imageUrlList = body.getAll("imageUrlList") as string[];
   const newImages = body.getAll("newImages") as File[];
   const stringedCategoryIDList = (body.get("categoryIDList") ?? "[]") as string;
+  const stringedSubCategoryIDList = (body.get("subCategoryIDList") ??
+    "[]") as string;
+  const subCategoryIDList = JSON.parse(stringedSubCategoryIDList);
   const categoryIDList = JSON.parse(stringedCategoryIDList) as string[];
   //Validate form data
   const isValidId = mongoose.Types.ObjectId.isValid(storeItemID);
@@ -84,6 +87,7 @@ export async function POST(req: Request) {
     imageNamesList,
     imageUrlList,
     categoryIDList: validatedCategoryIDList,
+    subCategoryIDList: subCategoryIDList,
   };
   try {
     validateNewStoreItem.parse(newItem);

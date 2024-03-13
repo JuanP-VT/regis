@@ -18,6 +18,8 @@ The request should be a POST request with form data.
 - `imageNamesList` (Array of Strings): The list of image names.
 - `imageUrlList` (Array of Strings): The list of image URLs.
 - `newImages` (Array of Files, optional): The new images to upload.
+- `categoryIDList` (Array of Strings): valid mongodb category document id
+- `subCategoryIDList` (Array of Strings) valid subcategory id (uuidv4)
 
 ## Response
 
