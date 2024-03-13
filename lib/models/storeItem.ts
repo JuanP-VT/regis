@@ -5,6 +5,10 @@ const storeItemSchema = new mongoose.Schema({
     type: [String],
     require: true,
   },
+  subCategoryIDList: {
+    type: [String],
+    require: true,
+  },
   storeItemName: { type: String, required: true },
   details: { type: String, required: true }, // Detailed description as html of the product
   mainImageIndex: { type: Number, required: true }, // Index of the main image of the product
