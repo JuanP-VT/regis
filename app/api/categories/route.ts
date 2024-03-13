@@ -5,6 +5,7 @@ import { Role } from "@/types/user";
 import { NextResponse } from "next/server";
 import { categoryModel } from "@/lib/models/category";
 import { validateNewCategory } from "@/lib/schema-validators/admin-new-category";
+import { v4 } from "uuid";
 export async function GET() {
   try {
     const collection = await categoryModel.find({});
@@ -38,7 +39,7 @@ export async function POST(req: Request) {
   const newCategory: Category = {
     name: body.name.trim().toLowerCase(),
     description: body.description.trim().toLowerCase(),
-    subCategories: body.subCategories,
+    subCategoryList: body.subCategoryList ?? [],
   };
   try {
     validateNewCategory.parse(newCategory);
@@ -46,10 +47,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Failed Validation" }, { status: 400 });
   }
   //Subcategories must be a list of unique elements and should not contain empty strings
-  newCategory.subCategories = Array.from(
+  newCategory.subCategoryList = Array.from(
     new Set(
-      newCategory.subCategories.filter((subCategory) => subCategory !== ""),
+      newCategory.subCategoryList.filter(
+        (subCategory) => subCategory.name !== "",
+      ),
     ),
+  );
+  //Assign unique ID to each new subcategory
+  newCategory.subCategoryList = newCategory.subCategoryList.map(
+    (subCategory) => ({
+      ...subCategory,
+      id: v4(),
+    }),
   );
   //Save to DB
   try {

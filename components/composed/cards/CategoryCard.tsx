@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Category_ID } from "@/types/category";
+import { Category_ID, SubCategory } from "@/types/category";
 import {
   CheckIcon,
   DeleteIcon,
@@ -34,7 +34,9 @@ export default function CategoryCard({ category, index }: Props) {
   console.log(index);
   const [isOnEditMode, setIsOnEditMode] = useState(false);
   function DefaultDisplayMode({ category }: { category: Category_ID }) {
-    const subCategoriesString = category.subCategories.join(", ");
+    const subCategoriesString = category.subCategoryList
+      .map((subCategory) => subCategory.name)
+      .join(", ");
     return (
       <TableRow
         className={`${index % 2 === 0 ? "bg-slate-100" : "bg-zinc-100"}  `}
@@ -63,7 +65,7 @@ export default function CategoryCard({ category, index }: Props) {
       _id: category._id,
       name: category.name,
       description: category.description,
-      subCategories: category.subCategories ?? [],
+      subCategoryList: category.subCategoryList ?? [],
     });
     const [isLoading, setIsLoading] = useState(false);
     const [feedback, setFeedback] = useState("");
@@ -73,7 +75,7 @@ export default function CategoryCard({ category, index }: Props) {
         _id: formState._id,
         name: formState.name,
         description: formState.description,
-        subCategories: formState.subCategories,
+        subCategoryList: formState.subCategoryList,
       };
       await fetch("/api/categories/edit", {
         method: "POST",
@@ -125,18 +127,18 @@ export default function CategoryCard({ category, index }: Props) {
           />
         </TableCell>
         <TableCell className="relative font-medium">
-          {formState.subCategories?.map((subCategory, index) => (
+          {formState.subCategoryList?.map((subCategory, index) => (
             <div className="flex items-center gap-2" key={`in${index}`}>
               <Input
                 className="my-1"
-                value={formState.subCategories[index]}
+                value={formState.subCategoryList[index].name}
                 size={1}
                 onChange={(ev) => {
-                  const updatedSubCategories = [...formState.subCategories];
-                  updatedSubCategories[index] = ev.currentTarget.value;
+                  const updatedSubCategories = [...formState.subCategoryList];
+                  updatedSubCategories[index].name = ev.currentTarget.value;
                   setFormState((prev) => ({
                     ...prev,
-                    subCategories: updatedSubCategories,
+                    subCategoryList: updatedSubCategories,
                   }));
                 }}
               />
@@ -145,13 +147,13 @@ export default function CategoryCard({ category, index }: Props) {
                 size={20}
                 className="cursor-pointer hover:text-pink-500"
                 onClick={() => {
-                  const updatedSubCategories = [...formState.subCategories];
+                  const updatedSubCategories = [...formState.subCategoryList];
                   const indexToDelete =
                     updatedSubCategories.indexOf(subCategory);
                   updatedSubCategories.splice(indexToDelete, 1);
                   setFormState((prev) => ({
                     ...prev,
-                    subCategories: updatedSubCategories,
+                    subCategoryList: updatedSubCategories,
                   }));
                 }}
               />
@@ -163,11 +165,12 @@ export default function CategoryCard({ category, index }: Props) {
             <PlusIcon
               className="h-4 w-4 cursor-pointer hover:scale-105 hover:text-pink-500"
               onClick={() => {
-                const updatedSubCategories = formState.subCategories;
-                updatedSubCategories.push("");
+                const updatedSubCategories = formState.subCategoryList;
+                const newSubCategory: SubCategory = { id: "", name: "" };
+                updatedSubCategories.push(newSubCategory);
                 setFormState((prev) => ({
                   ...prev,
-                  subCategories: updatedSubCategories,
+                  subCategoryList: updatedSubCategories,
                 }));
               }}
             />

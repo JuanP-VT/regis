@@ -9,7 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import PulseLoader from "react-spinners/PulseLoader";
-import { Category } from "@/types/category";
+import { Category, SubCategory } from "@/types/category";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,7 @@ export function CreateNewCategory() {
   const [formState, setFormState] = useState<Category>({
     name: "",
     description: "",
-    subCategories: [],
+    subCategoryList: [],
   });
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState("");
@@ -31,7 +31,7 @@ export function CreateNewCategory() {
     const newCategory: Category = {
       name: formState.name,
       description: formState.description,
-      subCategories: formState.subCategories,
+      subCategoryList: formState.subCategoryList,
     };
     const req = await fetch("/api/categories", {
       body: JSON.stringify(newCategory),
@@ -47,6 +47,7 @@ export function CreateNewCategory() {
       setIsLoading(false);
     }
   }
+  console.log(formState);
   return (
     <div>
       <Sheet>
@@ -103,39 +104,44 @@ export function CreateNewCategory() {
                 <PlusIcon
                   className="cursor-pointer hover:text-pink-500"
                   onClick={() => {
-                    const updatedSubCategories = [...formState.subCategories];
-                    updatedSubCategories.push("");
+                    const updatedSubCategories = [...formState.subCategoryList];
+                    const newSubCategory: SubCategory = { id: "", name: "" };
+                    updatedSubCategories.push(newSubCategory);
                     setFormState((prev) => ({
                       ...prev,
-                      subCategories: updatedSubCategories,
+                      subCategoryList: updatedSubCategories,
                     }));
                   }}
                 />
               </div>
-              {formState.subCategories.map((subCategory, index) => (
+              {formState.subCategoryList.map((subCategory, index) => (
                 <div key={`sub${index}`} className="flex items-center gap-2">
                   <Input
                     onChange={(ev) => {
-                      const updatedSubCategories = [...formState.subCategories];
-                      updatedSubCategories[index] = ev.currentTarget.value;
+                      const updatedSubCategories = [
+                        ...formState.subCategoryList,
+                      ];
+                      updatedSubCategories[index].name = ev.currentTarget.value;
                       setFormState((prev) => ({
                         ...prev,
-                        subCategories: updatedSubCategories,
+                        subCategoryList: updatedSubCategories,
                       }));
                     }}
-                    value={formState.subCategories[index]}
+                    value={formState.subCategoryList[index].name}
                     className="col-span-3"
                   />
                   <DeleteIcon
                     className="cursor-pointer hover:text-pink-500"
                     onClick={() => {
-                      const updatedSubCategories = [...formState.subCategories];
+                      const updatedSubCategories = [
+                        ...formState.subCategoryList,
+                      ];
                       const indexToDelete =
                         updatedSubCategories.indexOf(subCategory);
                       updatedSubCategories.splice(indexToDelete, 1);
                       setFormState((prev) => ({
                         ...prev,
-                        subCategories: updatedSubCategories,
+                        subCategoryList: updatedSubCategories,
                       }));
                     }}
                   />
@@ -147,7 +153,7 @@ export function CreateNewCategory() {
             {isLoading ? (
               <PulseLoader size={7} />
             ) : (
-              <Button onClick={() => handleSubmit()}>Agregar</Button>
+              <Button onClick={() => handleSubmit()}>Agregar Registro</Button>
             )}
           </SheetFooter>
           {feedback}

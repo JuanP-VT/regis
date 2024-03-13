@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const categorySchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
   description: { type: String, required: true },
-  subCategories: { type: [String], required: true },
+  subCategoryList: { type: [Object], required: true },
 });
 
 // Create the Category model if it does not already exist, otherwise retrieve it

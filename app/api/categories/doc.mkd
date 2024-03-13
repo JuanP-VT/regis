@@ -35,7 +35,7 @@ The request body should include:
 - `_id` : Valid mongodb ID (required)
 - `name`: The name of the new category (required).
 - `description`: The description of the new category (required).
-- `subCategories`: Array of String (required)
+- `subCategories`: Array of SubCategory Object `{id:"", name:string}` (optional) ID will be assigned on server
 
 **Response:**
 

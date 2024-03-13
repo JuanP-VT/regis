@@ -5,6 +5,8 @@ import { NextResponse } from "next/server";
 import { Category, Category_ID } from "@/types/category";
 import { validateNewCategory } from "@/lib/schema-validators/admin-new-category";
 import { categoryModel } from "@/lib/models/category";
+import { StoreItemModel } from "@/lib/models/storeItem";
+import { StoreItemDB_ID } from "@/types/storeItemDB";
 
 export async function POST(req: Request) {
   try {
@@ -19,7 +21,7 @@ export async function POST(req: Request) {
   const categoryToParse: Category = {
     name: body.name,
     description: body.description,
-    subCategories: body.subCategories ?? [],
+    subCategoryList: body.subCategoryList ?? [],
   };
   //Validate
   try {
@@ -27,13 +29,16 @@ export async function POST(req: Request) {
   } catch (error) {
     return NextResponse.json({ message: "Validation error" }, { status: 400 });
   }
+  //TODO: abort operation if request wants to delete a in use category
   //Apply string format after validation
   categoryToParse.name = categoryToParse.name.toLocaleLowerCase();
   categoryToParse.description = categoryToParse.description.toLowerCase();
   //Subcategories must be a list of unique elements and should not contain empty strings
-  categoryToParse.subCategories = Array.from(
+  categoryToParse.subCategoryList = Array.from(
     new Set(
-      categoryToParse.subCategories.filter((subCategory) => subCategory !== ""),
+      categoryToParse.subCategoryList.filter(
+        (subCategory) => subCategory.name !== "",
+      ),
     ),
   );
   //Save to database
