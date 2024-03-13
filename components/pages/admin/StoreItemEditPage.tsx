@@ -1,6 +1,7 @@
 "use client";
 import LoadingButton from "@/components/LoadingButton";
 import CategorySelectMenu from "@/components/composed/CategorySelectMenu";
+import SubCategorySelectMenu from "@/components/composed/SubCategorySelectMenu";
 import Tiptap from "@/components/composed/Text Editor/TipTap";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +19,7 @@ type Props = {
  * Page to edit store items in the admin panel
  * Dynamic route : /admin/store-edit/[id]
  */
+//TODO: refactor SelectCategoryMenu & SelectSubCategoryMenu into a single component
 export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
   const [feedback, setFeedback] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -25,9 +27,12 @@ export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
   const [details, setDetails] = useState<string>(storeItem.details);
   const [newImageFiles, setNewImageFiles] = useState<File[]>([]);
   const [newImageUrl, setNewImageUrl] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+  const [selectedCategoriesID, setSelectedCategoriesID] = useState<string[]>(
     storeItem.categoryIDList,
   );
+  const [selectedSubCategoriesID, setSelectedSubCategoriesID] = useState<
+    string[]
+  >(storeItem.subCategoryIDList ?? []);
   async function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
     setIsLoading(true);
     ev.preventDefault();
@@ -35,7 +40,12 @@ export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
     //Append all the form data
     formData.append("storeItemID", formState._id);
     formData.append("fileName", formState.fileName);
-    formData.append("categoryIDList", JSON.stringify(selectedCategories));
+    formData.append("categoryIDList", JSON.stringify(selectedCategoriesID));
+    formData.append(
+      "subCategoryIDList",
+      JSON.stringify(selectedSubCategoriesID),
+    );
+
     formData.append("storeItemName", formState.storeItemName);
     formData.append("price", formState.price.toString());
     formData.append(
@@ -71,6 +81,11 @@ export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
       setIsLoading(false);
     }
   }
+  //Get subcategory list from selected categories
+  const availableSubCategoryList = categoryList
+    .filter((category) => selectedCategoriesID.includes(category._id))
+    .map((category) => category.subCategoryList)
+    .flat();
   return (
     <div className="p-5">
       <div>
@@ -82,8 +97,16 @@ export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
           <div className="flex flex-col">
             <CategorySelectMenu
               categoryList={categoryList}
-              selectedCategories={selectedCategories}
-              setCategoryIDList={setSelectedCategories}
+              selectedCategoriesID={selectedCategoriesID}
+              setCategoryIDList={setSelectedCategoriesID}
+              setSelectedSubCategoriesID={setSelectedSubCategoriesID}
+            />
+          </div>
+          <div className="flex flex-col">
+            <SubCategorySelectMenu
+              subCategoryList={availableSubCategoryList}
+              selectedSubCategoriesID={selectedSubCategoriesID}
+              setSelectedSubCategoriesID={setSelectedSubCategoriesID}
             />
           </div>
           <div className="flex flex-col">

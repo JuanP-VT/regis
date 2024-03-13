@@ -5,13 +5,15 @@ import { Label } from "@/components/ui/label";
 type Props = {
   categoryList: Category_ID[];
   setCategoryIDList: React.Dispatch<React.SetStateAction<string[]>>;
-  selectedCategories: string[];
+  selectedCategoriesID: string[];
+  setSelectedSubCategoriesID: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 export default function CategorySelectMenu({
   categoryList,
-  selectedCategories,
+  selectedCategoriesID,
   setCategoryIDList,
+  setSelectedSubCategoriesID,
 }: Props) {
   return (
     <div>
@@ -20,20 +22,38 @@ export default function CategorySelectMenu({
         {categoryList.map((category, index) => (
           <div key={`category${index}`} className="flex items-center space-x-2">
             <Checkbox
-              checked={selectedCategories.includes(category._id)}
+              checked={selectedCategoriesID.includes(category._id)}
               onCheckedChange={() => {
-                if (selectedCategories.includes(category._id)) {
+                if (selectedCategoriesID.includes(category._id)) {
                   //find index to remove
-                  const indexToRemove = selectedCategories.indexOf(
+                  const indexToRemove = selectedCategoriesID.indexOf(
                     category._id,
                   );
+
                   if (indexToRemove >= 0) {
-                    const updatedSelectedCategories = [...selectedCategories];
+                    //On category unCheck also unCheck all of its sub categories for data consistency
+                    const SubCategoriesIDToRemove =
+                      categoryList
+                        .find(
+                          (category) =>
+                            category._id === selectedCategoriesID[index],
+                        )
+                        ?.subCategoryList.map(
+                          (subCategory) => subCategory.id,
+                        ) ?? [];
+                    setSelectedSubCategoriesID((prev) => {
+                      const newSubCategories = [...prev];
+                      return newSubCategories.filter(
+                        (subCategory) =>
+                          !SubCategoriesIDToRemove.includes(subCategory),
+                      );
+                    });
+                    const updatedSelectedCategories = [...selectedCategoriesID];
                     updatedSelectedCategories.splice(indexToRemove, 1);
                     setCategoryIDList(updatedSelectedCategories);
                   }
                 } else {
-                  const updatedSelectedCategories = [...selectedCategories];
+                  const updatedSelectedCategories = [...selectedCategoriesID];
                   updatedSelectedCategories.push(category._id);
                   setCategoryIDList(updatedSelectedCategories);
                 }

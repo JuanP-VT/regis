@@ -31,7 +31,6 @@ type Props = {
 // This component represents a category in the admin panel.
 // It has a default display mode and an edit mode for modifications.
 export default function CategoryCard({ category, index }: Props) {
-  console.log(index);
   const [isOnEditMode, setIsOnEditMode] = useState(false);
   function DefaultDisplayMode({ category }: { category: Category_ID }) {
     const subCategoriesString = category.subCategoryList

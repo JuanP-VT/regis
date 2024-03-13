@@ -12,12 +12,13 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import Tiptap from "@/components/composed/Text Editor/TipTap";
-import { NewStoreItem } from "@/types/newStoreItem";
+import { NewStoreItem } from "@/types/storeItemDB";
 import LoadingButton from "@/components/LoadingButton";
 import { Category_ID } from "@/types/category";
 import CategorySelectMenu from "@/components/composed/CategorySelectMenu";
 import PulseLoader from "react-spinners/PulseLoader";
 import { Button } from "@/components/ui/button";
+import SubCategorySelectMenu from "@/components/composed/SubCategorySelectMenu";
 
 type Props = {
   filesKeyList: (string | undefined)[] | undefined;
@@ -40,6 +41,7 @@ export default function NewStoreItemPage({
     details: "", //Will be saved in other React state for type safety
     mainImageIndex: 0,
     categoryIDList: [],
+    subCategoryIDList: [],
   });
   const [imagesUrl, setImagesUrl] = useState<String[]>([]);
   //We need to show a loading button while the form is being submitted
@@ -47,7 +49,17 @@ export default function NewStoreItemPage({
   //We need to send the user feedback after the form is submitted
   const [feedback, setFeedback] = useState("");
   const [details, setDetails] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategoriesID, setSelectedCategoriesID] = useState<string[]>(
+    [],
+  );
+  const [selectedSubCategoriesID, setSelectedSubCategoriesID] = useState<
+    string[]
+  >([]);
+  //Get subcategory list from selected categories
+  const availableSubCategoryList = categoryList
+    .filter((category) => selectedCategoriesID.includes(category._id))
+    .map((category) => category.subCategoryList)
+    .flat();
   async function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
     setIsLoading(true);
@@ -55,7 +67,7 @@ export default function NewStoreItemPage({
     const formData = new FormData();
     formData.append("fileName", formValue.fileName);
     formData.append("storeItemName", formValue.storeItemName);
-    formData.append("categoryIDList", JSON.stringify(selectedCategories));
+    formData.append("categoryIDList", JSON.stringify(selectedCategoriesID));
     formData.append("price", formValue.price.toString());
     formData.append(
       "discountPercentage",
@@ -66,6 +78,10 @@ export default function NewStoreItemPage({
     });
     formData.append("mainImageIndex", formValue.mainImageIndex.toString());
     formData.append("details", details);
+    formData.append(
+      "subCategoryIDList",
+      JSON.stringify(selectedSubCategoriesID),
+    );
     //Send the form data to the server
     const response = await fetch("/api/store", {
       method: "POST",
@@ -90,6 +106,7 @@ export default function NewStoreItemPage({
       setIsLoading(false);
     }
   }
+
   return (
     <div className="mt-5 flex w-full flex-col items-center p-3 py-5">
       <h1 className="mb-10 text-2xl">
@@ -122,8 +139,14 @@ export default function NewStoreItemPage({
           </Select>
           <CategorySelectMenu
             categoryList={categoryList}
-            selectedCategories={selectedCategories}
-            setCategoryIDList={setSelectedCategories}
+            setSelectedSubCategoriesID={setSelectedSubCategoriesID}
+            setCategoryIDList={setSelectedCategoriesID}
+            selectedCategoriesID={selectedCategoriesID}
+          />
+          <SubCategorySelectMenu
+            selectedSubCategoriesID={selectedSubCategoriesID}
+            setSelectedSubCategoriesID={setSelectedSubCategoriesID}
+            subCategoryList={availableSubCategoryList}
           />
           <Label className="mt-4">Nombre del archivo en tienda</Label>
           <Input

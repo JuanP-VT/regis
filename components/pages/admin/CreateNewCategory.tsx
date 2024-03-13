@@ -47,7 +47,6 @@ export function CreateNewCategory() {
       setIsLoading(false);
     }
   }
-  console.log(formState);
   return (
     <div>
       <Sheet>
