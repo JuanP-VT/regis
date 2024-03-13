@@ -32,33 +32,41 @@ export async function POST(req: Request) {
   }
   //Compare request subcategories with the one in database, if there are missing elements it means the user wants to delete them
   //Abort operation if request wants to delete a sub category that is being by a store item
-  await dbConnect();
-  const CategoryToEdit: Category_ID | null = await categoryModel.findById(
-    body._id,
-  );
-  if (!CategoryToEdit) {
-    return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
-  }
-  const subCategoryIDListInDB = CategoryToEdit.subCategoryList.map(
-    (subCategory) => subCategory.id,
-  );
-  const requestSubCategoryIDList = categoryToParse.subCategoryList.map(
-    (subCategory) => subCategory.id,
-  );
-  const categoryIDToDelete = subCategoryIDListInDB.filter(
-    (id) => !requestSubCategoryIDList.includes(id),
-  );
-  for (let i = 0; i < categoryIDToDelete.length; i++) {
-    const id = categoryIDToDelete[i];
-    const find = await StoreItemModel.findOne({
-      subCategoryIDList: { $in: id },
-    });
-    if (find) {
-      return NextResponse.json(
-        { message: "Sub categoría está en uso" },
-        { status: 409 },
-      );
+  try {
+    await dbConnect();
+    const CategoryToEdit: Category_ID | null = await categoryModel.findById(
+      body._id,
+    );
+    if (!CategoryToEdit) {
+      return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
     }
+    const subCategoryIDListInDB = CategoryToEdit.subCategoryList.map(
+      (subCategory) => subCategory.id,
+    );
+    const requestSubCategoryIDList = categoryToParse.subCategoryList.map(
+      (subCategory) => subCategory.id,
+    );
+    const categoryIDToDelete = subCategoryIDListInDB.filter(
+      (id) => !requestSubCategoryIDList.includes(id),
+    );
+    for (let i = 0; i < categoryIDToDelete.length; i++) {
+      const id = categoryIDToDelete[i];
+      const find = await StoreItemModel.findOne({
+        subCategoryIDList: { $in: id },
+      });
+      if (find) {
+        return NextResponse.json(
+          { message: "Sub categoría está en uso" },
+          { status: 409 },
+        );
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    NextResponse.json(
+      { message: "Error connecting to category document database" },
+      { status: 500 },
+    );
   }
   //Check if the request is creating new subCategories, assign unique ID to new subCategories
   const updateSubCategories = [...categoryToParse.subCategoryList];

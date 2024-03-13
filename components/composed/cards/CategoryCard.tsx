@@ -86,6 +86,7 @@ export default function CategoryCard({ category, index }: Props) {
       if (res.status === 409) {
         window.alert("La SubCategoría está en uso");
         setIsLoading(false);
+        setIsOnEditMode(false);
       }
     }
     async function handleDelete() {
