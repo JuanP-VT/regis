@@ -9,12 +9,50 @@ import { StoreItemModel } from "@/lib/models/storeItem";
 import { StoreItemDB } from "@/types/storeItemDB";
 import xss from "xss";
 import { Role } from "@/types/user";
-//Fetch all store items from database
-export async function GET() {
-  try {
-    const storeItems = (await StoreItemModel.find({})) as StoreItemDB[];
+import z from "zod";
 
-    return NextResponse.json(storeItems);
+//Fetch all store items from database
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const page = searchParams.get("page");
+  const limit = searchParams.get("limit");
+
+  let pageNum = Number(page as string);
+  let limitNum = Number(limit as string);
+  //Convert values to default for invalid query params
+  //Url Param Validation
+  const getStoreItemQueryParamValidator = z.object({
+    page: z.number().min(0),
+    limit: z.number().min(0).max(20),
+  });
+  try {
+    getStoreItemQueryParamValidator.parse({ page: pageNum, limit: limitNum });
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json({ message: error.message }, { status: 400 });
+    } else {
+      return NextResponse.json({ message: "An Unknown error ocurred" });
+    }
+  }
+  try {
+    const skip = (pageNum - 1) * limitNum;
+    const storeItems = (await StoreItemModel.find({})
+      .skip(skip)
+      .limit(limitNum)) as StoreItemDB[];
+
+    // Calculate total number of items for pagination metadata
+    const totalItems = await StoreItemModel.countDocuments({});
+    const totalPages = Math.ceil(totalItems / limitNum);
+
+    return NextResponse.json({
+      storeItems,
+      pagination: {
+        totalItems,
+        totalPages,
+        currentPage: pageNum,
+        itemsPerPage: limitNum,
+      },
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
