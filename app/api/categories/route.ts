@@ -6,8 +6,10 @@ import { NextResponse } from "next/server";
 import { categoryModel } from "@/lib/models/category";
 import { validateNewCategory } from "@/lib/schema-validators/admin-new-category";
 import { v4 } from "uuid";
+import dbConnect from "@/lib/dbConnect";
 export async function GET() {
   try {
+    await dbConnect();
     const collection = await categoryModel.find({});
     return NextResponse.json(collection, { status: 200 });
   } catch (error) {
@@ -57,7 +59,7 @@ export async function POST(req: Request) {
   //Assign unique ID to each new subcategory
   newCategory.subCategoryList = newCategory.subCategoryList.map(
     (subCategory) => ({
-      ...subCategory,
+      name: subCategory.name.toLowerCase(),
       id: v4(),
     }),
   );
