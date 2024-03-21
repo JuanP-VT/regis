@@ -17,20 +17,29 @@ type Props = {
 
 export default function CategoryNav({ categoryList }: Props) {
   return (
-    <div>
-      <NavigationMenu>
-        <NavigationMenuList>
-          {categoryList?.map((category, index) => (
-            <NavigationMenuItem key={`option${index}`}>
+    <div className="flex">
+      {categoryList?.map((category, index) => (
+        <NavigationMenu key={`option${index}`}>
+          <NavigationMenuList>
+            <NavigationMenuItem>
               <NavigationMenuTrigger className="capitalize">
                 {category.name}
               </NavigationMenuTrigger>
               <NavigationMenuContent>
+                <Link
+                  className="group  flex min-w-32  flex-col p-3  text-sm"
+                  href={`/catalog/category=${category._id}&subCategory=`}
+                >
+                  <p className="w-min border-b border-b-transparent  capitalize transition-all duration-500 group-hover:border-b-slate-500">
+                    {category.name}
+                  </p>
+                </Link>
+
                 {category.subCategoryList?.map((subCategory, index) => (
                   <Link
                     key={`${subCategory}-${index}`}
-                    href={``}
-                    className="group  flex min-w-[200px] max-w-[600px] flex-col p-3  text-sm"
+                    href={`/catalog/category=${category._id}&subCategory=${subCategory.id}`}
+                    className="group  flex min-w-32  flex-col p-3  text-sm"
                   >
                     <p className="w-min border-b border-b-transparent  capitalize transition-all duration-500 group-hover:border-b-slate-500">
                       {subCategory.name}
@@ -39,9 +48,9 @@ export default function CategoryNav({ categoryList }: Props) {
                 ))}
               </NavigationMenuContent>
             </NavigationMenuItem>
-          ))}
-        </NavigationMenuList>
-      </NavigationMenu>
+          </NavigationMenuList>
+        </NavigationMenu>
+      ))}
     </div>
   );
 }
