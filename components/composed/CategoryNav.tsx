@@ -18,6 +18,12 @@ type Props = {
 export default function CategoryNav({ categoryList }: Props) {
   return (
     <div className="flex">
+      <Link
+        className="p-3 text-sm font-semibold"
+        href={`/catalog/category=&subCategory=`}
+      >
+        Todos
+      </Link>
       {categoryList?.map((category, index) => (
         <NavigationMenu key={`option${index}`}>
           <NavigationMenuList>

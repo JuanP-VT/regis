@@ -8,16 +8,16 @@ type Props = {
 
 export default function CatalogItemCard({ storeItem }: Props) {
   return (
-    <div className=" h-72 w-52">
-      <div className="group relative cursor-pointer overflow-x-hidden">
+    <div className=" h-96 w-80">
+      <div className="group relative h-60 cursor-pointer overflow-hidden">
         <Image
-          className="h-52  rounded-sm object-cover"
+          className=" h-full w-full self-center rounded-sm"
           src={storeItem.imageUrlList[storeItem.mainImageIndex]}
           alt="Store Display View"
-          width={208}
-          height={208}
+          width={500}
+          height={500}
         />
-        <Button className="absolute bottom-0 w-full -translate-x-52 text-sm transition-all duration-300 group-hover:-translate-x-0">
+        <Button className="absolute bottom-0 w-full -translate-x-96 text-sm transition-all duration-300 group-hover:-translate-x-0">
           Agregar Al Carrito
         </Button>
       </div>
