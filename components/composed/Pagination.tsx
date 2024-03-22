@@ -19,7 +19,10 @@ function Pagination({
   function PaginationButton({ page, isCurrent }: ButtonProps) {
     if (isCurrent === true) {
       return (
-        <Button className="ml-1  rounded-lg   bg-sky-500 text-white hover:bg-sky-800">
+        <Button
+          size="sm"
+          className="ml-1 h-9  w-9 rounded-full bg-rose-400   text-xs text-white transition-all duration-500 hover:bg-rose-500"
+        >
           {page}
         </Button>
       );
@@ -36,7 +39,10 @@ function Pagination({
         }}
         as={`/catalog/category=${categoryID}&subCategory=${subCategoryID}&page=${page}`}
       >
-        <Button className="ml-1 rounded-lg  bg-sky-600  text-white hover:bg-sky-800">
+        <Button
+          size="sm"
+          className="ml-1  h-9 w-9 rounded-full  bg-rose-300  text-xs text-white transition-all duration-500 hover:bg-rose-500"
+        >
           {page}
         </Button>
       </Link>
@@ -46,9 +52,9 @@ function Pagination({
     return (
       <button
         data-testid="dots"
-        className="ml-1 rounded-sm bg-sky-600 px-4  py-2 text-white hover:bg-sky-800"
+        className="ml-1 h-9  w-9 rounded-full bg-rose-300  text-center text-xs text-white hover:bg-rose-500"
       >
-        ....
+        ..
       </button>
     );
   }
