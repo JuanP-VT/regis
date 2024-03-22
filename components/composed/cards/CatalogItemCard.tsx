@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Category_ID } from "@/types/category";
 import { StoreItemDB_ID } from "@/types/storeItemDB";
 import Image from "next/image";
 
@@ -8,7 +9,7 @@ type Props = {
 
 export default function CatalogItemCard({ storeItem }: Props) {
   return (
-    <div className=" h-96 w-80">
+    <div className=" h-80 w-80">
       <div className="group relative h-60 cursor-pointer overflow-hidden">
         <Image
           className=" h-full w-full self-center rounded-sm"
@@ -25,11 +26,14 @@ export default function CatalogItemCard({ storeItem }: Props) {
       <div className="mt-2">
         {storeItem.discountPercentage > 0 ? (
           <p className="text-center text-sm">
-            {storeItem.price - storeItem.price * storeItem.discountPercentage}
+            {(
+              storeItem.price -
+              (storeItem.price * storeItem.discountPercentage) / 100
+            ).toFixed(2)}
             $MX
           </p>
         ) : (
-          <p className="text-center text-sm">{storeItem.price}$MX</p>
+          <p className="text-center text-sm">{storeItem.price.toFixed(2)}$MX</p>
         )}
       </div>
     </div>

@@ -20,7 +20,7 @@ export default function CategoryNav({ categoryList }: Props) {
     <div className="flex">
       <Link
         className="p-3 text-sm font-semibold"
-        href={`/catalog/category=&subCategory=`}
+        href={`/catalog/category=&subCategory=&page=1`}
       >
         Todos
       </Link>
@@ -34,7 +34,7 @@ export default function CategoryNav({ categoryList }: Props) {
               <NavigationMenuContent>
                 <Link
                   className="group  flex min-w-32  flex-col p-3  text-sm"
-                  href={`/catalog/category=${category._id}&subCategory=`}
+                  href={`/catalog/category=${category._id}&subCategory=&page=1`}
                 >
                   <p className="w-min border-b border-b-transparent  capitalize transition-all duration-500 group-hover:border-b-slate-500">
                     {category.name}
@@ -44,7 +44,7 @@ export default function CategoryNav({ categoryList }: Props) {
                 {category.subCategoryList?.map((subCategory, index) => (
                   <Link
                     key={`${subCategory}-${index}`}
-                    href={`/catalog/category=${category._id}&subCategory=${subCategory.id}`}
+                    href={`/catalog/category=${category._id}&subCategory=${subCategory.id}&page=1`}
                     className="group  flex min-w-32  flex-col p-3  text-sm"
                   >
                     <p className="w-min border-b border-b-transparent  capitalize transition-all duration-500 group-hover:border-b-slate-500">
