@@ -1,39 +1,52 @@
-import { Dispatch, SetStateAction } from "react";
+import Link from "next/link";
+import { Button } from "../ui/button";
 type Props = {
   numberOfPages: number;
   currentPage: number;
-  setCurrentPage: Dispatch<SetStateAction<number>>;
+  categoryID: string;
+  subCategoryID: string;
 };
-function Pagination({ numberOfPages, currentPage, setCurrentPage }: Props) {
+function Pagination({
+  numberOfPages,
+  currentPage,
+  categoryID,
+  subCategoryID,
+}: Props) {
   type ButtonProps = {
     page: number;
-    setCurrentPage: Dispatch<SetStateAction<number>>;
     isCurrent?: boolean;
   };
-  function PaginationButton({ page, isCurrent, setCurrentPage }: ButtonProps) {
+  function PaginationButton({ page, isCurrent }: ButtonProps) {
     if (isCurrent === true) {
       return (
-        <button className="rounded-sm bg-sky-500 px-4 py-2  text-white">
+        <Button className="ml-1  rounded-lg   bg-sky-500 text-white hover:bg-sky-800">
           {page}
-        </button>
+        </Button>
       );
     }
     return (
-      <button
-        onClick={() => {
-          setCurrentPage(page);
+      <Link
+        href={{
+          pathname: "/catalog",
+          query: {
+            category: categoryID,
+            subCategory: subCategoryID,
+            page: page,
+          },
         }}
-        className="rounded-sm bg-sky-600 px-4 py-2  text-white hover:bg-sky-800"
+        as={`/catalog/category=${categoryID}&subCategory=${subCategoryID}&page=${page}`}
       >
-        {page}
-      </button>
+        <Button className="ml-1 rounded-lg  bg-sky-600  text-white hover:bg-sky-800">
+          {page}
+        </Button>
+      </Link>
     );
   }
   function PaginationFillerDots() {
     return (
       <button
         data-testid="dots"
-        className="rounded-sm bg-sky-600 px-4 py-2  text-white hover:bg-sky-800"
+        className="ml-1 rounded-sm bg-sky-600 px-4  py-2 text-white hover:bg-sky-800"
       >
         ....
       </button>
@@ -49,7 +62,6 @@ function Pagination({ numberOfPages, currentPage, setCurrentPage }: Props) {
           <PaginationButton
             page={index + 1}
             key={`pgnBtn${index + 1}`}
-            setCurrentPage={setCurrentPage}
             isCurrent={index + 1 === currentPage}
           />
         );
@@ -63,33 +75,17 @@ function Pagination({ numberOfPages, currentPage, setCurrentPage }: Props) {
       </div>
     );
   }
-  /**
-   * Dynamically generate buttons, pagination layout is
-   * CP = current Page
-   * first Page ... | CP-2 | CP-1 | CP | CP+1 | CP+2 |
-   * CP -1 & CP -2 will be referred as items below (below current page)
-   * CP +2 & CP +2 will be referred as items above (above current page)
-   * Should not create buttons above max page
-   */
   const dynamicRenderButton = () => {
     // Items below current page always exist
-    const firstPage = (
-      <PaginationButton
-        page={1}
-        key={`pgnBtn${1}`}
-        setCurrentPage={setCurrentPage}
-      />
-    );
+    const firstPage = <PaginationButton page={1} key={`pgnBtn${1}`} />;
     const itemsBelow = [
       <PaginationButton
         page={currentPage - 2}
         key={`pgnBtn${currentPage - 2}`}
-        setCurrentPage={setCurrentPage}
       />,
       <PaginationButton
         page={currentPage - 1}
         key={`pgnBtn${currentPage - 1}`}
-        setCurrentPage={setCurrentPage}
       />,
     ];
     // I want to include next two buttons, but return nothing if next page is above max page
@@ -97,11 +93,7 @@ function Pagination({ numberOfPages, currentPage, setCurrentPage }: Props) {
 
     for (let index = currentPage; index < numberOfPages; index++) {
       const element = (
-        <PaginationButton
-          page={index + 1}
-          key={`pgnBtn${index + 1}`}
-          setCurrentPage={setCurrentPage}
-        />
+        <PaginationButton page={index + 1} key={`pgnBtn${index + 1}`} />
       );
       itemsAbove.push(element);
     }
@@ -113,18 +105,13 @@ function Pagination({ numberOfPages, currentPage, setCurrentPage }: Props) {
       <PaginationButton
         page={currentPage}
         key={`main${currentPage}`}
-        setCurrentPage={setCurrentPage}
         isCurrent={true}
       />,
       ...itemsAbove.slice(0, 2),
     ];
     return layout;
   };
-  return (
-    <div className="flex w-full p-2 " data-testid="pagination-container">
-      {dynamicRenderButton()}
-    </div>
-  );
+  return <div className="flex w-full  p-2">{dynamicRenderButton()}</div>;
 }
 
 export default Pagination;
