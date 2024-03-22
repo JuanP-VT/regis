@@ -1,13 +1,14 @@
 import CatalogPage from "@/components/pages/CatalogPage";
 import { Category_ID } from "@/types/category";
-
+export const revalidate = 0;
 export default async function page({ params }: { params: { slug: string } }) {
   try {
     const paramObject = new URLSearchParams(decodeURIComponent(params.slug));
-    const categoryID = paramObject.get("category");
+    const categoryID = paramObject.get("category") || "";
     const subCategoryID = paramObject.get("subCategory") || "";
+    const page = paramObject.get("page") || "1";
     const publicStoreRes = await fetch(
-      `${process.env.URL}/api/public/store?category=${categoryID}&subCategory=${subCategoryID}`,
+      `${process.env.URL}/api/public/store?category=${categoryID}&subCategory=${subCategoryID}&page=${page}`,
     );
     const categoryRes = await fetch(`${process.env.url}/api/categories`);
     const categoryList = (await categoryRes.json()) as Category_ID[];
@@ -26,6 +27,8 @@ export default async function page({ params }: { params: { slug: string } }) {
         storeItems={storeItems}
         category={categoryName}
         subCategory={subCategoryName}
+        categoryID={categoryID}
+        subCategoryID={subCategoryID}
       />
     );
   } catch (error) {
