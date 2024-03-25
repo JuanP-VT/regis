@@ -21,10 +21,8 @@ export default async function Admin() {
   try {
     //Fetch store items from the database
     //Transform mongoose documents to plain objects
-    const storeItems = (await StoreItemModel.find({})).map((doc) =>
-      doc.toObject(),
-    ) as StoreItemDB_ID[];
-
+    const data = await StoreItemModel.find({});
+    const storeItems = JSON.parse(JSON.stringify(data)) as StoreItemDB_ID[];
     const reqCategory = await fetch(`${process.env.URL}/api/categories`);
     const categoryList = (await reqCategory.json()) as
       | Category_ID[]

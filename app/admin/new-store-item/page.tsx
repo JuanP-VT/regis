@@ -29,9 +29,9 @@ export default async function NewStoreItem() {
     const response = await AwsS3Client.send(command);
     const fileNameList = response.Contents?.map((content) => content.Key);
     //Filter files that are already associated with a store item
-    const storeItems = (await StoreItemModel.find({})).map((doc) =>
-      doc.toObject(),
-    ) as StoreItemDB_ID[];
+    const data = await StoreItemModel.find({});
+    const storeItems = JSON.parse(JSON.stringify(data)) as StoreItemDB_ID[];
+
     //Return the list of files that are not associated with a store item
     filteredKeyList = fileNameList?.filter(
       (fileName) =>
