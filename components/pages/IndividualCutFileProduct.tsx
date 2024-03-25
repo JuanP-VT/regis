@@ -15,6 +15,7 @@ import { StoreItemDB_ID } from "@/types/storeItemDB";
 import Tiptap from "../composed/Text Editor/TipTap";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import addToShoppingCart from "@/utils/addToShoppingCart";
 
 /**
  *
@@ -59,8 +60,11 @@ export default function IndividualCutFileProduct({ storeItem }: Props) {
             ))}
         </div>
         <p className="md:max-w-2xl ">{storeItem.storeItemName}</p>
-        <Button className="mt-2 max-w-96 rounded-full bg-rose-500">
-          Add To Cart
+        <Button
+          onClick={() => addToShoppingCart(storeItem)}
+          className="mt-2 max-w-96 rounded-full bg-rose-500"
+        >
+          Agregar al carrito
         </Button>
         <div className="mt-3 flex flex-col">
           <Accordion type="single" collapsible className="mt-2 md:w-96">
