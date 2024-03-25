@@ -1,71 +1,20 @@
 # Store Item API
 
-# GET /store-items
+# API Documentation
 
-Retrieves a paginated list of store items based on the provided query parameters. This endpoint is designed to fetch store items with pagination support, allowing clients to request a subset of store items at a time.
+## GET /store-items
 
-### Request Parameters
+This endpoint returns a list of store items. ONLY FOR ADMINS
 
-- `page` (Query Parameter): The page number of the store items to retrieve. Must be a non-negative integer. Defaults to 1 if not provided or invalid.
-- `limit` (Query Parameter): The maximum number of store items to return in the response. Must be a non-negative integer between 0 and 20. Defaults to a sensible value (e.g., 10) if not provided or invalid.
+### Request
 
-### Response
-
-The response is a JSON object containing the retrieved store items and pagination metadata.
-
-#### Success Response (200 OK)
-
-```json
-{
-  "storeItems": [
-    {
-      "fileName": "string",
-      "storeItemName": "string",
-      "details": "string",
-      "mainImageIndex": 0,
-      "imageNamesList": ["string"],
-      "price": 0,
-      "discountPercentage": 0,
-      "imageUrlList": ["string"],
-      "categoryIDList": ["string"],
-      "subCategoryIDList": ["string"]
-    }
-  ],
-  "pagination": {
-    "totalItems": 0,
-    "totalPages": 0,
-    "currentPage": 0,
-    "itemsPerPage": 0
-  }
-}
-```
-
-`storeItems`: An array of store item objects.
-`pagination`: An object containing pagination metadata.
-`totalItems`: The total number of store items available.
-`totalPages`: The total number of pages based on the current limit.
-`currentPage`: The current page number.
-`itemsPerPage`: The number of items per page, as specified by the limit query parameter.
-
-### Error Responses
-
-400 Bad Request: Returned if the provided query parameters are invalid. The response body contains a message detailing the validation error.
-{ "message": "Validation error message" }
-500 Internal Server Error: Returned if an error occurs while fetching the store items from the database. The response body contains a generic error message.
-{ "message": "An error occurred fetching the store items" }
+No parameters needed.
 
 ### Response
 
-An array of store items. Each store item is an object with the following properties:
-
-- `fileName`: String
-- `storeItemName`: String
-- `price`: Number
-- `discountPercentage`: Number
-- `imageNamesList`: Array of Strings
-- `imageUrlList`: Array of Strings
-- `details`: String
-- `mainImageIndex`: Number
+- `200 OK`: Returns an array of store items.
+- `401 Unauthorized`: If the user is not authenticated or not an admin.
+- `500 Internal Server Error`: If an error occurred on the server.
 
 # POST /store-item
 
