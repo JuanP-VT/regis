@@ -6,6 +6,7 @@ import StoreItemsDisplay from "@/components/pages/admin/StoreItemsDisplay";
 import { StoreItemDB_ID } from "@/types/storeItemDB";
 import AdminNav from "@/components/composed/AdminNav";
 import { Category_ID } from "@/types/category";
+import { StoreItemModel } from "@/lib/models/storeItem";
 
 export default async function Admin() {
   try {
@@ -19,8 +20,10 @@ export default async function Admin() {
 
   try {
     //Fetch store items from the database
-    const res = await fetch(`${process.env.URL}/api/store`);
-    const data = (await res.json()) as StoreItemDB_ID[] | undefined;
+    //Transform mongoose documents to plain objects
+    const storeItems = (await StoreItemModel.find({})).map((doc) =>
+      doc.toObject(),
+    ) as StoreItemDB_ID[];
 
     const reqCategory = await fetch(`${process.env.URL}/api/categories`);
     const categoryList = (await reqCategory.json()) as
@@ -30,7 +33,10 @@ export default async function Admin() {
     return (
       <div>
         <AdminNav />
-        <StoreItemsDisplay storeItems={data} categoryList={categoryList} />
+        <StoreItemsDisplay
+          storeItems={storeItems}
+          categoryList={categoryList}
+        />
       </div>
     );
   } catch (error) {

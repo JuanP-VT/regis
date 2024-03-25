@@ -10,35 +10,6 @@ import { StoreItemDB } from "@/types/storeItemDB";
 import xss from "xss";
 import { Role } from "@/types/user";
 
-//Fetch all store items from database
-export async function GET() {
-  try {
-    const session = await getServerSession(OPTIONS);
-    if (!session || session.user.role !== Role.ADMIN) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      {
-        message: "An error ocurred authenticating the user",
-      },
-      { status: 500 },
-    );
-  }
-  try {
-    const storeItems = (await StoreItemModel.find({})) as StoreItemDB[];
-    return NextResponse.json(storeItems);
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      {
-        message: "An error occurred fetching the store items",
-      },
-      { status: 500 },
-    );
-  }
-}
 //Create a new store item
 export async function POST(req: Request) {
   const session = await getServerSession(OPTIONS);

@@ -1,21 +1,5 @@
 # Store Item API
 
-# API Documentation
-
-## GET /store-items
-
-This endpoint returns a list of store items. ONLY FOR ADMINS
-
-### Request
-
-No parameters needed.
-
-### Response
-
-- `200 OK`: Returns an array of store items.
-- `401 Unauthorized`: If the user is not authenticated or not an admin.
-- `500 Internal Server Error`: If an error occurred on the server.
-
 # POST /store-item
 
 Creates a new store item.
