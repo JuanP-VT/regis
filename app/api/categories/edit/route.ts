@@ -74,6 +74,7 @@ export async function POST(req: Request) {
     if (subCategory.id === "" || !subCategory.id) {
       const id = v4();
       updateSubCategories[index].id = id;
+      updateSubCategories[index].name = subCategory.name.toLowerCase();
     }
   });
   //Apply string format after validation

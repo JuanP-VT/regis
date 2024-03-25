@@ -6,8 +6,9 @@ import UnderLine from "@tiptap/extension-underline";
 import { Toolbar } from "./Toolbar";
 
 type Props = {
-  onChange: React.Dispatch<React.SetStateAction<string>>;
+  onChange?: React.Dispatch<React.SetStateAction<string>>;
   content?: string;
+  readOnly?: boolean;
 };
 
 /**
@@ -15,7 +16,7 @@ type Props = {
  * It provides a WYSIWYG editor with a toolbar for text formatting.
  */
 
-const Tiptap = ({ onChange, content }: Props) => {
+const Tiptap = ({ onChange, content, readOnly }: Props) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -29,16 +30,23 @@ const Tiptap = ({ onChange, content }: Props) => {
       UnderLine,
     ],
     onUpdate({ editor }) {
-      onChange(editor.getHTML());
+      if (onChange) {
+        onChange(editor.getHTML());
+      }
     },
     content: content || "Detalles Del Producto...",
   });
-
   if (editor) {
+    readOnly ? editor.setEditable(false) : editor.setEditable(true);
     return (
-      <div className="border ">
-        <Toolbar editor={editor} />
-        <EditorContent editor={editor} content={content} className="p-1" />
+      <div className=" ">
+        {readOnly ? null : <Toolbar editor={editor} />}
+        <EditorContent
+          editor={editor}
+          content={content}
+          className="p-1"
+          readOnly={true}
+        />
       </div>
     );
   } else {

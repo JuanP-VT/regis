@@ -4,9 +4,10 @@ import { Role } from "@/types/user";
 import { getServerSession } from "next-auth";
 import { AwsS3Client } from "@/lib/awsS3Client";
 import { ListObjectsV2Command } from "@aws-sdk/client-s3";
-import { StoreItemDB } from "@/types/storeItemDB";
+import { StoreItemDB, StoreItemDB_ID } from "@/types/storeItemDB";
 import AdminNav from "@/components/composed/AdminNav";
 import { Category_ID } from "@/types/category";
+import { StoreItemModel } from "@/lib/models/storeItem";
 export default async function NewStoreItem() {
   try {
     const session = await getServerSession(OPTIONS);
@@ -28,12 +29,13 @@ export default async function NewStoreItem() {
     const response = await AwsS3Client.send(command);
     const fileNameList = response.Contents?.map((content) => content.Key);
     //Filter files that are already associated with a store item
-    const storeItems = await fetch(`${process.env.URL}/api/store`);
-    const storeItemsJson = (await storeItems.json()) as StoreItemDB[];
+    const data = await StoreItemModel.find({});
+    const storeItems = JSON.parse(JSON.stringify(data)) as StoreItemDB_ID[];
+
     //Return the list of files that are not associated with a store item
     filteredKeyList = fileNameList?.filter(
       (fileName) =>
-        !storeItemsJson.some((storeItem) => storeItem.fileName === fileName),
+        !storeItems.some((storeItem) => storeItem.fileName === fileName),
     );
   } catch (err) {
     console.error(err);

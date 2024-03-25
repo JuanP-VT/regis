@@ -1,23 +1,6 @@
 # Store Item API
 
-## GET /store-item
-
-Fetches all store items from the database.
-
-### Response
-
-An array of store items. Each store item is an object with the following properties:
-
-- `fileName`: String
-- `storeItemName`: String
-- `price`: Number
-- `discountPercentage`: Number
-- `imageNamesList`: Array of Strings
-- `imageUrlList`: Array of Strings
-- `details`: String
-- `mainImageIndex`: Number
-
-## POST /store-item
+# POST /store-item
 
 Creates a new store item.
 
