@@ -10,10 +10,11 @@ export default async function ProductPage({
   try {
     await dbConnect();
     const findItem = await StoreItemModel.findById(params.id);
+    const plainJsonStoreItems = JSON.parse(JSON.stringify(findItem));
     if (!findItem) {
       return <div>Producto No Encontrado</div>;
     }
-    return <IndividualCutFileProduct storeItem={findItem} />;
+    return <IndividualCutFileProduct storeItem={plainJsonStoreItems} />;
   } catch (error) {
     console.error(error);
     return <div>Producto No Encontrado</div>;
