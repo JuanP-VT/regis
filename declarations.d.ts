@@ -20,6 +20,7 @@ declare global {
       CLOUDFRONT_URL: string;
       S3_IMAGE_BUCKET_NAME: string;
       S3_FILES_BUCKET_NAME: string;
+      NEXT_PUBLIC_LOCAL_STORAGE_CART_NAME: string;
     }
   }
 }
