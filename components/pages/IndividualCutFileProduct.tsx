@@ -13,9 +13,11 @@ import { StoreItemDB_ID } from "@/types/storeItemDB";
 
 // Option 1: Browser + server-side
 import Tiptap from "../composed/Text Editor/TipTap";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ShoppingCart as ShoppingCartIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import addToShoppingCart from "@/utils/addToShoppingCart";
+import ShoppingCart from "@/utils/classes/ShoppingCart";
+import { toast } from "sonner";
 
 /**
  *
@@ -61,11 +63,23 @@ export default function IndividualCutFileProduct({ storeItem }: Props) {
         </div>
         <p className="md:max-w-2xl ">{storeItem.storeItemName}</p>
         <Button
-          onClick={() => addToShoppingCart(storeItem)}
           className="mt-2 max-w-96 rounded-full bg-rose-500"
+          variant="outline"
+          onClick={() => {
+            const cart = new ShoppingCart();
+            cart.addToCart(storeItem);
+            toast("Agregado Al Carrito", {
+              description: `${storeItem.storeItemName.slice(0, 50)}... ha sido agregado al carrito!`,
+              action: {
+                label: "Cerrar",
+                onClick: () => {},
+              },
+            });
+          }}
         >
-          Agregar al carrito
+          Agregar Al Carrito
         </Button>
+
         <div className="mt-3 flex flex-col">
           <Accordion type="single" collapsible className="mt-2 md:w-96">
             <AccordionItem value="item-1">

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { StoreItemDB_ID } from "@/types/storeItemDB";
 import Image from "next/image";
 import addToShoppingCart from "@/utils/addToShoppingCart";
+import AddToShoppingCartButton from "@/components/AddToShoppingCartButton";
 
 type Props = {
   storeItem: StoreItemDB_ID;
@@ -22,14 +23,7 @@ export default function CatalogItemCard({ storeItem }: Props) {
           />
         </Link>
 
-        <Button
-          onClick={() => {
-            addToShoppingCart(storeItem);
-          }}
-          className="absolute bottom-0 w-full -translate-x-96 text-sm transition-all duration-300 group-hover:-translate-x-0"
-        >
-          Agregar Al Carrito
-        </Button>
+        <AddToShoppingCartButton storeItem={storeItem} />
       </div>
       <p className="text-center text-xs">{storeItem.storeItemName}</p>
       <div className="mt-2">
