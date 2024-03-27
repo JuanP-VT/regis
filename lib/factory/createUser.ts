@@ -25,5 +25,6 @@ export default function createUser(
     name,
     profileImage,
     role: Role.USER,
+    purchasedItems: [],
   };
 }

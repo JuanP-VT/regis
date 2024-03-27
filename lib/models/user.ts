@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
     enum: Object.values(Role), // Role must be one of the values in the Role enum
   },
   profileImage: String, // URL of the user's profile image
+  purchasedItems: [String], // Array of Filenames  purchased by the user
 });
 
 // Check if the 'User' model has already been compiled. If it has, use the existing model.

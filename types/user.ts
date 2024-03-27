@@ -9,5 +9,9 @@ export interface User {
   name: string;
   role: Role;
   profileImage: string;
+  purchasedItems: string[];
+}
+export interface User_ID extends User {
+  _id: string;
 }
 export default User;
