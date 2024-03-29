@@ -8,7 +8,14 @@ declare module "next-auth" {
 }
 //Extending the NodeJS namespace to include the process.env variables
 declare global {
+  var mongoose: any; // This was done to avoid ts error "Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature."
   namespace NodeJS {
+    interface Global {
+      mongoose: {
+        conn: any;
+        promise: any;
+      };
+    }
     interface ProcessEnv {
       DB_CONNECTION_STRING: string;
       GOOGLE_AUTH_CLIENT_ID: string;
@@ -21,6 +28,8 @@ declare global {
       S3_IMAGE_BUCKET_NAME: string;
       S3_FILES_BUCKET_NAME: string;
       NEXT_PUBLIC_LOCAL_STORAGE_CART_NAME: string;
+      NEXT_PUBLIC_PAYPAL_CLIENT_ID: string;
+      PAYPAL_CLIENT_SECRET: string;
     }
   }
 }

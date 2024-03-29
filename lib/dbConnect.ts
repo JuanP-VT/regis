@@ -1,30 +1,57 @@
-/**
- * This function handles the connection to the MongoDB database.
- * It's designed to prevent connection overhead by reusing existing connections.
- *
- * @returns {Promise<void>|undefined} - The function returns a Promise that resolves when the connection is established.
- *                                      If a connection is already established or being established, it returns undefined.
- *
- * @throws {Error} - If an error occurs while trying to connect to the database, the function logs the error and throws it.
- */
+import mongoose from "mongoose";
 
-import mongoose from "mongoose"; // Import the Mongoose library for MongoDB interactions
+const MONGODB_URI = process.env.DB_CONNECTION_STRING;
 
-export default async function dbConnect() {
-  try {
-    // Check if we're already connected to the database
-    // mongoose.connection.readyState is 0 if disconnected, 1 if connected, 2 if connecting, and 3 if disconnecting
-    // So if it's 1 or 2, we're either already connected or currently connecting, so we can just return
-    if (mongoose.connection.readyState >= 1) {
-      return;
-    }
-
-    // If we're not already connected or connecting, connect to the database
-    // The connection string is taken from the environment variables
-    return mongoose.connect(process.env.DB_CONNECTION_STRING);
-  } catch (error) {
-    // If an error occurred while trying to connect, log the error and throw it
-    console.error(error);
-    throw new Error("Error connecting to the database");
-  }
+if (!MONGODB_URI) {
+  throw new Error(
+    "Please define the DB_CONNECTION_STRING environment variable inside .env.local",
+  );
 }
+
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+const dbConnect = async () => {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      maxPoolSize: 10, // Adjust the pool size as needed
+    };
+
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+      return mongoose;
+    });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
+  }
+
+  return cached.conn;
+};
+
+const disconnect = () => {
+  if (cached.conn) {
+    cached.conn.disconnect();
+  }
+};
+
+const handleExit = () => {
+  disconnect();
+  process.exit(0);
+};
+
+process.on("SIGINT", handleExit);
+process.on("SIGTERM", handleExit);
+process.on("beforeExit", handleExit);
+
+export default dbConnect;
