@@ -27,7 +27,7 @@ const purchaseOrderSchema = new mongoose.Schema({
 });
 
 const purchaseOrderModel =
-  mongoose.models.Category ||
+  mongoose.models.purchaseOrder ||
   mongoose.model("purchaseOrder", purchaseOrderSchema);
 
 export { purchaseOrderModel };
