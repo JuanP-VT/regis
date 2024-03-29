@@ -66,7 +66,10 @@ export default function Page() {
       <Card>
         <CardContent className="grid gap-4 p-2">
           {purchasedItems.map((item, index) => (
-            <div key={`itm` + index} className="flex items-center gap-4">
+            <div
+              key={`itm` + index}
+              className="flex flex-col items-center gap-4 sm:flex-row"
+            >
               <Image
                 alt="Thumbnail"
                 className="aspect-square rounded-md border object-cover"
@@ -76,12 +79,14 @@ export default function Page() {
               />
               <div className="grid gap-1.5">
                 <div className="font-medium">{item.storeItemName}</div>
-                <div className="text-sm italic">Archivo: {item.fileName}</div>
+                <div className="text-xs italic sm:text-sm">
+                  Archivo: {item.fileName}
+                </div>
                 <div className="text-xs text-sky-500 dark:text-sky-400">
                   Archivo Digital
                 </div>
               </div>
-              <div className="ml-auto font-medium">
+              <div className="text-center text-xs font-medium sm:ml-auto ">
                 {(
                   item.price -
                   (item.price * item.discountPercentage) / 100
