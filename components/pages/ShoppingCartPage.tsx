@@ -43,7 +43,7 @@ export default function ShoppingCartPage() {
     }
   }
   return (
-    <div className="flex w-full justify-center">
+    <div className="mt-5 flex w-full justify-center">
       <div className="w-full max-w-[1200px] lg:min-w-[900px]">
         <Card>
           <CardHeader className="pb-4">
@@ -80,8 +80,8 @@ export default function ShoppingCartPage() {
                       {item.discountPercentage <= 0 && (
                         <div className="font-semibold">${item.price}</div>
                       )}
-                      <div className="flex items-center gap-2">
-                        <Button size="icon" variant="outline">
+                      <div className="flex items-center ">
+                        <Button size="sm" variant="outline">
                           <TrashIcon
                             onClick={() => {
                               Cart?.deleteItem(item._id);
@@ -98,7 +98,7 @@ export default function ShoppingCartPage() {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="mt-5 flex flex-col gap-4 px-4 py-4">
+          <CardFooter className="mt-5 flex flex-col gap-4 p-7">
             {Cart && Cart?.getItemCount() > 0 && (
               <div className="self-start">
                 <div className=" ">
@@ -114,7 +114,7 @@ export default function ShoppingCartPage() {
                 >
                   <PayPalButtons
                     style={{
-                      color: "black",
+                      color: "gold",
                     }}
                     createOrder={async () => {
                       const res = await fetch("/api/paypal/checkout", {
