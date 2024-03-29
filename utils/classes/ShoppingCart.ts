@@ -42,7 +42,21 @@ class ShoppingCart {
       const discountedPrice = item.price - discount;
       totalCost += discountedPrice;
     }
+
     return Number(totalCost.toFixed(2));
+  }
+  setRecentPurchase(recentPurchase: boolean) {
+    if (typeof recentPurchase !== "boolean") {
+      throw new Error("Recent purchase must be a boolean");
+    }
+    if (recentPurchase) {
+      localStorage.setItem("regis-recent-purchase", "true");
+    } else {
+      localStorage.setItem("regis-recent-purchase", "false");
+    }
+  }
+  resetCart() {
+    localStorage.setItem(this.localStorageCartName, "[]");
   }
 }
 

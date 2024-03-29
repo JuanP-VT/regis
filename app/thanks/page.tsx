@@ -29,8 +29,8 @@ export default function Page() {
       setPurchasedItems(cart.getCart());
       setTotalPrice(cart.getTotalCost());
       setShowMessage(true);
-      // localStorage.setItem("regis-recent-purchase", "false");
-
+      cart.setRecentPurchase(false);
+      cart.resetCart();
       setTimeout(() => {
         setNumberOfPieces(20);
       }, 10000);
@@ -114,7 +114,7 @@ export default function Page() {
         <CardContent>
           <div className="grid gap-2 p-2">
             <h2 className="text-lg font-semibold text-sky-300">
-              ❤ Gracias Por Tu Compra! ❤
+              💖 ¡Gracias Por Tu Compra! 💖
             </h2>
             <p className="text-sm leading-loose">
               Ya Puedes Descargar Tus Archivos Desde Tu Perfil!

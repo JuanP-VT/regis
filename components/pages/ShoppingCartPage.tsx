@@ -128,7 +128,7 @@ export default function ShoppingCartPage() {
                       const success = await paypalCaptureOrder(data.orderID);
                       if (success) {
                         toast("Compra Exitosa 🎉");
-                        localStorage.setItem("regis-recent-purchase", "true");
+                        Cart.setRecentPurchase(true);
                         setTimeout(() => {
                           router.push("/thanks");
                         }, 1000);
