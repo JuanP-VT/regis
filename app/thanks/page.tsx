@@ -15,6 +15,24 @@ import {
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+/**
+ * Page is a React component that displays a confirmation page after a purchase.
+ * It shows a confetti animation and details of the purchased items.
+ * If there are no recent purchases, it displays a "Not Found" message.
+ *
+ * State variables:
+ * - showMessage: Boolean indicating whether to show the purchase confirmation or not.
+ * - purchasedItems: Array of items that were purchased.
+ * - totalPrice: Total cost of the purchased items.
+ * - numberOfPieces: Number of confetti pieces to display in the animation.
+ *
+ * The component uses the ShoppingCart utility to get information about the recent purchase.
+ * If there is a recent purchase, it sets the state variables and resets the cart.
+ * After 10 seconds, it reduces the number of confetti pieces to 20.
+ *
+ * The component returns a JSX element containing the confetti animation and the purchase details.
+ * If showMessage is false, it returns a "Not Found" message.
+ */
 
 export default function Page() {
   const [showMessage, setShowMessage] = useState(false);
@@ -23,9 +41,8 @@ export default function Page() {
   const [numberOfPieces, setNumberOfPieces] = useState(350);
   const { width, height } = useWindowSize();
   useEffect(() => {
-    const recentPurchase = localStorage.getItem("regis-recent-purchase");
-    if (recentPurchase === "true") {
-      const cart = new ShoppingCart();
+    const cart = new ShoppingCart();
+    if (cart.hasRecentPurchase()) {
       setPurchasedItems(cart.getCart());
       setTotalPrice(cart.getTotalCost());
       setShowMessage(true);

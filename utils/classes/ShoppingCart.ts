@@ -1,6 +1,21 @@
 import { StoreItemDB_ID } from "@/types/storeItemDB";
-// ShoppingCart class to manage the shopping cart operations
-// Rely on the local storage to store the cart items
+/**
+ * ShoppingCart is a class that manages shopping cart operations.
+ * It relies on local storage to store the cart items.
+ *
+ * Properties:
+ * - localStorageCartName: The name of the local storage key where the cart items are stored.
+ *
+ * Methods:
+ * - getCart: Returns the cart items from local storage.
+ * - addToCart: Adds an item to the cart.
+ * - getItemCount: Returns the number of items in the cart.
+ * - deleteItem: Deletes an item from the cart.
+ * - getTotalCost: Returns the total cost of the items in the cart.
+ * - setRecentPurchase: Sets the recent purchase flag in local storage.
+ * - hasRecentPurchase: Returns the recent purchase flag from local storage.
+ * - resetCart: Resets the cart.
+ */
 class ShoppingCart {
   private localStorageCartName: string;
 
@@ -59,6 +74,11 @@ class ShoppingCart {
     } else {
       localStorage.setItem("regis-recent-purchase", "false");
     }
+  }
+  // Method to get the recent purchase flag from local storage
+  hasRecentPurchase(): boolean {
+    const recentPurchase = localStorage.getItem("regis-recent-purchase");
+    return recentPurchase === "true";
   }
   // Method to reset the cart
   resetCart() {
