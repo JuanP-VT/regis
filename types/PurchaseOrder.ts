@@ -1,4 +1,4 @@
-interface PurchaseUnit {
+export interface PurchaseUnit {
   referenceID: string; //File name
   value: string; //Price
 }
