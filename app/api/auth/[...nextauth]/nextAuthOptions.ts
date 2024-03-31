@@ -2,7 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import createUser from "@/lib/factory/createUser";
 import isRegisteredUser from "@/lib/isRegisteredUser";
 import { UserModel } from "@/lib/models/user";
-import { Role } from "@/types/user";
+import { Role, User_ID } from "@/types/user";
 import Google from "next-auth/providers/google";
 import { NextAuthOptions } from "next-auth";
 
@@ -41,8 +41,11 @@ export const OPTIONS: NextAuthOptions = {
         return token;
       }
       await dbConnect();
-      const dbUser = await UserModel.findOne({ googleId: token.sub });
+      const dbUser = (await UserModel.findOne({
+        googleId: token.sub,
+      })) as User_ID;
       token.role = dbUser?.role; // Add the user role to the token
+      token._id = dbUser?._id.toString();
       return token;
     },
     /* This function is triggered whenever a session is accessed. It adds the user's ID from the token to the session object. */
@@ -51,6 +54,7 @@ export const OPTIONS: NextAuthOptions = {
         session.user.googleId = token.sub as string;
         session.user.profileImage = token.picture ?? "";
         session.user.role = token.role as Role.USER | Role.ADMIN;
+        session.user._id = token._id as string;
       }
       return session;
     },

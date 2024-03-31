@@ -1,9 +1,9 @@
 import "next-auth";
-import User from "./types/user";
+import User, { User_ID } from "./types/user";
 //Extending the Session interface to include the id property
 declare module "next-auth" {
   interface Session {
-    user: User;
+    user: User_ID;
   }
 }
 //Extending the NodeJS namespace to include the process.env variables
