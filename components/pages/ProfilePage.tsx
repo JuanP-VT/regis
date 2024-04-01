@@ -38,7 +38,7 @@ export default function ProfilePage({ user, purchaseOrders }: Props) {
     if (res.ok) {
       const data = await res.json();
       const { url } = data;
-      window.open(url);
+      window.location.href = url;
     } else {
       toast.error("No tienes acceso a este archivo", {
         description:
