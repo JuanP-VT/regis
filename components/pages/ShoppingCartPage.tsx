@@ -98,9 +98,9 @@ export default function ShoppingCartPage() {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="mt-5 flex flex-col gap-4 p-7">
+          <CardFooter className=" mt-5 flex flex-col gap-4 p-7">
             {Cart && Cart?.getItemCount() > 0 && (
-              <div className="self-start">
+              <div className="z-0 self-start">
                 <div className=" ">
                   <div>Total</div>
                   <div className="font-semibold">
