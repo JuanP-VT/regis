@@ -22,6 +22,7 @@ class ShoppingCart {
   constructor() {
     this.localStorageCartName = "rexgael-shopping-cart";
   }
+
   // Method to get the cart items from local storage
   getCart(): StoreItemDB_ID[] {
     return JSON.parse(
@@ -38,6 +39,7 @@ class ShoppingCart {
     }
     cart.push(newItem);
     localStorage.setItem(this.localStorageCartName, JSON.stringify(cart));
+    window.dispatchEvent(new Event("storage"));
   }
   // Method to get the number of items in the cart
   getItemCount(): number {
@@ -49,6 +51,7 @@ class ShoppingCart {
     const cart = this.getCart();
     const newCart = cart.filter((item) => item._id !== itemId);
     localStorage.setItem(this.localStorageCartName, JSON.stringify(newCart));
+    window.dispatchEvent(new Event("storage"));
     return newCart;
   }
   // Method to get the total cost of the items in the cart
@@ -83,6 +86,7 @@ class ShoppingCart {
   // Method to reset the cart
   resetCart() {
     localStorage.setItem(this.localStorageCartName, "[]");
+    window.dispatchEvent(new Event("storage"));
   }
 }
 

@@ -1,41 +1,42 @@
 "use client";
-import { ShoppingCart, People, FavoriteBorder } from "@mui/icons-material";
+import { People } from "@mui/icons-material";
 import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
 import SignInButton from "./SignInButton";
-import { signOut } from "next-auth/react";
+import { Session } from "next-auth";
+import ShoppingCartIcon from "./ShoppingCartIcon";
 
 /* 
   Navigation bar used in the store
 */
-export default function TopNav() {
+type Props = {
+  session: Session | null;
+};
+export default function TopNav({ session }: Props) {
   return (
-    <header className="flex h-10 items-center border-b bg-slate-100 px-4 md:px-6 lg:h-14 ">
-      <nav className="gap-4 text-sm md:flex lg:gap-8 ">
-        <Link className="font-semibold  uppercase " href="/">
-          Home
+    <header className="flex h-12 items-center border-b bg-slate-100 px-1 md:px-6 lg:h-14 ">
+      <div className="flex gap-2 px-1 text-sm md:gap-8">
+        <Link className="text-xs font-semibold sm:text-base" href="/">
+          Inicio
         </Link>
-        <Link className="font-semibold  uppercase " href="/store">
-          Store
+        <Link
+          className="text-xs font-semibold sm:text-base"
+          href="/catalog/category=&subCategory=&page=1"
+        >
+          Catálogo
         </Link>
-      </nav>
+      </div>
 
-      <div className="ml-auto flex items-center gap-4 lg:ml-auto lg:gap-8">
-        <Button size="sm" variant="outline">
-          <ShoppingCart className="h-4 w-4" />
-          <span className="sr-only">Toggle cart</span>
-        </Button>
-        <Button size="sm" variant="outline">
-          <FavoriteBorder className="h-4 w-4" />
-          <span className="sr-only">Toggle favorite products</span>
-        </Button>
-        <Button size="sm" variant="outline">
-          <People className="h-4 w-4" />
-          <span className="sr-only">Toggle account</span>
-        </Button>
-        <SignInButton />
-        <Button onClick={() => signOut()} />
+      <div className="ml-auto flex items-center gap-1  lg:gap-8">
+        <ShoppingCartIcon />
+        <Link href="/me">
+          <Button size="icon" variant="outline">
+            <People className="h-4 w-4" />
+            <span className="sr-only">Perfil</span>
+          </Button>
+        </Link>
+        <SignInButton session={session} />
       </div>
     </header>
   );

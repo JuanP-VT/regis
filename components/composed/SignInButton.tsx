@@ -1,18 +1,22 @@
+import { Session } from "next-auth";
 import { Button } from "../ui/button";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 
 /* 
   Button to sign in with the next-auth library
 */
-export default function SignInButton() {
+type Props = {
+  session: Session | null;
+};
+export default function SignInButton({ session }: Props) {
   return (
     <Button
-      className="rounded-xl border-sky-100 bg-rose-200 px-5 "
+      className="rounded-xl border-rose-100 bg-sky-200 px-3 text-xs hover:bg-sky-300 "
       size="sm"
       variant="outline"
-      onClick={() => signIn()}
+      onClick={session ? () => signOut() : () => signIn()}
     >
-      Sign In
+      {session ? "Cerrar sesión" : "Iniciar sesión"}
     </Button>
   );
 }
