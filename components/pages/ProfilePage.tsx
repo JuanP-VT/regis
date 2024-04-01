@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { PurchaseOrder, PurchaseUnit } from "@/types/PurchaseOrder";
 import { User_ID } from "@/types/user";
+import { toast } from "sonner";
 type Props = {
   user: User_ID;
   purchaseOrders: PurchaseOrder[];
@@ -29,7 +30,22 @@ export default function ProfilePage({ user, purchaseOrders }: Props) {
     },
     [],
   );
-
+  async function handleDownload(fileName: string) {
+    const res = await fetch(`/api/download`, {
+      method: "POST",
+      body: JSON.stringify({ fileName }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const { url } = data;
+      window.open(url);
+    } else {
+      toast.error("No tienes acceso a este archivo", {
+        description:
+          "Intenta de nuevo, Si crees que esto es un error contacta a soporte",
+      });
+    }
+  }
   return (
     <>
       <Card>
@@ -92,7 +108,11 @@ export default function ProfilePage({ user, purchaseOrders }: Props) {
                     Archivo {index + 1}
                   </p>
                 </div>
-                <Button className="ml-auto" size="sm">
+                <Button
+                  onClick={() => handleDownload(unit.referenceID)}
+                  className="ml-auto"
+                  size="sm"
+                >
                   Download
                 </Button>
               </div>
