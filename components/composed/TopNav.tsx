@@ -6,6 +6,7 @@ import Link from "next/link";
 import SignInButton from "./SignInButton";
 import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
+import ShoppingCartIcon from "./ShoppingCartIcon";
 
 /* 
   Navigation bar used in the store
@@ -29,12 +30,7 @@ export default function TopNav({ session }: Props) {
       </div>
 
       <div className="ml-auto flex items-center gap-1  lg:gap-8">
-        <Link href="/cart">
-          <Button size="icon" variant="outline">
-            <ShoppingCart className="h-4 w-4" />
-            <span className="sr-only">Carrito</span>
-          </Button>
-        </Link>
+        <ShoppingCartIcon />
         <Link href="/me">
           <Button size="icon" variant="outline">
             <People className="h-4 w-4" />
