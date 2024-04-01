@@ -95,7 +95,7 @@ export default function CategoryNavMobile({ categoryList }: Props) {
                     setIsOpen(false);
                   }, 100);
                 }}
-                className="p-3  text-sm font-semibold capitalize text-accent-foreground underline-offset-2
+                className="border-b  p-3 text-sm font-semibold capitalize text-accent-foreground underline-offset-2
                              transition-all duration-500 hover:text-sky-500 hover:underline "
                 href={`/catalog/category=${category._id}&subCategory=&page=1`}
               >
