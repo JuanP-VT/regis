@@ -11,53 +11,85 @@ import {
 import Link from "next/link";
 import React from "react";
 import { cn } from "@/lib/utils";
+import CategoryNavMobile from "./CategoryNavMobile";
+
 type Props = {
   categoryList: Category_ID[];
 };
-
+/*
+  
+  This component is used to render the categories and subcategories in the catalog page.
+  It receives a list of categories and subcategories and renders them as a list of links.
+  If a category has subcategories, it renders the category as a link and the subcategories as a dropdown menu.
+  If a category has no subcategories, it renders the category as a link.
+  Contains a separate component for the mobile version
+*/
 export default function CategoryNav({ categoryList }: Props) {
+  //Separate categories with no subcategories because these ones are going to be render as a link not as a menu
+  const categoriesWithNoSubcategories = categoryList.filter(
+    (category) => !category.subCategoryList?.length,
+  );
+  const categoriesWithSubcategories = categoryList.filter(
+    (category) => category.subCategoryList?.length,
+  );
   return (
-    <div className="flex">
-      <Link
-        className="p-3 text-sm font-semibold"
-        href={`/catalog/category=&subCategory=&page=1`}
-      >
-        Todos
-      </Link>
-      {categoryList?.map((category, index) => (
-        <NavigationMenu key={`option${index}`}>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger className="capitalize">
-                {category.name}
-              </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <Link
-                  className="group  flex min-w-32  flex-col p-3  text-sm"
-                  href={`/catalog/category=${category._id}&subCategory=&page=1`}
-                >
-                  <p className="w-min border-b border-b-transparent  capitalize transition-all duration-500 group-hover:border-b-slate-500">
-                    {category.name}
-                  </p>
-                </Link>
-
-                {category.subCategoryList?.map((subCategory, index) => (
+    <>
+      <div className="relative  flex sm:hidden">
+        <CategoryNavMobile categoryList={categoryList} />
+      </div>
+      <div className="hidden sm:flex">
+        <Link
+          className="p-3  text-xs font-semibold capitalize text-accent-foreground underline-offset-2
+          transition-all duration-500 hover:text-sky-500 hover:underline "
+          href={`/catalog/category=&subCategory=&page=1`}
+        >
+          Todos
+        </Link>
+        {categoriesWithNoSubcategories?.map((category, index) => (
+          <Link
+            key={`option${index}`}
+            className="hover: p-3 text-xs font-semibold capitalize text-accent-foreground underline-offset-2
+          transition-all duration-500 hover:text-sky-500 hover:underline"
+            href={`/catalog/category=${category._id}&subCategory=&page=1`}
+          >
+            {category.name}
+          </Link>
+        ))}
+        {categoriesWithSubcategories?.map((category, index) => (
+          <NavigationMenu key={`option${index}`}>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-xs capitalize">
+                  {category.name}
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
                   <Link
-                    key={`${subCategory}-${index}`}
-                    href={`/catalog/category=${category._id}&subCategory=${subCategory.id}&page=1`}
-                    className="group  flex min-w-32  flex-col p-3  text-sm"
+                    className="group  flex min-w-32  flex-col p-3  text-xs "
+                    href={`/catalog/category=${category._id}&subCategory=&page=1`}
                   >
-                    <p className="w-min border-b border-b-transparent  capitalize transition-all duration-500 group-hover:border-b-slate-500">
-                      {subCategory.name}
+                    <p className="w-min border-b border-b-transparent text-xs capitalize  transition-all duration-500 hover:text-sky-500 group-hover:border-b-slate-400">
+                      {category.name}
                     </p>
                   </Link>
-                ))}
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-      ))}
-    </div>
+
+                  {category.subCategoryList?.map((subCategory, index) => (
+                    <Link
+                      key={`${subCategory}-${index}`}
+                      href={`/catalog/category=${category._id}&subCategory=${subCategory.id}&page=1`}
+                      className="group  flex min-w-32  flex-col p-3  text-sm"
+                    >
+                      <p className="w-min border-b border-b-transparent  capitalize transition-all duration-500  hover:text-sky-500 group-hover:border-b-slate-400">
+                        {subCategory.name}
+                      </p>
+                    </Link>
+                  ))}
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        ))}
+      </div>
+    </>
   );
 }
 const ListItem = React.forwardRef<
