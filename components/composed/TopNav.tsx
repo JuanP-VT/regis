@@ -1,10 +1,9 @@
 "use client";
-import { ShoppingCart, People, FavoriteBorder } from "@mui/icons-material";
+import { People } from "@mui/icons-material";
 import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
 import SignInButton from "./SignInButton";
-import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
 import ShoppingCartIcon from "./ShoppingCartIcon";
 
@@ -16,7 +15,7 @@ type Props = {
 };
 export default function TopNav({ session }: Props) {
   return (
-    <header className="flex h-10 items-center border-b bg-slate-100 px-1 md:px-6 lg:h-14 ">
+    <header className="flex h-12 items-center border-b bg-slate-100 px-1 md:px-6 lg:h-14 ">
       <div className="flex gap-2 px-1 text-sm md:gap-8">
         <Link className="text-xs font-semibold sm:text-base" href="/">
           Inicio

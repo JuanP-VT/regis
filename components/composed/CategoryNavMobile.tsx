@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Link from "next/link";
+import { Button } from "../ui/button";
 type Props = {
   categoryList: Category_ID[];
 };
@@ -21,11 +22,13 @@ export default function CategoryNavMobile({ categoryList }: Props) {
     (category) => category.subCategoryList?.length,
   );
   return (
-    <div className="absolute z-20  ">
-      <MenuIcon
-        onClick={() => setIsOpen(!isOpen)}
-        className={`absolute  z-10 m-1 cursor-pointer  `}
-      />
+    <div className="absolute z-50   ">
+      <Button variant="outline">
+        <MenuIcon
+          onClick={() => setIsOpen(!isOpen)}
+          className={`absolute  z-50 m-1 cursor-pointer  `}
+        />
+      </Button>
       <div
         className={`mt-7 flex min-w-60 flex-col rounded-lg border bg-slate-100 pb-5 ${isOpen ? "-translate-x-0" : "-translate-x-full"} transition-all duration-500`}
       >
