@@ -50,8 +50,13 @@ const handleExit = () => {
   process.exit(0);
 };
 
-process.on("SIGINT", handleExit);
-process.on("SIGTERM", handleExit);
-process.on("beforeExit", handleExit);
-
+if (process.listenerCount("SIGINT") < 1) {
+  process.on("SIGINT", handleExit);
+}
+if (process.listenerCount("SIGTERM") < 1) {
+  process.on("SIGTERM", handleExit);
+}
+if (process.listenerCount("beforeExit") < 1) {
+  process.on("beforeExit", handleExit);
+}
 export default dbConnect;
