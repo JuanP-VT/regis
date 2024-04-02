@@ -17,6 +17,7 @@ export interface StoreItemDB {
   storeItemName: string;
   details: string;
   mainImageIndex: number;
+  secondaryImageIndex: number;
   imageNamesList: string[];
   price: number;
   discountPercentage: number;

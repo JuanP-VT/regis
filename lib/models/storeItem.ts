@@ -12,6 +12,8 @@ const storeItemSchema = new mongoose.Schema({
   storeItemName: { type: String, required: true },
   details: { type: String, required: true }, // Detailed description as html of the product
   mainImageIndex: { type: Number, required: true }, // Index of the main image of the product
+  secondaryImageIndex: { type: Number, required: true }, // Index of the secondary image of the product (used in the hover animation)
+
   imageNamesList: { type: [String], required: true }, // Array of image files for the product
   imageUrlList: { type: [String], required: true }, // Array of image URLs for the product
   price: { type: Number, required: true, min: 0 }, // Base price of the product, before any discounts are applied
