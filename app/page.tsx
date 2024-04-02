@@ -13,31 +13,32 @@ export default async function HomePage() {
       <div className="">
         <CategoryNav categoryList={categoryList} />
 
-        <div className="relative mt-3 w-full ">
-          <Image
-            src="/banner.jpg"
-            alt="logo"
-            width={3200}
-            height={800}
-            className="  self-center  rounded-lg object-contain  shadow-2xl  sm:h-64"
+        <div className="relative mt-3 flex w-full flex-col items-center justify-center">
+          <SparklesCore
+            particleDensity={200}
+            particleColor="#9dbac3"
+            background="#f8fafc"
+            className="absolute -z-10 h-full w-full "
           />
-        </div>
-        <div className="relative ">
-          <Link href={"/catalog/category=&subCategory=&page=1"}>
+          <div>
+            <Image
+              src="/banner.jpg"
+              alt="logo"
+              width={3200}
+              height={800}
+              className="z-10  self-center  rounded-lg object-contain    sm:h-64"
+            />
+          </div>
+          <Link href={"/catalog/category=&subCategory=&page=1"} className="">
             <Button
               size={"sm"}
-              className=" absolute bottom-0 left-1/2 -translate-x-1/2 transform bg-rose-500 hover:bg-sky-400  md:px-16 "
+              className="  bottom-0  z-10 transform  bg-rose-500 hover:bg-sky-400 md:px-16"
             >
               Visitar Tienda
             </Button>
           </Link>
-          <SparklesCore
-            particleDensity={200}
-            particleColor="#b5ecf7"
-            background="#f8fafc"
-            className="h-12 w-full sm:h-36"
-          />
         </div>
+        <div className="relative "></div>
         <div className="mt-2 rounded-lg bg-zinc-200">
           <section className="w-full">
             <div className="container px-4 md:px-6">
