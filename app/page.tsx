@@ -1,109 +1,76 @@
-import Link from "next/link";
+import { SparklesCore } from "@/components/Sparkles";
+import CategoryNav from "@/components/composed/CategoryNav";
 import { Button } from "@/components/ui/button";
-import {
-  SelectTrigger,
-  SelectItem,
-  SelectContent,
-  Select,
-} from "@/components/ui/select";
-import TopNav from "@/components/composed/TopNav";
+import { categoryModel } from "@/lib/models/category";
 import Image from "next/image";
-import Footer from "@/components/Footer";
-import { Rainbow } from "lucide-react";
-import RainbowText from "@/components/RainbowText";
+import Link from "next/link";
 
-export default function Home() {
-  return (
-    <div className="flex min-h-screen flex-col">
-      <main className="grid flex-1 gap-4 bg-gradient-to-l from-pink-50 to-sky-200 p-4 md:gap-8 md:p-6">
-        <div className="flex flex-col items-center justify-center gap-4 text-center">
-          <RainbowText content="Regis Design" />
-          <p className="max-w-[600px] text-gray-500 dark:text-gray-400 md:text-xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed">
-            Your destination for beautiful cut files for your crafting projects
-          </p>
-          <Button variant="outline">Visit Store(❁´◡`❁) </Button>
-        </div>
-        <div className="grid gap-4 md:gap-6">
-          <div className="flex items-center gap-4">
-            <h2 className="font-semibold">Featured Cut Files</h2>
+export default async function HomePage() {
+  try {
+    const categoryData = await categoryModel.find({});
+    const categoryList = JSON.parse(JSON.stringify(categoryData));
+    return (
+      <div className="">
+        <CategoryNav categoryList={categoryList} />
+
+        <div className="relative mt-3 flex w-full flex-col items-center justify-center">
+          <SparklesCore
+            particleDensity={200}
+            particleColor="#9dbac3"
+            background="#f8fafc"
+            className="absolute -z-10 h-full w-full "
+          />
+          <div>
+            <Image
+              src="/banner.jpg"
+              alt="logo"
+              width={3200}
+              height={800}
+              className="z-10  self-center  rounded-lg object-contain    sm:h-64"
+            />
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-4 xl:gap-8">
-            <div className="flex flex-col items-center gap-2 rounded-lg border p-4 hover:shadow-lg md:flex-row md:items-start md:gap-4 md:p-6 lg:gap-2 xl:p-8">
-              <Link
-                className="aspect-square overflow-hidden rounded-lg"
-                href="#"
-              >
-                <Image
-                  alt="Thumbnail"
-                  className="aspect-square object-cover"
-                  height="180"
-                  src="https://picsum.photos/600/1200"
-                  width="180"
-                />
-              </Link>
-              <div className="grid flex-1 gap-2 text-center md:text-left">
-                <div className="space-y-1.5">
-                  <h3 className="font-semibold">Floral Bundle</h3>
-                  <p className="text-sm">Beautiful flowers and leaves</p>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="font-semibold">$4.99</span>
-                  <Button size="sm">View</Button>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col items-center gap-2 rounded-lg border p-4 hover:shadow-lg md:flex-row md:items-start md:gap-4 md:p-6 lg:gap-2 xl:p-8">
-              <Link
-                className="aspect-square overflow-hidden rounded-lg"
-                href="#"
-              >
-                <Image
-                  alt="Thumbnail"
-                  className="aspect-square object-cover"
-                  height="180"
-                  src="https://picsum.photos/900/1200"
-                  width="180"
-                />
-              </Link>
-              <div className="grid flex-1 gap-2 text-center md:text-left">
-                <div className="space-y-1.5">
-                  <h3 className="font-semibold">Cute Animals</h3>
-                  <p className="text-sm">Adorable animal silhouettes</p>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="font-semibold">$3.99</span>
-                  <Button size="sm">View</Button>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col items-center gap-2 rounded-lg border p-4 hover:shadow-lg md:flex-row md:items-start md:gap-4 md:p-6 lg:gap-2 xl:p-8">
-              <Link
-                className="aspect-square overflow-hidden rounded-lg"
-                href="#"
-              >
-                <Image
-                  alt="Thumbnail"
-                  className="aspect-square object-cover"
-                  height="180"
-                  src="https://picsum.photos/700/1100"
-                  width="180"
-                />
-              </Link>
-              <div className="grid flex-1 gap-2 text-center md:text-left">
-                <div className="space-y-1.5">
-                  <h3 className="font-semibold">Elegant Frames</h3>
-                  <p className="text-sm">Stylish border designs</p>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="font-semibold">$2.99</span>
-                  <Button size="sm">View</Button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Link href={"/catalog/category=&subCategory=&page=1"} className="">
+            <Button
+              size={"sm"}
+              className="  bottom-0  z-10 transform  bg-rose-500 hover:bg-sky-400 md:px-16"
+            >
+              Visitar Tienda
+            </Button>
+          </Link>
         </div>
-      </main>
-      <Footer />
-    </div>
-  );
+        <div className="relative "></div>
+        <div className="mt-2 rounded-lg bg-zinc-200">
+          <section className="w-full">
+            <div className="container px-4 md:px-6">
+              <div className="grid items-center gap-6 lg:grid-cols-[1fr_600px] lg:gap-12 xl:grid-cols-[1fr_800px]">
+                <div className="space-y-2">
+                  <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-800">
+                    Archivos Digitales
+                  </div>
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                    Los Mejores Diseños
+                  </h1>
+                  <p className="max-w-[600px] text-gray-500 dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                    En Regis&GaelStudio creamos los mejores diseños para ti, con
+                    la mejor calidad y al mejor precio. <br /> ¡Visita nuestra
+                    tienda!
+                  </p>
+                </div>
+                <Image
+                  alt="Banner"
+                  className="aspect-video overflow-hidden rounded-full object-contain object-center p-3"
+                  height="450"
+                  src="/logo.jfif"
+                  width="600"
+                />
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    );
+  } catch (error) {
+    console.log(error);
+    return <div>Error Interno</div>;
+  }
 }
