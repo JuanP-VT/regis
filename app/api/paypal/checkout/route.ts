@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import paypal from "@paypal/checkout-server-sdk";
 import { StoreItemDB_ID } from "@/types/storeItemDB";
 import { StoreItemModel } from "@/lib/models/storeItem";
-import { calculateTotalPrice } from "@/utils/calculateTotalPrice";
 import dbConnect from "@/lib/dbConnect";
 import client from "@/utils/paypal/client";
 import { getServerSession } from "next-auth";
@@ -33,7 +32,6 @@ export async function POST(req: Request) {
     if (findItems.length === 0) {
       return NextResponse.json({ message: "No items found" }, { status: 400 });
     }
-    //Savepoint
     const request = new paypal.orders.OrdersCreateRequest();
     //We need to find the user DB ID to use a custom ID for the order
     const findUser = (await UserModel.findOne({
