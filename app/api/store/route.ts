@@ -24,6 +24,7 @@ export async function POST(req: Request) {
   const discountPercentage = body.get("discountPercentage") as string;
   const images = body.getAll("images") as File[];
   const mainImageIndex = body.get("mainImageIndex") as string;
+  const secondaryImageIndex = body.get("secondaryImageIndex") as string;
   const details = body.get("details") as string;
   const unparsedCategoryList = (body.get("categoryIDList") ?? "[]") as string;
   const categoryIDList = JSON.parse(unparsedCategoryList);
@@ -39,7 +40,6 @@ export async function POST(req: Request) {
     !images ||
     !categoryIDList ||
     !subCategoryIDList ||
-    !mainImageIndex ||
     !details.trim() ||
     !discountPercentage
   ) {
@@ -58,6 +58,7 @@ export async function POST(req: Request) {
     mainImageIndex: parseInt(mainImageIndex),
     categoryIDList: categoryIDList,
     subCategoryIDList,
+    secondaryImageIndex: parseInt(secondaryImageIndex),
   };
 
   try {
@@ -125,7 +126,13 @@ export async function POST(req: Request) {
   ) {
     newStoreItem.mainImageIndex = 0;
   }
-
+  //If secondaryImageIndex is out of bounds, modify it to be 0
+  if (
+    newStoreItem.secondaryImageIndex >= newStoreItem.imageNamesList.length ||
+    newStoreItem.secondaryImageIndex < 0
+  ) {
+    newStoreItem.secondaryImageIndex = 0;
+  }
   //Finally Store item to database
   try {
     await StoreItemModel.create(newStoreItem);

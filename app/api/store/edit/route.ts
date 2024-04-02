@@ -47,6 +47,7 @@ export async function POST(req: Request) {
   const discountPercentage = body.get("discountPercentage") as string;
   const details = body.get("details") as string;
   const mainImageIndex = body.get("mainImageIndex") as string;
+  const secondaryImageIndex = body.get("secondaryImageIndex") as string;
   const imageNamesList = body.getAll("imageNamesList") as string[];
   const imageUrlList = body.getAll("imageUrlList") as string[];
   const newImages = body.getAll("newImages") as File[];
@@ -88,6 +89,7 @@ export async function POST(req: Request) {
     imageUrlList,
     categoryIDList: validatedCategoryIDList,
     subCategoryIDList: subCategoryIDList,
+    secondaryImageIndex: parseInt(secondaryImageIndex ?? "0"),
   };
   try {
     validateNewStoreItem.parse(newItem);
@@ -167,6 +169,13 @@ export async function POST(req: Request) {
   //Update main image index if it is out of bounds
   if (updatedItem.mainImageIndex >= updatedItem.imageNamesList.length) {
     updatedItem.mainImageIndex = 0;
+  }
+  //
+  if (
+    updatedItem.secondaryImageIndex >= updatedItem.imageNamesList.length ||
+    updatedItem.secondaryImageIndex < 0
+  ) {
+    updatedItem.secondaryImageIndex = 0;
   }
   //Update item in database
   try {

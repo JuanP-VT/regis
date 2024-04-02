@@ -15,6 +15,7 @@ The request should be a POST request with form data.
 - `discountPercentage` (Number): The discount percentage of the store item.
 - `details` (String): The details of the store item.
 - `mainImageIndex` (Number): The index of the main image.
+- `secondaryImageIndex` (Number): The index of the secondary image.
 - `imageNamesList` (Array of Strings): The list of image names.
 - `imageUrlList` (Array of Strings): The list of image URLs.
 - `newImages` (Array of Files, optional): The new images to upload.

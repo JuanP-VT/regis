@@ -9,6 +9,7 @@ export interface NewStoreItem {
   discountPercentage: number;
   categoryIDList: string[];
   subCategoryIDList: string[];
+  secondaryImageIndex: number;
 }
 
 // Represents the structure of a store item  in the database
