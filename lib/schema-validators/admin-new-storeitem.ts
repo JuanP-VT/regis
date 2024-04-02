@@ -10,4 +10,6 @@ export const validateNewStoreItem = z.object({
   details: z.string().min(1),
   categoryIDList: z.array(z.string()),
   subCategoryIDList: z.array(z.string()).optional(),
+  mainImageIndex: z.number().min(0),
+  secondaryImageIndex: z.number().min(0),
 });

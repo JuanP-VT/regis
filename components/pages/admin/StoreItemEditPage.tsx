@@ -54,6 +54,10 @@ export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
     );
     formData.append("details", details);
     formData.append("mainImageIndex", formState.mainImageIndex.toString());
+    formData.append(
+      "secondaryImageIndex",
+      formState.secondaryImageIndex?.toString(),
+    );
     //Append old images
     formState.imageNamesList.forEach((imageName) => {
       formData.append("imageNamesList", imageName);
@@ -231,7 +235,7 @@ export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
               </Dropzone>
             </div>
             <div className="flex flex-col">
-              <Label>Indice De La Imagen Principal</Label>
+              <Label className="my-2">Indice De La Imagen Principal</Label>
               <Input
                 type="number"
                 value={formState.mainImageIndex.toString()}
@@ -239,6 +243,18 @@ export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
                   setFormState((prev) => ({
                     ...prev,
                     mainImageIndex:
+                      ev.target.value === "" ? 0 : parseInt(ev.target.value),
+                  }))
+                }
+              />
+              <Label className="my-2">Indice De La Imagen Secundaria</Label>
+              <Input
+                type="number"
+                value={formState.secondaryImageIndex?.toString()}
+                onChange={(ev) =>
+                  setFormState((prev) => ({
+                    ...prev,
+                    secondaryImageIndex:
                       ev.target.value === "" ? 0 : parseInt(ev.target.value),
                   }))
                 }

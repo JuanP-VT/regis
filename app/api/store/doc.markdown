@@ -14,9 +14,11 @@ The request should be a `multipart/form-data` with the following fields:
 - `discountPercentage`: String
 - `images`: Array of Files
 - `mainImageIndex`: String
+- -`secondaryImageIndex`: String // Number
 - `details`: String
 - `categoryIDList`: Array of Strings
 - `subCategoryIDList` Array of Strings
+-
 
 ### Response
 

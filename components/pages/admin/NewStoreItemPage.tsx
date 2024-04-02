@@ -42,6 +42,7 @@ export default function NewStoreItemPage({
     mainImageIndex: 0,
     categoryIDList: [],
     subCategoryIDList: [],
+    secondaryImageIndex: 0,
   });
   const [imagesUrl, setImagesUrl] = useState<String[]>([]);
   //We need to show a loading button while the form is being submitted
@@ -77,6 +78,10 @@ export default function NewStoreItemPage({
       formData.append("images", image);
     });
     formData.append("mainImageIndex", formValue.mainImageIndex.toString());
+    formData.append(
+      "secondaryImageIndex",
+      formValue.secondaryImageIndex.toString(),
+    );
     formData.append("details", details);
     formData.append(
       "subCategoryIDList",
@@ -236,7 +241,19 @@ export default function NewStoreItemPage({
                   ev.target.value === "" ? 0 : parseInt(ev.target.value),
               }))
             }
-            placeholder="La primera imagen tiene indice 0"
+            placeholder="Imagen Principal"
+          />
+          <Label className="mt-4">Indice De La Imagen Secundaria</Label>
+          <Input
+            type="number"
+            onChange={(ev) =>
+              setFormValue((prevState) => ({
+                ...prevState,
+                secondaryImageIndex:
+                  ev.target.value === "" ? 0 : parseInt(ev.target.value),
+              }))
+            }
+            placeholder="Indice Secundario"
           />
           <Label className="my-3">Detalles del producto</Label>
           <Tiptap onChange={setDetails} />
