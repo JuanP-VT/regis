@@ -10,7 +10,7 @@ export interface User {
   role: Role;
   profileImage: string;
   purchasedItems: string[];
-  email: string | undefined;
+  email: string | undefined | null;
 }
 export interface User_ID extends User {
   _id: string;

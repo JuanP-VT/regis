@@ -19,11 +19,13 @@ export default function createUser(
   googleId: string,
   name: string,
   profileImage: string,
+  email: string | null | undefined,
 ): User {
   return {
     googleId,
     name,
     profileImage,
+    email,
     role: Role.USER,
     purchasedItems: [],
   };
