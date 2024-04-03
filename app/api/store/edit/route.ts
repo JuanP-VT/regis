@@ -12,6 +12,7 @@ import { getServerSession } from "next-auth";
 import { OPTIONS } from "../../auth/[...nextauth]/nextAuthOptions";
 import { Role } from "@/types/user";
 import { Category_ID } from "@/types/category";
+import { categoryModel } from "@/lib/models/category";
 export async function POST(req: Request) {
   //Check Environment Variables
   if (
@@ -64,8 +65,10 @@ export async function POST(req: Request) {
   //Check if category list is valid, if an invalid id is found remove it
   let validatedCategoryIDList: string[];
   try {
-    const resCategoryList = await fetch(`${process.env.URL}/api/categories`);
-    const categoryList = (await resCategoryList.json()) as Category_ID[];
+    const resCategoryList = categoryModel.find({}).lean();
+    const categoryList = JSON.parse(
+      JSON.stringify(resCategoryList),
+    ) as Category_ID[];
     const allCategoriesIDList = categoryList.map((category) => {
       return category._id;
     });
