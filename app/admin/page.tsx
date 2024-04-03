@@ -7,6 +7,8 @@ import { StoreItemDB_ID } from "@/types/storeItemDB";
 import AdminNav from "@/components/composed/AdminNav";
 import { Category_ID } from "@/types/category";
 import { StoreItemModel } from "@/lib/models/storeItem";
+import { categoryModel } from "@/lib/models/category";
+import dbConnect from "@/lib/dbConnect";
 
 export default async function Admin() {
   try {
@@ -21,13 +23,13 @@ export default async function Admin() {
   try {
     //Fetch store items from the database
     //Transform mongoose documents to plain objects
+    await dbConnect();
     const data = await StoreItemModel.find({});
     const storeItems = JSON.parse(JSON.stringify(data)) as StoreItemDB_ID[];
-    const reqCategory = await fetch(`${process.env.URL}/api/categories`);
-    const categoryList = (await reqCategory.json()) as
-      | Category_ID[]
-      | undefined;
-
+    const categoryData = await categoryModel.find({}).lean();
+    const categoryList = JSON.parse(
+      JSON.stringify(categoryData),
+    ) as Category_ID[];
     return (
       <div>
         <AdminNav />
