@@ -4,10 +4,11 @@ import { Role } from "@/types/user";
 import { getServerSession } from "next-auth";
 import { AwsS3Client } from "@/lib/awsS3Client";
 import { ListObjectsV2Command } from "@aws-sdk/client-s3";
-import { StoreItemDB, StoreItemDB_ID } from "@/types/storeItemDB";
+import { StoreItemDB_ID } from "@/types/storeItemDB";
 import AdminNav from "@/components/composed/AdminNav";
 import { Category_ID } from "@/types/category";
 import { StoreItemModel } from "@/lib/models/storeItem";
+import { categoryModel } from "@/lib/models/category";
 export default async function NewStoreItem() {
   try {
     const session = await getServerSession(OPTIONS);
@@ -43,9 +44,8 @@ export default async function NewStoreItem() {
   }
   let categoryList: Category_ID[];
   try {
-    const res = await fetch(`${process.env.URL}/api/categories`);
-    const data = res.ok ? await res.json() : [];
-    categoryList = [...data];
+    const data = await categoryModel.find({}).lean();
+    categoryList = JSON.parse(JSON.stringify(data)) as Category_ID[];
     categoryList.sort((a, b) => a.name.localeCompare(b.name));
   } catch (error) {
     return <p>There was an error getting categories</p>;
