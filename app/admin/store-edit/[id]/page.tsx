@@ -2,6 +2,7 @@ import { OPTIONS } from "@/app/api/auth/[...nextauth]/nextAuthOptions";
 import AdminNav from "@/components/composed/AdminNav";
 import StoreItemEditPage from "@/components/pages/admin/StoreItemEditPage";
 import dbConnect from "@/lib/dbConnect";
+import { categoryModel } from "@/lib/models/category";
 import { StoreItemModel } from "@/lib/models/storeItem";
 import { Category_ID } from "@/types/category";
 import { StoreItemDB_ID } from "@/types/storeItemDB";
@@ -37,8 +38,10 @@ export default async function EditStoreItem({
 
     const data = JSON.parse(JSON.stringify(findInDb)) as StoreItemDB_ID;
 
-    const reqCategories = await fetch(`${process.env.URL}/api/categories`);
-    const categoryList = (await reqCategories.json()) as Category_ID[];
+    const reqCategories = await categoryModel.find({}).lean();
+    const categoryList = JSON.parse(
+      JSON.stringify(reqCategories),
+    ) as Category_ID[];
     categoryList.sort((a, b) => a.name.localeCompare(b.name));
 
     return (
