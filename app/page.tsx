@@ -10,7 +10,8 @@ import Link from "next/link";
 export default async function HomePage() {
   try {
     await dbConnect();
-    const categoryList = (await categoryModel.find({}).lean()) as Category_ID[];
+    const categoryData = (await categoryModel.find({}).lean()) as Category_ID[];
+    const categoryList = JSON.parse(JSON.stringify(categoryData));
     return (
       <div className="">
         <CategoryNav categoryList={categoryList} />
