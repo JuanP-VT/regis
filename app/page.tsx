@@ -1,14 +1,16 @@
 import { SparklesCore } from "@/components/Sparkles";
 import CategoryNav from "@/components/composed/CategoryNav";
 import { Button } from "@/components/ui/button";
+import dbConnect from "@/lib/dbConnect";
 import { categoryModel } from "@/lib/models/category";
+import { Category_ID } from "@/types/category";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function HomePage() {
   try {
-    const categoryData = await categoryModel.find({});
-    const categoryList = JSON.parse(JSON.stringify(categoryData));
+    await dbConnect();
+    const categoryList = (await categoryModel.find({}).lean()) as Category_ID[];
     return (
       <div className="">
         <CategoryNav categoryList={categoryList} />
