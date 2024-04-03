@@ -17,6 +17,13 @@ import { ArrowBack } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+/**
+ * ShoppingCartPage Component
+ *
+ * This component is used to display the shopping cart page.
+ *
+ * @returns {JSX.Element} ShoppingCartPage Component
+ */
 export default function ShoppingCartPage() {
   const router = useRouter();
   const [Cart, setCart] = useState<ShoppingCart>();
