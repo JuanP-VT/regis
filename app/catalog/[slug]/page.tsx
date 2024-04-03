@@ -1,26 +1,69 @@
 import CatalogPage from "@/components/pages/CatalogPage";
+import dbConnect from "@/lib/dbConnect";
+import { categoryModel } from "@/lib/models/category";
+import { StoreItemModel } from "@/lib/models/storeItem";
 import { Category_ID } from "@/types/category";
-export const revalidate = 0;
+import { StoreItemDB_ID } from "@/types/storeItemDB";
+import z from "zod";
+
 export default async function page({ params }: { params: { slug: string } }) {
+  const paramObject = new URLSearchParams(decodeURIComponent(params.slug));
+  const categoryID = paramObject.get("category") ?? "";
+  const subCategoryID = paramObject.get("subCategory") ?? "";
+  const pageString = paramObject.get("page") ?? "1";
+  const page = parseInt(pageString) ?? 1;
+  const itemsPerPage = 20; // Should never be 0
+
+  //Validate URL Params
+  const paramValidator = z.object({
+    page: z.number().min(0),
+    category: z.string().max(50).optional(),
+    subCategory: z.string().max(50).optional(),
+  });
   try {
-    const paramObject = new URLSearchParams(decodeURIComponent(params.slug));
-    const categoryID = paramObject.get("category") || "";
-    const subCategoryID = paramObject.get("subCategory") || "";
-    const page = paramObject.get("page") || "1";
-    const publicStoreRes = await fetch(
-      `${process.env.URL}/api/public/store?category=${categoryID}&subCategory=${subCategoryID}&page=${page}`,
-    );
-    const categoryRes = await fetch(`${process.env.url}/api/categories`);
-    const categoryList = (await categoryRes.json()) as Category_ID[];
+    paramValidator.parse({ page, categoryID, subCategoryID });
+  } catch (error) {
+    console.error(error);
+    return <div>Invalid URL Params</div>;
+  }
+  type filter = {
+    categoryIDList?: string;
+    subCategoryIDList?: string;
+  };
+  const filter: filter = {};
+  if (categoryID) filter["categoryIDList"] = categoryID;
+  if (subCategoryID) filter["subCategoryIDList"] = subCategoryID;
+
+  try {
+    await dbConnect();
+    const skip = (page - 1) * itemsPerPage;
+    const storeItems = (await StoreItemModel.find({
+      ...(categoryID && { categoryIDList: { $in: [categoryID] } }),
+      ...(subCategoryID && { subCategoryIDList: { $in: [subCategoryID] } }),
+    })
+      .skip(skip)
+      .limit(itemsPerPage)) as StoreItemDB_ID[];
+    // Calculate total number of items for pagination metadata
+    const totalItems = await StoreItemModel.countDocuments(filter);
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const pagination = {
+      totalItems,
+      totalPages,
+      currentPage: page,
+      itemsPerPage: itemsPerPage,
+      hasNextPage: page < totalPages,
+    };
+    //Categories
+    const categoryData = await categoryModel.find({}).lean();
+    const categoryList = JSON.parse(
+      JSON.stringify(categoryData),
+    ) as Category_ID[];
     const categoryName =
       categoryList.find((category) => category._id === categoryID)?.name || "";
     const subCategoryName =
       categoryList
         .flatMap((category) => category.subCategoryList)
         .find((subCategory) => subCategory.id === subCategoryID)?.name || "";
-    const data = await publicStoreRes.json();
-    const pagination = data.pagination;
-    const storeItems = data.storeItems;
     return (
       <CatalogPage
         pagination={pagination}
@@ -32,7 +75,6 @@ export default async function page({ params }: { params: { slug: string } }) {
       />
     );
   } catch (error) {
-    console.error(error);
-    return <div>Not Found</div>;
+    return <div>Error Fetching Data</div>;
   }
 }

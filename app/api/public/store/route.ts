@@ -1,10 +1,16 @@
+/**
+ * Update 3/04/2024
+ * This route functionality was extracted in to the page.tsx server component at app/catalog/[slug]/page.tsx
+ * The reason is to avoid an extra request to the server and improve performance
+ * I will leave the route commented in case it is needed in the future
+ */
+/*
 import { NextResponse } from "next/server";
 import { StoreItemModel } from "@/lib/models/storeItem";
 import { StoreItemDB } from "@/types/storeItemDB";
 import z from "zod";
 import dbConnect from "@/lib/dbConnect";
 
-//Fetch paginated items based on query filters
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const itemsPerPage = 2;
@@ -68,3 +74,4 @@ export async function GET(req: Request) {
     );
   }
 }
+ */
