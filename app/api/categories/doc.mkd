@@ -2,28 +2,6 @@
 
 This document provides information about the Category API endpoints.
 
-## GET /category
-
-This endpoint retrieves all categories.
-
-**Request:**
-
-No parameters are required.
-
-**Response:**
-
-Returns a JSON array of all categories.
-
-Each category object includes:
-
-- `name`: The name of the category.
-- `description`: The description of the category.
-
-**Status Codes:**
-
-- `200 OK` on success
-- `500 Internal Server Error` if there is an error with the database
-
 ## POST /category
 
 This endpoint creates a new category.

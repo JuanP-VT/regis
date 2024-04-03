@@ -7,18 +7,6 @@ import { categoryModel } from "@/lib/models/category";
 import { validateNewCategory } from "@/lib/schema-validators/admin-new-category";
 import { v4 } from "uuid";
 import dbConnect from "@/lib/dbConnect";
-export async function GET() {
-  try {
-    await dbConnect();
-    const collection = await categoryModel.find({});
-    return NextResponse.json(collection, { status: 200 });
-  } catch (error) {
-    return NextResponse.json(
-      { message: "Error con la base de datos" },
-      { status: 500 },
-    );
-  }
-}
 
 export async function POST(req: Request) {
   try {
@@ -65,6 +53,7 @@ export async function POST(req: Request) {
   );
   //Save to DB
   try {
+    await dbConnect();
     await categoryModel.create(newCategory);
     return NextResponse.json({ message: "Category saved" }, { status: 201 });
   } catch (error) {
