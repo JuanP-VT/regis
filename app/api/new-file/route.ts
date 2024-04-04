@@ -19,19 +19,13 @@ export async function POST(req: Request) {
     // Extract the file from the request
     const formData = await req.formData();
     //Create File type Since unlike vercel AWS cant read browser objects in server side
-    type File = {
+    type FILE = {
       name: string;
       size: number;
       stream: () => ReadableStream<Uint8Array>;
     };
-    const file = formData.get("file") as File;
-    //Validate request
-    const unParsedData = { file };
-    const { success } = ValidateNewFileApi.safeParse(unParsedData);
+    const file = formData.get("file") as FILE;
 
-    if (!success) {
-      return NextResponse.json({ message: "Invalid request" }, { status: 400 });
-    }
     //Check if filename already exist in s3 bucket
     const listObjects = new ListObjectsV2Command({
       Bucket: process.env.S3_FILES_BUCKET_NAME,
