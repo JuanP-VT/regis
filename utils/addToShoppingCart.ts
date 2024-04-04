@@ -2,8 +2,7 @@ import { StoreItemDB_ID } from "@/types/storeItemDB";
 
 //Cart is going to be stored in local storage
 export default function addToShoppingCart(newItem: StoreItemDB_ID) {
-  const localStorageCartName =
-    process.env.NEXT_PUBLIC_LOCAL_STORAGE_CART_NAME || "rexgael-shopping-cart";
+  const localStorageCartName = "rexgael-shopping-cart";
 
   const cart = JSON.parse(
     localStorage.getItem(localStorageCartName) || "[]",

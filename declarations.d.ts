@@ -21,13 +21,12 @@ declare global {
       GOOGLE_AUTH_CLIENT_ID: string;
       GOOGLE_AUTH_CLIENT_SECRET: string;
       NEXTAUTH_URL: string;
-      AWS_ACCESS_KEY_ID: string;
-      AWS_SECRET_ACCESS_KEY: string;
+      S3_ACCESS_KEY_ID: string;
+      S3_SECRET_ACCESS_KEY: string;
       URL: string;
       CLOUDFRONT_URL: string;
       S3_IMAGE_BUCKET_NAME: string;
       S3_FILES_BUCKET_NAME: string;
-      NEXT_PUBLIC_LOCAL_STORAGE_CART_NAME: string;
       NEXT_PUBLIC_PAYPAL_CLIENT_ID: string;
       PAYPAL_CLIENT_SECRET: string;
     }
