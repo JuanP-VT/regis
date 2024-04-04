@@ -25,13 +25,7 @@ export async function POST(req: Request) {
       stream: () => ReadableStream<Uint8Array>;
     };
     const file = formData.get("file") as FILE;
-    //Validate request
-    const unParsedData = { file };
-    const { success } = ValidateNewFileApi.safeParse(unParsedData);
 
-    if (!success) {
-      return NextResponse.json({ message: "Invalid request" }, { status: 400 });
-    }
     //Check if filename already exist in s3 bucket
     const listObjects = new ListObjectsV2Command({
       Bucket: process.env.S3_FILES_BUCKET_NAME,
