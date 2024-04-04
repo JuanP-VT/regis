@@ -19,12 +19,12 @@ export async function POST(req: Request) {
     // Extract the file from the request
     const formData = await req.formData();
     //Create File type Since unlike vercel AWS cant read browser objects in server side
-    type File = {
+    type FILE = {
       name: string;
       size: number;
       stream: () => ReadableStream<Uint8Array>;
     };
-    const file = formData.get("file") as File;
+    const file = formData.get("file") as FILE;
     //Validate request
     const unParsedData = { file };
     const { success } = ValidateNewFileApi.safeParse(unParsedData);
