@@ -29,13 +29,13 @@ export default async function HomePage() {
             alt="logo"
             width={3200}
             height={800}
-            className="z-10  self-center  rounded-lg object-cover object-left pt-5 sm:h-64 sm:object-contain    sm:object-center"
+            className="  self-center  rounded-lg object-cover object-left pt-5 sm:h-64 sm:object-contain    sm:object-center"
           />
 
           <Link href={"/catalog/category=&subCategory=&page=1"} className="p-2">
             <Button
               size={"sm"}
-              className="  bottom-0  z-10 transform  bg-rose-500 hover:bg-sky-400 md:px-16"
+              className="  bottom-0  transform  bg-rose-500 hover:bg-sky-400 md:px-16"
             >
               Visitar Tienda
             </Button>
