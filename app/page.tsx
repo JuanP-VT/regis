@@ -42,7 +42,7 @@ export default async function HomePage() {
           </Link>
         </div>
         <div className="relative "></div>
-        <div className="mt-2 rounded-lg bg-zinc-200">
+        <div className=" rounded-lg bg-zinc-200">
           <section className="group w-full">
             <div className="container px-4 md:px-6">
               <div className="grid items-center gap-6 lg:grid-cols-[1fr_600px] lg:gap-12 xl:grid-cols-[1fr_800px]">
