@@ -115,7 +115,7 @@ function PriceTag({ price, discountPercentage }: PriceTagProps) {
   const priceAfterDiscount = price - (price * discountPercentage) / 100;
   if (discountPercentage === 0) {
     return (
-      <p className="text-4xl font-semibold text-green-700">
+      <p className="text-center text-4xl font-semibold text-green-700">
         MX${price.toFixed(2)}
       </p>
     );
