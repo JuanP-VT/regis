@@ -13,35 +13,40 @@ export default async function HomePage() {
     const categoryData = (await categoryModel.find({}).lean()) as Category_ID[];
     const categoryList = JSON.parse(JSON.stringify(categoryData));
     return (
-      <div className="">
-        <CategoryNav categoryList={categoryList} />
-
-        <div className="relative flex w-full flex-col items-center justify-center">
+      <div>
+        <div className="relative">
           <SparklesCore
             particleDensity={200}
-            particleColor="#9dbac3"
-            background="#f8fafc"
+            particleColor="#e6b7b0"
+            background="#fefdfb"
             className="absolute -z-10 h-full w-full "
           />
+          <div className="">
+            <CategoryNav categoryList={categoryList} />
 
-          <Image
-            src="/banner.jpg"
-            alt="logo"
-            width={3200}
-            height={800}
-            className="  self-center  rounded-lg object-cover object-left pt-5 sm:h-64 sm:object-contain    sm:object-center"
-          />
+            <div className="relative flex w-full flex-col items-center justify-center">
+              <Image
+                src="/banner.jpg"
+                alt="logo"
+                width={3200}
+                height={800}
+                className="  self-center  rounded-lg object-cover object-left pt-5 sm:h-64 sm:object-contain    sm:object-center"
+              />
 
-          <Link href={"/catalog/category=&subCategory=&page=1"} className="p-2">
-            <Button
-              size={"sm"}
-              className="  bottom-0  transform  bg-rose-500 hover:bg-sky-400 md:px-16"
-            >
-              Visitar Tienda
-            </Button>
-          </Link>
+              <Link
+                href={"/catalog/category=&subCategory=&page=1"}
+                className="p-2"
+              >
+                <Button
+                  size={"sm"}
+                  className="  bottom-0  transform  bg-rose-500 hover:bg-sky-400 md:px-16"
+                >
+                  Visitar Tienda
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="relative "></div>
         <div className=" rounded-lg bg-zinc-200">
           <section className="group w-full">
             <div className="container px-4 md:px-6">
