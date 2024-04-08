@@ -63,7 +63,7 @@ export default function ImageSlider({ images }: Props) {
           height={900}
           src={images[currentIndex]}
           alt="product image"
-          className="sticky top-20 h-[500px] w-[700px] rounded-lg "
+          className="sticky top-20 rounded-lg sm:h-[500px] sm:w-[700px] "
         />
       </div>
     </div>
