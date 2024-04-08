@@ -22,15 +22,15 @@ export default function CategoryNavMobile({ categoryList }: Props) {
     (category) => category.subCategoryList?.length,
   );
   return (
-    <div className="absolute z-50   ">
-      <Button variant="outline">
+    <div className={`absolute ${isOpen ? "z-50" : "-z-10"}`}>
+      <Button variant="outline" className="z-50">
         <MenuIcon
           onClick={() => setIsOpen(!isOpen)}
           className={`absolute  z-50 m-1 cursor-pointer  `}
         />
       </Button>
       <div
-        className={`mt-7 flex min-w-60 flex-col rounded-lg border bg-slate-100 pb-5 ${isOpen ? "-translate-x-0" : "-translate-x-full"} transition-all duration-500`}
+        className={`mt-7 flex min-w-60 flex-col rounded-lg border bg-slate-100 pb-5 ${isOpen ? "z-50 -translate-x-0" : "-z-10 -translate-x-full"} transition-all duration-500`}
       >
         <p className="m-2 p-2 font-semibold">Categorías</p>
         <Accordion type="single" collapsible className="w-full ">

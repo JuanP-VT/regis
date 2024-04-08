@@ -15,14 +15,14 @@ export default function CatalogItemCard({ storeItem }: Props) {
       <div className="group  relative h-60 cursor-pointer overflow-hidden">
         <Link href={`/product/${storeItem._id}`}>
           <Image
-            className=" absolute h-full w-full self-center rounded-sm opacity-100 transition duration-1000 ease-in-out group-hover:opacity-0"
+            className=" absolute -z-10 h-full w-full self-center rounded-sm opacity-100 transition duration-1000 ease-in-out group-hover:opacity-0"
             src={storeItem.imageUrlList[storeItem.mainImageIndex]}
             alt="Store Display View"
             width={500}
             height={500}
           />{" "}
           <Image
-            className=" absolute h-full w-full self-center rounded-sm opacity-0 transition duration-1000 ease-in-out group-hover:scale-110
+            className=" absolute -z-10 h-full w-full self-center rounded-sm opacity-0 transition duration-1000 ease-in-out group-hover:scale-110
              group-hover:opacity-100"
             src={storeItem.imageUrlList[storeItem.secondaryImageIndex]}
             alt="Store Display View"
@@ -46,6 +46,10 @@ export default function CatalogItemCard({ storeItem }: Props) {
         ) : (
           <p className="text-center text-sm">{storeItem.price.toFixed(2)}$MX</p>
         )}
+        <Link href={`/product/${storeItem._id}`}>
+          {" "}
+          <Button className="bg-pink-300 p-2 px-5 text-xs">Ver Detalles</Button>
+        </Link>
       </div>
     </div>
   );
