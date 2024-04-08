@@ -16,7 +16,7 @@ export default async function HomePage() {
       <div className="">
         <CategoryNav categoryList={categoryList} />
 
-        <div className="relative mt-3 flex w-full flex-col items-center justify-center">
+        <div className="relative flex w-full flex-col items-center justify-center">
           <SparklesCore
             particleDensity={200}
             particleColor="#9dbac3"
