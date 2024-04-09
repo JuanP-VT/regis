@@ -9,6 +9,7 @@ import { StoreItemModel } from "@/lib/models/storeItem";
 import { StoreItemDB } from "@/types/storeItemDB";
 import xss from "xss";
 import { Role } from "@/types/user";
+import dbConnect from "@/lib/dbConnect";
 
 //Create a new store item
 export async function POST(req: Request) {
@@ -72,18 +73,26 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
-  const validationResult = validateNewStoreItem.safeParse(newStoreItem);
 
-  if (!validationResult.success) {
-  }
   //Verify that fileName is unique in the database
-  const existingItem = await StoreItemModel.findOne({ fileName: fileName });
-  if (existingItem) {
+  try {
+    await dbConnect();
+    const existingItem = await StoreItemModel.findOne({ fileName: fileName });
+    if (existingItem) {
+      return NextResponse.json(
+        {
+          message: "File name already exists",
+        },
+        { status: 409 },
+      );
+    }
+  } catch (error) {
+    console.error(error);
     return NextResponse.json(
       {
-        message: "File name already exists",
+        message: "An error occurred verifying the file name",
       },
-      { status: 409 },
+      { status: 500 },
     );
   }
   //Upload images to S3

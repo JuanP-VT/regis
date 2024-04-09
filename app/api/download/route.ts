@@ -7,6 +7,7 @@ import { PurchaseOrder } from "@/types/PurchaseOrder";
 import { AwsS3Client } from "@/lib/awsS3Client";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import dbConnect from "@/lib/dbConnect";
 export async function POST(req: Request) {
   //Authenticate user
   const session = await getServerSession(OPTIONS);
@@ -35,6 +36,7 @@ export async function POST(req: Request) {
     }
   }
   //Check that user has purchased the file
+  await dbConnect();
   const userPurchaseOrders = (await purchaseOrderModel.find({
     userID: session.user._id,
   })) as PurchaseOrder[];

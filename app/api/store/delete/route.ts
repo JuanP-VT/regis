@@ -7,6 +7,7 @@ import { StoreItemDB } from "@/types/storeItemDB";
 import { DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import { AwsS3Client } from "@/lib/awsS3Client";
 import { Role } from "@/types/user";
+import dbConnect from "@/lib/dbConnect";
 export async function POST(req: Request) {
   //Check Environment Variables
   if (!process.env.S3_IMAGE_BUCKET_NAME) {
@@ -42,6 +43,7 @@ export async function POST(req: Request) {
   // Find document in db and delete images from s3 bucket
   let find: StoreItemDB | null = null;
   try {
+    await dbConnect();
     find = (await StoreItemModel.findOne({
       _id,
     })) as StoreItemDB | null;
