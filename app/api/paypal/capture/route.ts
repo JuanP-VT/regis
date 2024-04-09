@@ -1,3 +1,4 @@
+import dbConnect from "@/lib/dbConnect";
 import { purchaseOrderModel } from "@/lib/models/purchaseOrder";
 import { UserModel } from "@/lib/models/user";
 import { PurchaseOrder } from "@/types/PurchaseOrder";
@@ -63,6 +64,7 @@ export async function POST(req: Request) {
   };
   // Save the order to the database
   try {
+    await dbConnect();
     await purchaseOrderModel.create(newPurchaseOrder);
 
     //Update user purchased items

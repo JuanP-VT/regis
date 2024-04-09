@@ -37,12 +37,16 @@ export default async function page({ params }: { params: { slug: string } }) {
   try {
     await dbConnect();
     const skip = (page - 1) * itemsPerPage;
-    const storeItems = (await StoreItemModel.find({
+    const mongooseStoreItems = (await StoreItemModel.find({
       ...(categoryID && { categoryIDList: { $in: [categoryID] } }),
       ...(subCategoryID && { subCategoryIDList: { $in: [subCategoryID] } }),
     })
+      .lean()
       .skip(skip)
       .limit(itemsPerPage)) as StoreItemDB_ID[];
+    const storeItems = JSON.parse(
+      JSON.stringify(mongooseStoreItems),
+    ) as StoreItemDB_ID[];
     // Calculate total number of items for pagination metadata
     const totalItems = await StoreItemModel.countDocuments(filter);
     const totalPages = Math.ceil(totalItems / itemsPerPage);

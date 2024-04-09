@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import { categoryModel } from "@/lib/models/category";
 import { Category_ID } from "@/types/category";
 import { StoreItemModel } from "@/lib/models/storeItem";
+import dbConnect from "@/lib/dbConnect";
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(OPTIONS);
@@ -35,6 +36,7 @@ export async function POST(req: Request) {
   //Search in product collection, if a product contains a reference to this category abort operation
 
   try {
+    await dbConnect();
     const result = await StoreItemModel.findOne({
       categoryIDList: { $in: findCategory._id },
     });

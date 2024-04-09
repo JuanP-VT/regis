@@ -8,6 +8,7 @@ import { StoreItemDB } from "@/types/storeItemDB";
 import { getServerSession } from "next-auth";
 import { OPTIONS } from "../../auth/[...nextauth]/nextAuthOptions";
 import { Role } from "@/types/user";
+import dbConnect from "@/lib/dbConnect";
 
 /**
  * Route to handle delete file request
@@ -43,6 +44,7 @@ export async function POST(req: Request) {
   let imageFileName: string[] = [];
   let find: StoreItemDB | null = null;
   try {
+    await dbConnect();
     find = (await StoreItemModel.findOne({
       fileName,
     })) as StoreItemDB | null;

@@ -1,4 +1,5 @@
 import CategoryNav from "@/components/composed/CategoryNav";
+import dbConnect from "@/lib/dbConnect";
 import { categoryModel } from "@/lib/models/category";
 
 export default async function Layout({
@@ -7,6 +8,7 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   try {
+    await dbConnect();
     const res = await categoryModel.find({}).lean();
     const categoryList = JSON.parse(JSON.stringify(res));
     return (

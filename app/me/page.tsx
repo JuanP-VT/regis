@@ -4,6 +4,7 @@ import { OPTIONS } from "../api/auth/[...nextauth]/nextAuthOptions";
 import ProfilePageProducts from "@/components/pages/ProfilePage";
 import { purchaseOrderModel } from "@/lib/models/purchaseOrder";
 import { PurchaseOrder } from "@/types/PurchaseOrder";
+import dbConnect from "@/lib/dbConnect";
 
 type Props = {};
 
@@ -14,6 +15,7 @@ export default async function Page({}: Props) {
     if (!session) {
       return <div>Unauthorized</div>;
     }
+    await dbConnect();
     const userPurchases = (await purchaseOrderModel.find({
       userID: session.user._id,
     })) as PurchaseOrder[];

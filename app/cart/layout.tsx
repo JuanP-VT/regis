@@ -3,7 +3,7 @@ import dbConnect from "@/lib/dbConnect";
 import { categoryModel } from "@/lib/models/category";
 import { Category_ID } from "@/types/category";
 
-export default async function RootLayout({
+export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;

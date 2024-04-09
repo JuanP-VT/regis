@@ -13,6 +13,7 @@ import { OPTIONS } from "../../auth/[...nextauth]/nextAuthOptions";
 import { Role } from "@/types/user";
 import { Category_ID } from "@/types/category";
 import { categoryModel } from "@/lib/models/category";
+import dbConnect from "@/lib/dbConnect";
 export async function POST(req: Request) {
   //Check Environment Variables
   if (
@@ -65,6 +66,7 @@ export async function POST(req: Request) {
   //Check if category list is valid, if an invalid id is found remove it
   let validatedCategoryIDList: string[];
   try {
+    await dbConnect();
     const resCategoryList = categoryModel.find({}).lean();
     const categoryList = JSON.parse(
       JSON.stringify(resCategoryList),
