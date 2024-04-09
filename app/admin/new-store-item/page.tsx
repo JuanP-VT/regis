@@ -9,6 +9,7 @@ import AdminNav from "@/components/composed/AdminNav";
 import { Category_ID } from "@/types/category";
 import { StoreItemModel } from "@/lib/models/storeItem";
 import { categoryModel } from "@/lib/models/category";
+import dbConnect from "@/lib/dbConnect";
 export default async function NewStoreItem() {
   try {
     const session = await getServerSession(OPTIONS);
@@ -30,6 +31,7 @@ export default async function NewStoreItem() {
     const response = await AwsS3Client.send(command);
     const fileNameList = response.Contents?.map((content) => content.Key);
     //Filter files that are already associated with a store item
+    await dbConnect();
     const data = await StoreItemModel.find({});
     const storeItems = JSON.parse(JSON.stringify(data)) as StoreItemDB_ID[];
 
