@@ -6,6 +6,7 @@ import Link from "next/link";
 import SignInButton from "./SignInButton";
 import { Session } from "next-auth";
 import ShoppingCartIcon from "./ShoppingCartIcon";
+import { DatabaseIcon } from "lucide-react";
 
 /* 
   Navigation bar used in the store
@@ -29,6 +30,14 @@ export default function TopNav({ session }: Props) {
       </div>
 
       <div className="ml-auto flex items-center gap-1  lg:gap-8">
+        {session && session.user.role === "admin" && (
+          <Link href="/admin">
+            <Button size="icon" variant="outline">
+              <DatabaseIcon className="h-4 w-4" />
+              <span className="sr-only">Admin</span>
+            </Button>
+          </Link>
+        )}
         <ShoppingCartIcon />
         <Link href="/me">
           <Button size="icon" variant="outline">
