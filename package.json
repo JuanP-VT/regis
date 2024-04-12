@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@aws-sdk/lib-storage": "^3.511.0",
+    "@aws-sdk/s3-presigned-post": "^3.554.0",
     "@aws-sdk/s3-request-presigner": "^3.540.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
