@@ -13,12 +13,12 @@ import {
 import { Label } from "@/components/ui/label";
 import Tiptap from "@/components/composed/Text Editor/TipTap";
 import { NewStoreItem } from "@/types/storeItemDB";
-import LoadingButton from "@/components/LoadingButton";
 import { Category_ID } from "@/types/category";
 import CategorySelectMenu from "@/components/composed/CategorySelectMenu";
 import PulseLoader from "react-spinners/PulseLoader";
 import { Button } from "@/components/ui/button";
 import SubCategorySelectMenu from "@/components/composed/SubCategorySelectMenu";
+import type { PresignedPost } from "@aws-sdk/s3-presigned-post";
 
 type Props = {
   filesKeyList: (string | undefined)[] | undefined;
@@ -45,11 +45,13 @@ export default function NewStoreItemPage({
     secondaryImageIndex: 0,
   });
   const [imagesUrl, setImagesUrl] = useState<String[]>([]);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
   //We need to show a loading button while the form is being submitted
   const [isLoading, setIsLoading] = useState(false);
   //We need to send the user feedback after the form is submitted
   const [feedback, setFeedback] = useState("");
   const [details, setDetails] = useState("");
+  //States to handle category and subcategory selection
   const [selectedCategoriesID, setSelectedCategoriesID] = useState<string[]>(
     [],
   );
@@ -92,23 +94,60 @@ export default function NewStoreItemPage({
       method: "POST",
       body: formData,
     });
-    if (response.status === 200) {
-      setFeedback("Producto Agregado");
-      setTimeout(() => {
-        location.reload();
-      }, 2000);
-    }
+    //Handle  error status
     if (response.status === 400) {
       setFeedback("Solicitud incorrecta, verifica los campos");
       setIsLoading(false);
     }
     if (response.status === 409) {
-      setFeedback("File already exist");
+      setFeedback("Conflicto, ya existe un registro con ese nombre");
       setIsLoading(false);
     }
     if (response.status === 500) {
       setFeedback("Hubo un error en el servidor");
       setIsLoading(false);
+    }
+    //If the response is OK, we can upload the images to S3
+    if (response.status === 200) {
+      //Get presigned posts for images
+      const data = (await response.json()) as {
+        presignedPosts: PresignedPost[];
+      };
+      // Upload each image to S3
+      const uploadPromises = data.presignedPosts.map((post, index) => {
+        // Create a new FormData instance
+        const formData = new FormData();
+
+        // Append the fields from the presigned post
+        for (const field in post.fields) {
+          formData.append(field, post.fields[field]);
+        }
+
+        // Append the file associated with this presigned post
+        formData.append("file", imageFiles[index]);
+
+        // Make a POST request to the presigned URL
+        return fetch(post.url, {
+          method: "POST",
+          body: formData,
+        });
+      });
+
+      // Wait for all uploads to finish
+      const uploadResponses = await Promise.all(uploadPromises);
+      uploadResponses.forEach((response, index) => {
+        if (!response.ok) {
+          setFeedback(
+            `Upload for image ${index} failed with status ${response.status}`,
+          );
+          return;
+        } else {
+          setFeedback("Producto Agregado");
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        }
+      });
     }
   }
 
@@ -195,6 +234,7 @@ export default function NewStoreItemPage({
                 ...prevState,
                 images: acceptedFiles,
               }));
+              setImageFiles(acceptedFiles); // Update imageFiles
               const urls = acceptedFiles.map((file) =>
                 URL.createObjectURL(file),
               );
