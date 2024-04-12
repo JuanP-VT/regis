@@ -47,7 +47,7 @@ NextJS application to sell cut files
 
 ## Getting Started
 
-    To run the development server use the package manager of your choice, this project was bootstrap with Pnpm
+    To run the development server use the package manager of your choice, this project was bootstrap with npm
 
 Install Node Modules
 
