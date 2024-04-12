@@ -2,7 +2,7 @@ import { validateNewStoreItem } from "@/lib/schema-validators/admin-new-storeite
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { OPTIONS } from "../auth/[...nextauth]/nextAuthOptions";
-import { Upload } from "@aws-sdk/lib-storage";
+import { createPresignedPost, PresignedPost } from "@aws-sdk/s3-presigned-post";
 import { v4 as uuidv4 } from "uuid";
 import { AwsS3Client } from "@/lib/awsS3Client";
 import { StoreItemModel } from "@/lib/models/storeItem";
@@ -46,8 +46,7 @@ export async function POST(req: Request) {
   ) {
     return NextResponse.json({ message: "Missing fields" }, { status: 400 });
   }
-  //Validate the input
-
+  //Create object to validate
   const newStoreItem: StoreItemDB = {
     fileName: fileName,
     storeItemName: storeItemName,
@@ -95,31 +94,34 @@ export async function POST(req: Request) {
       { status: 500 },
     );
   }
-  //Upload images to S3
+  //Create presigned posts for each image
+  let presignedPosts: PresignedPost[] = [];
   try {
-    const uploadPromises = images.map(async (image) => {
+    const presignedPostPromises = images.map(async (image) => {
       const fileExtension = image.name.split(".").pop() as string;
       const uuid = uuidv4();
       const name = `${uuid}.${fileExtension}`;
-      const command = {
+
+      const presignedPost = await createPresignedPost(AwsS3Client, {
         Bucket: process.env.S3_IMAGE_BUCKET_NAME,
         Key: name,
-        Body: image.stream(),
-      };
+        Expires: 60 * 10, // Expires in 10 minutes
+        Conditions: [
+          ["content-length-range", 1, 1000000], // 1B to 1MB
+        ],
+      });
 
-      const upload = new Upload({ client: AwsS3Client, params: command });
-      await upload.done();
       const imageUrl = `https://${process.env.CLOUDFRONT_URL}/${uuid}.${fileExtension}`;
 
-      return { imageUrl, name };
+      return { imageUrl, name, presignedPost };
     });
 
-    const results = await Promise.all(uploadPromises);
-
+    const results = await Promise.all(presignedPostPromises);
+    presignedPosts = results.map((result) => result.presignedPost);
     newStoreItem.imageNamesList = results.map((result) => result.name);
     newStoreItem.imageUrlList = results.map((result) => result.imageUrl);
   } catch (error) {
-    console.error("Error uploading images:", error);
+    console.error("Error creating presigned posts:", error);
     return NextResponse.json(
       { message: "An error occurred uploading the images" },
       { status: 500 },
@@ -146,7 +148,9 @@ export async function POST(req: Request) {
   try {
     await StoreItemModel.create(newStoreItem);
 
-    return NextResponse.json({ message: "success" });
+    return NextResponse.json({
+      presignedPosts,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

@@ -31,6 +31,11 @@ export default function NewCutFilePage() {
   const [feedback, setFeedback] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   async function handleSubmit() {
+    if (!formState.file) {
+      setFeedback("No hay archivo seleccionado");
+      setIsLoading(false);
+      return;
+    }
     //Cliente Validation
     setIsLoading(true);
     const validateData = ValidateNewFileApi.safeParse(formState);
@@ -48,15 +53,9 @@ export default function NewCutFilePage() {
     });
     //Remove client side validation feedback to display feedback from the server
     setErrorMessage([]);
-    if (response.ok) {
-      setFeedback("Archivo Agregado");
-      setTimeout(() => {
-        location.reload();
-      }, 2000);
-      return;
-    }
+
     if (response.status === 409) {
-      setFeedback("Archivo ya existe en la base de datos");
+      setFeedback("Ya existe un archivo con ese nombre");
       setIsLoading(false);
       return;
     }
@@ -65,6 +64,31 @@ export default function NewCutFilePage() {
       setFeedback("Error al agregar archivo");
       setIsLoading(false);
       return;
+    }
+    // Extract the pre-signed POST data from response
+    const { presignedPost } = await response.json();
+    const uploadData = new FormData();
+    Object.entries(presignedPost.fields).forEach(([key, value]) => {
+      uploadData.append(key, value as string);
+    });
+
+    uploadData.append("file", formState.file);
+    const uploadResponse = await fetch(presignedPost.url, {
+      method: "POST",
+      body: uploadData,
+    });
+    if (uploadResponse.ok) {
+      setFeedback("Archivo agregado exitosamente");
+      setFormState((prevState) => ({
+        ...prevState,
+        file: null,
+      }));
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } else {
+      setFeedback("Error al agregar archivo");
     }
   }
   return (

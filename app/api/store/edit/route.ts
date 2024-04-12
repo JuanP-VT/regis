@@ -1,4 +1,3 @@
-import { Upload } from "@aws-sdk/lib-storage";
 import { AwsS3Client } from "@/lib/awsS3Client";
 import { v4 as uuid } from "uuid";
 import { StoreItemModel } from "@/lib/models/storeItem";
@@ -13,6 +12,7 @@ import { OPTIONS } from "../../auth/[...nextauth]/nextAuthOptions";
 import { Role } from "@/types/user";
 import { Category_ID } from "@/types/category";
 import { categoryModel } from "@/lib/models/category";
+import { createPresignedPost, PresignedPost } from "@aws-sdk/s3-presigned-post";
 import dbConnect from "@/lib/dbConnect";
 export async function POST(req: Request) {
   //Check Environment Variables
@@ -67,7 +67,7 @@ export async function POST(req: Request) {
   let validatedCategoryIDList: string[];
   try {
     await dbConnect();
-    const resCategoryList = categoryModel.find({}).lean();
+    const resCategoryList = await categoryModel.find({}).lean();
     const categoryList = JSON.parse(
       JSON.stringify(resCategoryList),
     ) as Category_ID[];
@@ -78,6 +78,7 @@ export async function POST(req: Request) {
       allCategoriesIDList.includes(category),
     );
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { message: "Error al acceder a la base de datos" },
       { status: 500 },
@@ -141,26 +142,28 @@ export async function POST(req: Request) {
   }
 
   // If there are new images, upload them to s3 bucket
-  let uploadedImageNamesList = [] as string[];
+  let uploadedImagesFileName = [] as string[];
+  let uploadedImageKeyNamesList = [] as string[]; //Keys of the uploaded images
   let uploadedImageUrlList = [] as string[];
+  let presignedPosts: PresignedPost[] = [];
   if (newImages.length > 0) {
-    const keyId = uuid();
     try {
-      const uploadPromises = newImages.map(async (file) => {
+      const presignedPostPromises = newImages.map(async (file, index) => {
+        const keyId = uuid();
         const fileExtension = file.name.split(".").pop() as string;
         const keyName = `${keyId}.${fileExtension}`;
-        const command = {
+        const presignedPost = await createPresignedPost(AwsS3Client, {
           Bucket: process.env.S3_IMAGE_BUCKET_NAME,
           Key: keyName,
-          Body: file.stream(),
-        };
-        const upload = new Upload({ client: AwsS3Client, params: command });
-        await upload.done();
+          Expires: 600, // Presigned URLs will be valid for 10 minute
+        });
         const imageUrl = `https://${process.env.CLOUDFRONT_URL}/${keyId}.${fileExtension}`;
-        uploadedImageNamesList.push(keyName);
+        uploadedImageKeyNamesList.push(keyName);
         uploadedImageUrlList.push(imageUrl);
+        uploadedImagesFileName.push(file.name);
+        return presignedPost;
       });
-      await Promise.all(uploadPromises);
+      presignedPosts = await Promise.all(presignedPostPromises);
     } catch (error) {
       return new Response("Error uploading images", { status: 500 });
     }
@@ -168,7 +171,7 @@ export async function POST(req: Request) {
   //Update item image names and urls
   const updatedItem: StoreItemDB = {
     ...newItem,
-    imageNamesList: [...imageNamesList, ...uploadedImageNamesList],
+    imageNamesList: [...imageNamesList, ...uploadedImageKeyNamesList],
     imageUrlList: [...imageUrlList, ...uploadedImageUrlList],
   };
   //Update main image index if it is out of bounds
@@ -192,7 +195,12 @@ export async function POST(req: Request) {
       },
     );
     return NextResponse.json(
-      { message: "Producto actualizado", updatedProduct },
+      {
+        message: "Producto actualizado",
+        updatedProduct,
+        presignedPosts: presignedPosts,
+        newImages: uploadedImagesFileName,
+      },
       { status: 200 },
     );
   } catch (error) {

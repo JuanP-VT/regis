@@ -11,6 +11,8 @@ import { StoreItemDB_ID } from "@/types/storeItemDB";
 import Image from "next/image";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
+import type { PresignedPost } from "@aws-sdk/s3-presigned-post";
+
 type Props = {
   storeItem: StoreItemDB_ID;
   categoryList: Category_ID[];
@@ -19,7 +21,7 @@ type Props = {
  * Page to edit store items in the admin panel
  * Dynamic route : /admin/store-edit/[id]
  */
-//TODO: refactor SelectCategoryMenu & SelectSubCategoryMenu into a single component
+//Future TODO: refactor SelectCategoryMenu & SelectSubCategoryMenu into a single component
 export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
   const [feedback, setFeedback] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -33,6 +35,7 @@ export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
   const [selectedSubCategoriesID, setSelectedSubCategoriesID] = useState<
     string[]
   >(storeItem.subCategoryIDList ?? []);
+
   async function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
     setIsLoading(true);
     ev.preventDefault();
@@ -70,26 +73,58 @@ export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
       formData.append("newImages", file);
     });
     //Send the form data to the server
-    const req = await fetch("/api/store/edit", {
+    const res = await fetch("/api/store/edit", {
       method: "POST",
       body: formData,
     });
-    const res = await req.json();
-    if (req.ok) {
-      setFeedback("Cambios guardados");
-      setTimeout(() => {
-        location.reload();
-      }, 2000);
-    } else {
-      setFeedback(res.message);
-      setIsLoading(false);
+
+    if (res.ok) {
+      //Get presigned posts for images
+      const data = await res.json();
+      const presignedPosts = data.presignedPosts as PresignedPost[];
+      const newImages = data.newImages as string[];
+      // Upload each image to S3
+      const uploadPromises = presignedPosts.map((post, index) => {
+        // Create a new FormData instance
+        const formData = new FormData();
+
+        // Append the fields from the presigned post
+        for (const field in post.fields) {
+          formData.append(field, post.fields[field]);
+        }
+
+        // Api will return the file name in the newImages array
+        // Append the file associated with this presigned post
+        const file = newImageFiles.find(
+          (imageFile) => imageFile.name === newImages[index],
+        );
+        formData.append("file", file as Blob);
+
+        // Make a POST request to the presigned URL
+        return fetch(post.url, {
+          method: "POST",
+          body: formData,
+        });
+      });
+
+      // Wait for all uploads to finish
+      const uploadResponses = await Promise.all(uploadPromises);
+      // Check if all uploads were successful
+      const successfulUploads = uploadResponses.every((res) => res.ok);
+      if (successfulUploads) {
+        setFeedback("Edición Exitosa");
+      } else {
+        setFeedback("Error al subir imágenes");
+      }
     }
   }
+
   //Get subcategory list from selected categories
   const availableSubCategoryList = categoryList
     .filter((category) => selectedCategoriesID.includes(category._id))
     .map((category) => category.subCategoryList)
     .flat();
+
   return (
     <div className="p-5">
       <div>

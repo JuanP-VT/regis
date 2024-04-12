@@ -1,10 +1,10 @@
 import { getServerSession } from "next-auth";
 import { OPTIONS } from "@/app/api/auth/[...nextauth]/nextAuthOptions";
 import { AwsS3Client } from "@/lib/awsS3Client";
-import { Upload } from "@aws-sdk/lib-storage";
-import { ValidateNewFileApi } from "@/lib/schema-validators/admin-new-file";
+
 import { NextResponse } from "next/server";
 import { ListObjectsV2Command } from "@aws-sdk/client-s3";
+import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { Role } from "@/types/user";
 /**
  * Pending, rate limit!!
@@ -39,20 +39,19 @@ export async function POST(req: Request) {
         { status: 409 },
       );
     }
-    // Upload the file to the S3 bucket
-    const command = {
+    // Generate pre-signed POST data
+    const presignedPost = await createPresignedPost(AwsS3Client, {
       Bucket: process.env.S3_FILES_BUCKET_NAME,
       Key: file.name,
-      Body: file.stream(),
-      Metadata: {
-        "Content-Length": file.size.toString(),
-        "Content-Group": file.name,
-      },
-    };
-    const upload = new Upload({ client: AwsS3Client, params: command });
+      Expires: 60 * 10, // Expires in 10 minutes
+      Conditions: [
+        ["content-length-range", 1, 1000000], // 1B to 1MB
+      ],
+    });
 
-    const data = await upload.done();
-    return NextResponse.json({ message: "File uploaded successfully", data });
+    return NextResponse.json({
+      presignedPost,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "An error occurred" }, { status: 500 });
