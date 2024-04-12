@@ -22,7 +22,7 @@ The request should be a `multipart/form-data` with the following fields:
 
 ### Response
 
-If successful, returns a JSON object with a `message` property set to "success".
+If successful, returns a JSON object with a `presignedPosts` property for the client to upload the files.
 
 If there are missing fields in the request, returns a 400 status code with a JSON object containing a `message` property set to "Missing fields".
 
