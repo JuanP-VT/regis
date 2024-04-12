@@ -12,12 +12,11 @@ import StarIcon from "../ui/custom svg/StarIcon";
 import { StoreItemDB_ID } from "@/types/storeItemDB";
 
 // Option 1: Browser + server-side
-import Tiptap from "../composed/Text Editor/TipTap";
-import { ArrowLeft, ShoppingCart as ShoppingCartIcon } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import addToShoppingCart from "@/utils/addToShoppingCart";
 import ShoppingCart from "@/utils/classes/ShoppingCart";
 import { toast } from "sonner";
+import TiptapReadOnly from "../composed/Text Editor/TipTapReadOnly";
 
 /**
  *
@@ -87,7 +86,7 @@ export default function IndividualCutFileProduct({ storeItem }: Props) {
                 Detalles del producto
               </AccordionTrigger>
               <AccordionContent>
-                <Tiptap readOnly content={storeItem.details} />
+                <TiptapReadOnly content={storeItem.details} />
               </AccordionContent>
             </AccordionItem>
           </Accordion>
