@@ -52,7 +52,7 @@ NextJS application to sell cut files
 Install Node Modules
 
 ```bash
-pnpm install
+npm install
 ```
 
 Set env file
@@ -62,7 +62,7 @@ Set env file
 Run Development server
 
 ```bash
-pnpm dev
+npm dev
 ```
 
 App is started at [http://localhost:3000](http://localhost:3000).
