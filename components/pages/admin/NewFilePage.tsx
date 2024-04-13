@@ -7,7 +7,8 @@ import { ValidateNewFileApi } from "@/lib/schema-validators/admin-new-file";
 import { z } from "zod";
 import AdminNav from "@/components/composed/AdminNav";
 import PulseLoader from "react-spinners/PulseLoader";
-
+import axios from "axios";
+import { Progress } from "@/components/ui/progress";
 /**
  * This is the `NewCutFilePage` component.
  *
@@ -29,6 +30,7 @@ export default function NewCutFilePage() {
   const [errorMessage, setErrorMessage] = useState<z.ZodError[]>([]);
   const [feedback, setFeedback] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   async function handleSubmit() {
     if (!formState.file) {
       setFeedback("No hay archivo seleccionado");
@@ -70,13 +72,17 @@ export default function NewCutFilePage() {
     Object.entries(presignedPost.fields).forEach(([key, value]) => {
       uploadData.append(key, value as string);
     });
-
+    console.log(presignedPost);
     uploadData.append("file", formState.file);
-    const uploadResponse = await fetch(presignedPost.url, {
-      method: "POST",
-      body: uploadData,
+    const uploadResponse = await axios.post(presignedPost.url, uploadData, {
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = progressEvent.total
+          ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          : 0;
+        setUploadProgress(percentCompleted);
+      },
     });
-    if (uploadResponse.ok) {
+    if (uploadResponse.status === 204) {
       setFeedback("Archivo agregado exitosamente");
       setFormState((prevState) => ({
         ...prevState,
@@ -124,7 +130,10 @@ export default function NewCutFilePage() {
             ))}
           </div>
           {isLoading ? (
-            <PulseLoader size={2} />
+            <>
+              <Progress value={uploadProgress} />
+              <PulseLoader size={2} />
+            </>
           ) : (
             <Button className="w-20" onClick={handleSubmit}>
               Agregar
