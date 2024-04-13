@@ -23,7 +23,7 @@ export async function POST(req: Request) {
   const storeItemName = body.get("storeItemName") as string;
   const price = body.get("price") as string;
   const discountPercentage = body.get("discountPercentage") as string;
-  const images = body.getAll("images") as File[];
+  const imageNames = body.getAll("imageNames") as string[];
   const mainImageIndex = body.get("mainImageIndex") as string;
   const secondaryImageIndex = body.get("secondaryImageIndex") as string;
   const details = body.get("details") as string;
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     !fileName.trim() ||
     !storeItemName.trim() ||
     !price ||
-    !images ||
+    !imageNames ||
     !categoryIDList ||
     !subCategoryIDList ||
     !details.trim() ||
@@ -95,30 +95,35 @@ export async function POST(req: Request) {
     );
   }
   //Create presigned posts for each image
-  let presignedPosts: PresignedPost[] = [];
+  let presignedPostsData: {
+    imageUrl: string;
+    key: string;
+    presignedPost: PresignedPost;
+    fileName: string;
+  }[];
   try {
-    const presignedPostPromises = images.map(async (image) => {
-      const fileExtension = image.name.split(".").pop() as string;
+    const presignedPostPromises = imageNames.map(async (fileName) => {
+      const fileExtension = fileName.split(".").pop() as string;
       const uuid = uuidv4();
-      const name = `${uuid}.${fileExtension}`;
+      const key = `${uuid}.${fileExtension}`;
 
       const presignedPost = await createPresignedPost(AwsS3Client, {
         Bucket: process.env.S3_IMAGE_BUCKET_NAME,
-        Key: name,
-        Expires: 60 * 10, // Expires in 10 minutes
+        Key: key,
+        Expires: 60 * 15, // Expires in 15 minutes
         Conditions: [
-          ["content-length-range", 1, 1000000], // 1B to 1MB
+          ["content-length-range", 1, 500000000], // 1B to 500MB
         ],
       });
 
       const imageUrl = `https://${process.env.CLOUDFRONT_URL}/${uuid}.${fileExtension}`;
 
-      return { imageUrl, name, presignedPost };
+      return { imageUrl, key, presignedPost, fileName };
     });
 
     const results = await Promise.all(presignedPostPromises);
-    presignedPosts = results.map((result) => result.presignedPost);
-    newStoreItem.imageNamesList = results.map((result) => result.name);
+    presignedPostsData = results;
+    newStoreItem.imageNamesList = results.map((result) => result.key);
     newStoreItem.imageUrlList = results.map((result) => result.imageUrl);
   } catch (error) {
     console.error("Error creating presigned posts:", error);
@@ -149,7 +154,7 @@ export async function POST(req: Request) {
     await StoreItemModel.create(newStoreItem);
 
     return NextResponse.json({
-      presignedPosts,
+      presignedPostsData,
     });
   } catch (error) {
     console.error(error);

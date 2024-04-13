@@ -19,6 +19,7 @@ import PulseLoader from "react-spinners/PulseLoader";
 import { Button } from "@/components/ui/button";
 import SubCategorySelectMenu from "@/components/composed/SubCategorySelectMenu";
 import type { PresignedPost } from "@aws-sdk/s3-presigned-post";
+import { Progress } from "@/components/ui/progress";
 
 type Props = {
   filesKeyList: (string | undefined)[] | undefined;
@@ -44,13 +45,11 @@ export default function NewStoreItemPage({
     subCategoryIDList: [],
     secondaryImageIndex: 0,
   });
-  const [imagesUrl, setImagesUrl] = useState<String[]>([]);
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
-  //We need to show a loading button while the form is being submitted
-  const [isLoading, setIsLoading] = useState(false);
-  //We need to send the user feedback after the form is submitted
-  const [feedback, setFeedback] = useState("");
-  const [details, setDetails] = useState("");
+  const [imagesUrl, setImagesUrl] = useState<String[]>([]); // is displayed in the dropzone as feedback
+  const [imageFiles, setImageFiles] = useState<File[]>([]); // Image Files to be uploaded
+  const [isLoading, setIsLoading] = useState(false); //Loading state
+  const [feedback, setFeedback] = useState(""); //Feedback to the user
+  const [details, setDetails] = useState(""); //Details of the product
   //States to handle category and subcategory selection
   const [selectedCategoriesID, setSelectedCategoriesID] = useState<string[]>(
     [],
@@ -58,11 +57,16 @@ export default function NewStoreItemPage({
   const [selectedSubCategoriesID, setSelectedSubCategoriesID] = useState<
     string[]
   >([]);
+  //Upload progress
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const progressPercentage = (uploadProgress / imageFiles.length) * 100;
   //Get subcategory list from selected categories
   const availableSubCategoryList = categoryList
     .filter((category) => selectedCategoriesID.includes(category._id))
     .map((category) => category.subCategoryList)
     .flat();
+
+  //Handle form submission
   async function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
     setIsLoading(true);
@@ -77,7 +81,7 @@ export default function NewStoreItemPage({
       formValue.discountPercentage.toString(),
     );
     formValue.images?.forEach((image) => {
-      formData.append("images", image);
+      formData.append("imageNames", image.name);
     });
     formData.append("mainImageIndex", formValue.mainImageIndex.toString());
     formData.append(
@@ -109,45 +113,58 @@ export default function NewStoreItemPage({
     }
     //If the response is OK, we can upload the images to S3
     if (response.status === 200) {
-      //Get presigned posts for images
-      const data = (await response.json()) as {
-        presignedPosts: PresignedPost[];
+      type ApiResponse = {
+        presignedPostsData: {
+          imageUrl: string;
+          key: string;
+          presignedPost: PresignedPost;
+          fileName: string;
+        }[];
       };
+      //Get presigned posts for images
+      const data = (await response.json()) as ApiResponse;
+
       // Upload each image to S3
-      const uploadPromises = data.presignedPosts.map((post, index) => {
+      const uploadPromises = data.presignedPostsData.map(async (post) => {
         // Create a new FormData instance
         const formData = new FormData();
 
         // Append the fields from the presigned post
-        for (const field in post.fields) {
-          formData.append(field, post.fields[field]);
+        for (const field in post.presignedPost.fields) {
+          formData.append(field, post.presignedPost.fields[field]);
         }
 
         // Append the file associated with this presigned post
-        formData.append("file", imageFiles[index]);
+        const fileToUpload = imageFiles.find(
+          (file) => file.name === post.fileName,
+        );
+        if (fileToUpload) formData.append("file", fileToUpload);
 
         // Make a POST request to the presigned URL
-        return fetch(post.url, {
+        return fetch(post.presignedPost.url, {
           method: "POST",
           body: formData,
+        }).then((response) => {
+          setUploadProgress((prev) => prev + 1);
+          return response;
         });
       });
 
       // Wait for all uploads to finish
       const uploadResponses = await Promise.all(uploadPromises);
-      uploadResponses.forEach((response, index) => {
-        if (!response.ok) {
-          setFeedback(
-            `Upload for image ${index} failed with status ${response.status}`,
-          );
-          return;
-        } else {
-          setFeedback("Producto Agregado");
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
-        }
-      });
+
+      // Check if all uploads were successful
+      const allUploadsSucceeded = uploadResponses.every(
+        (response) => response.ok,
+      );
+      if (allUploadsSucceeded) {
+        setFeedback("Producto agregado con éxito");
+      } else {
+        setFeedback("Hubo un error subiendo las imágenes");
+      }
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     }
   }
 
@@ -298,7 +315,10 @@ export default function NewStoreItemPage({
           <Label className="my-3">Detalles del producto</Label>
           <Tiptap onChange={setDetails} />
           {isLoading ? (
-            <PulseLoader size={2} />
+            <>
+              <Progress value={progressPercentage} />
+              <PulseLoader size={2} />
+            </>
           ) : (
             <Button className="my-2">Agregar</Button>
           )}
