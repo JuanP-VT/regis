@@ -12,11 +12,10 @@ import PulseLoader from "react-spinners/PulseLoader";
  * This is the `NewCutFilePage` component.
  *
  * It's a form that allows users to upload a file, specifically with a `.zip` extension.
- * The file is then sent to the `/api/new-file` endpoint for processing.
+ * The fileName is then sent to the `/api/new-file` endpoint for processing.
  *
  * The component handles both client-side and server-side validation:
  * - Client-side validation is done using the `ValidateNewFileApi` schema validator.
- * - Server-side validation feedback is displayed to the user.
  *
  * The component also provides feedback to the user in case of errors or successful file upload.
  *
@@ -46,7 +45,7 @@ export default function NewCutFilePage() {
       return;
     }
     const formData = new FormData();
-    formData.append("file", formState.file as Blob);
+    formData.append("fileName", formState.file.name);
     const response = await fetch("/api/new-file", {
       method: "POST",
       body: formData,
