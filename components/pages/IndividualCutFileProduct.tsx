@@ -7,7 +7,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import ProductReview from "../composed/cards/ProductReview";
 import StarIcon from "../ui/custom svg/StarIcon";
 import { StoreItemDB_ID } from "@/types/storeItemDB";
 
@@ -30,81 +29,78 @@ export default function IndividualCutFileProduct({ storeItem }: Props) {
   const router = useRouter();
 
   return (
-    <div className="flex min-h-screen flex-col-reverse gap-5 md:justify-center lg:flex-row">
-      <ArrowLeft
-        className="cursor-pointer hover:text-rose-500"
-        onClick={(event) => {
-          event.preventDefault();
-          router.back();
-        }}
-      />
-      <div className="flex max-w-3xl flex-col">
-        <ImageSlider images={storeItem.imageUrlList} />
-        <div className="p-2">
-          {Array(3)
-            .fill(0)
-            .map((_, index) => (
-              <ProductReview key={`pr${index}`} />
-            ))}
-        </div>
-      </div>
-      <div className="ml-3 flex flex-col p-1 lg:ml-0 lg:mt-5">
-        <PriceTag
-          price={storeItem.price}
-          discountPercentage={storeItem.discountPercentage}
-        />
-        <div className="flex py-2 ">
-          {Array(5)
-            .fill(0)
-            .map((_, index) => (
-              <StarIcon className="h-5 w-5 text-rose-400" key={index} />
-            ))}
-        </div>
-        <p className="md:max-w-2xl ">{storeItem.storeItemName}</p>
-        <Button
-          className="mt-2 max-w-96 rounded-full bg-rose-500"
-          variant="outline"
-          onClick={() => {
-            const cart = new ShoppingCart();
-            cart.addToCart(storeItem);
-            toast("Agregado Al Carrito", {
-              description: `${storeItem.storeItemName.slice(0, 50)}... ha sido agregado al carrito!`,
-              action: {
-                label: "Cerrar",
-                onClick: () => {},
-              },
-            });
+    <div>
+      <div className="relative flex  flex-col-reverse gap-5 md:justify-center lg:flex-row">
+        <ArrowLeft
+          className="absolute left-0 top-0 z-20 cursor-pointer hover:text-rose-500"
+          onClick={(event) => {
+            event.preventDefault();
+            router.back();
           }}
-        >
-          Agregar Al Carrito
-        </Button>
+        />
+        <div className="flex w-full max-w-3xl flex-col">
+          <ImageSlider images={storeItem.imageUrlList} />
+        </div>
+        <div className="ml-5 flex flex-col p-1 lg:ml-0 lg:mt-5">
+          <PriceTag
+            price={storeItem.price}
+            discountPercentage={storeItem.discountPercentage}
+          />
+          <div className="flex py-2 ">
+            {Array(5)
+              .fill(0)
+              .map((_, index) => (
+                <StarIcon className="h-5 w-5 text-rose-300" key={index} />
+              ))}
+          </div>
+          <p className="md:max-w-2xl ">{storeItem.storeItemName}</p>
+          <Button
+            className="mt-2 max-w-96 rounded-full bg-sky-300 hover:bg-sky-500"
+            variant="outline"
+            onClick={() => {
+              const cart = new ShoppingCart();
+              cart.addToCart(storeItem);
+              toast("Agregado Al Carrito", {
+                description: `${storeItem.storeItemName.slice(0, 50)}... ha sido agregado al carrito!`,
+                action: {
+                  label: "Cerrar",
+                  onClick: () => {},
+                },
+              });
+            }}
+          >
+            Agregar Al Carrito
+          </Button>
 
-        <div className="mt-3 flex flex-col">
-          <Accordion type="single" collapsible className="mt-2 md:w-96">
-            <AccordionItem value="item-1">
-              <AccordionTrigger className="rounded-full pl-3 text-xs font-semibold hover:bg-slate-300">
-                Detalles del producto
-              </AccordionTrigger>
-              <AccordionContent>
-                <TiptapReadOnly content={storeItem.details} />
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-          <Accordion type="single" collapsible className="mt-2 md:w-96">
-            <AccordionItem value="item-1">
-              <AccordionTrigger className="rounded-full pl-3 text-xs font-semibold hover:bg-slate-300">
-                Delivery
-              </AccordionTrigger>
-              <AccordionContent>
-                Descarga instantánea Tus archivos estarán disponibles para
-                descargar una vez Se confirma el pago. Así es cómo. Los
-                elementos de descarga instantánea no aceptar devoluciones,
-                cambios o cancelaciones.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          <div className="mt-3 flex flex-col">
+            <Accordion type="single" collapsible className="mt-2 md:w-96">
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="rounded-full pl-3 text-xs font-semibold hover:bg-slate-300">
+                  Detalles del producto
+                </AccordionTrigger>
+                <AccordionContent>
+                  <TiptapReadOnly content={storeItem.details} />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+            <Accordion type="single" collapsible className="mt-2 md:w-96">
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="rounded-full pl-3 text-xs font-semibold hover:bg-slate-300">
+                  Delivery
+                </AccordionTrigger>
+                <AccordionContent>
+                  Descarga instantánea Tus archivos estarán disponibles para
+                  descargar una vez Se confirma el pago. Así es cómo. Los
+                  elementos de descarga instantánea no aceptar devoluciones,
+                  cambios o cancelaciones.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
         </div>
       </div>
+      <div className="mt-10 flex h-96 border">Placeholder Review Section</div>
+      <div className="flex h-96 border">Placeholder ADS Section</div>
     </div>
   );
 }
@@ -114,7 +110,7 @@ function PriceTag({ price, discountPercentage }: PriceTagProps) {
   const priceAfterDiscount = price - (price * discountPercentage) / 100;
   if (discountPercentage === 0) {
     return (
-      <p className="text-center text-4xl font-semibold text-green-700">
+      <p className=" text-4xl font-semibold text-green-700">
         MX${price.toFixed(2)}
       </p>
     );
