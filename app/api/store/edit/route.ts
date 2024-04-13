@@ -52,7 +52,7 @@ export async function POST(req: Request) {
   const secondaryImageIndex = body.get("secondaryImageIndex") as string;
   const imageNamesList = body.getAll("imageNamesList") as string[];
   const imageUrlList = body.getAll("imageUrlList") as string[];
-  const newImages = body.getAll("newImages") as File[];
+  const newImagesNames = body.getAll("newImageNames") as string[];
   const stringedCategoryIDList = (body.get("categoryIDList") ?? "[]") as string;
   const stringedSubCategoryIDList = (body.get("subCategoryIDList") ??
     "[]") as string;
@@ -145,29 +145,30 @@ export async function POST(req: Request) {
   let uploadedImagesFileName = [] as string[];
   let uploadedImageKeyNamesList = [] as string[]; //Keys of the uploaded images
   let uploadedImageUrlList = [] as string[];
-  let presignedPosts: PresignedPost[] = [];
-  if (newImages.length > 0) {
+  let presignedPostsData: { presignedPost: PresignedPost; fileName: string }[] =
+    [];
+  if (newImagesNames.length > 0) {
     try {
-      const presignedPostPromises = newImages.map(async (file, index) => {
+      const presignedPostPromises = newImagesNames.map(async (fileName) => {
         const keyId = uuid();
-        const fileExtension = file.name.split(".").pop() as string;
+        const fileExtension = fileName.split(".").pop() as string;
         const keyName = `${keyId}.${fileExtension}`;
         const presignedPost = await createPresignedPost(AwsS3Client, {
           Bucket: process.env.S3_IMAGE_BUCKET_NAME,
           Key: keyName,
-          Expires: 600, // Presigned URLs will be valid for 10 minute
         });
         const imageUrl = `https://${process.env.CLOUDFRONT_URL}/${keyId}.${fileExtension}`;
         uploadedImageKeyNamesList.push(keyName);
         uploadedImageUrlList.push(imageUrl);
-        uploadedImagesFileName.push(file.name);
-        return presignedPost;
+        uploadedImagesFileName.push(fileName);
+        return { presignedPost, fileName };
       });
-      presignedPosts = await Promise.all(presignedPostPromises);
+      presignedPostsData = await Promise.all(presignedPostPromises);
     } catch (error) {
       return new Response("Error uploading images", { status: 500 });
     }
   }
+  console.log(presignedPostsData);
   //Update item image names and urls
   const updatedItem: StoreItemDB = {
     ...newItem,
@@ -198,8 +199,7 @@ export async function POST(req: Request) {
       {
         message: "Producto actualizado",
         updatedProduct,
-        presignedPosts: presignedPosts,
-        newImages: uploadedImagesFileName,
+        presignedPostsData,
       },
       { status: 200 },
     );

@@ -12,6 +12,8 @@ import Image from "next/image";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
 import type { PresignedPost } from "@aws-sdk/s3-presigned-post";
+import { Progress } from "@/components/ui/progress";
+import SyncLoader from "react-spinners/SyncLoader";
 
 type Props = {
   storeItem: StoreItemDB_ID;
@@ -29,12 +31,21 @@ export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
   const [details, setDetails] = useState<string>(storeItem.details);
   const [newImageFiles, setNewImageFiles] = useState<File[]>([]);
   const [newImageUrl, setNewImageUrl] = useState<string[]>([]);
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const progressPercentage = (uploadProgress / newImageFiles.length) * 100;
+
   const [selectedCategoriesID, setSelectedCategoriesID] = useState<string[]>(
     storeItem.categoryIDList,
   );
   const [selectedSubCategoriesID, setSelectedSubCategoriesID] = useState<
     string[]
   >(storeItem.subCategoryIDList ?? []);
+
+  //Get subcategory list from selected categories
+  const availableSubCategoryList = categoryList
+    .filter((category) => selectedCategoriesID.includes(category._id))
+    .map((category) => category.subCategoryList)
+    .flat();
 
   async function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
     setIsLoading(true);
@@ -70,7 +81,7 @@ export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
     });
     //Append all the new images
     newImageFiles.forEach((file) => {
-      formData.append("newImages", file);
+      formData.append("newImageNames", file.name);
     });
     //Send the form data to the server
     const res = await fetch("/api/store/edit", {
@@ -78,52 +89,63 @@ export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
       body: formData,
     });
 
-    if (res.ok) {
-      //Get presigned posts for images
-      const data = await res.json();
-      const presignedPosts = data.presignedPosts as PresignedPost[];
-      const newImages = data.newImages as string[];
-      // Upload each image to S3
-      const uploadPromises = presignedPosts.map((post, index) => {
-        // Create a new FormData instance
-        const formData = new FormData();
-
-        // Append the fields from the presigned post
-        for (const field in post.fields) {
-          formData.append(field, post.fields[field]);
-        }
-
-        // Api will return the file name in the newImages array
-        // Append the file associated with this presigned post
-        const file = newImageFiles.find(
-          (imageFile) => imageFile.name === newImages[index],
-        );
-        formData.append("file", file as Blob);
-
-        // Make a POST request to the presigned URL
-        return fetch(post.url, {
-          method: "POST",
-          body: formData,
-        });
-      });
-
-      // Wait for all uploads to finish
-      const uploadResponses = await Promise.all(uploadPromises);
-      // Check if all uploads were successful
-      const successfulUploads = uploadResponses.every((res) => res.ok);
-      if (successfulUploads) {
-        setFeedback("Edición Exitosa");
-      } else {
-        setFeedback("Error al subir imágenes");
-      }
+    if (!res.ok) {
+      setFeedback("Error al editar el producto");
+      setIsLoading(false);
+      return;
     }
-  }
 
-  //Get subcategory list from selected categories
-  const availableSubCategoryList = categoryList
-    .filter((category) => selectedCategoriesID.includes(category._id))
-    .map((category) => category.subCategoryList)
-    .flat();
+    //Get presigned posts for images
+    type ApiResponse = {
+      message: string;
+      updatedProduct: StoreItemDB_ID;
+      presignedPostsData: {
+        presignedPost: PresignedPost;
+        fileName: string;
+      }[];
+    };
+    const data = (await res.json()) as ApiResponse;
+
+    console.log(data);
+    // Upload each image to S3
+    const uploadPromises = data.presignedPostsData.map(async (post) => {
+      // Create a new FormData instance
+      const formData = new FormData();
+
+      // Append the fields from the presigned post
+      for (const field in post.presignedPost.fields) {
+        formData.append(field, post.presignedPost.fields[field]);
+      }
+
+      // Append the file associated with this presigned post
+      const fileToUpload = newImageFiles.find(
+        (file) => file.name === post.fileName,
+      );
+      if (fileToUpload) formData.append("file", fileToUpload);
+
+      // Make a POST request to the presigned URL
+      return fetch(post.presignedPost.url, {
+        method: "POST",
+        body: formData,
+      }).then((response) => {
+        setUploadProgress((prev) => prev + 1);
+        return response;
+      });
+    });
+
+    // Wait for all uploads to finish
+    const uploadResponses = await Promise.all(uploadPromises);
+    // Check if all uploads were successful
+    const successfulUploads = uploadResponses.every((res) => res.ok);
+    if (successfulUploads) {
+      setFeedback("Edición Exitosa");
+    } else {
+      setFeedback("Error al subir imágenes");
+    }
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  }
 
   return (
     <div className="p-5">
@@ -296,8 +318,23 @@ export default function StoreItemEditPage({ storeItem, categoryList }: Props) {
               />
             </div>
           </div>
-          <LoadingButton isLoading={isLoading} message="Confirmar Edición" />
-          <p>{feedback}</p>
+          {isLoading && (
+            <SyncLoader
+              color="#000"
+              loading={isLoading}
+              size={3}
+              className="my-2"
+            />
+          )}
+          {isLoading && newImageFiles.length > 0 && (
+            <Progress
+              value={progressPercentage}
+              className="w-[60%] "
+              color="#efcef5"
+            />
+          )}
+          {!isLoading && <Button className="my-2">Confirmar Edición</Button>}
+          <p className="my-2">{feedback}</p>
         </form>
       </div>
     </div>
