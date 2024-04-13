@@ -41,9 +41,8 @@ export async function POST(req: Request) {
     const presignedPost = await createPresignedPost(AwsS3Client, {
       Bucket: process.env.S3_FILES_BUCKET_NAME,
       Key: fileName,
-      Expires: 60 * 10, // Expires in 10 minutes
       Conditions: [
-        ["content-length-range", 1, 1000000], // 1B to 1MB
+        ["content-length-range", 1, 500000000], // 1B to 500MB
       ],
     });
 
