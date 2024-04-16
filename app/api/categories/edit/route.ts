@@ -79,7 +79,7 @@ export async function POST(req: Request) {
   });
   //Apply string format after validation
   categoryToParse.name = categoryToParse.name.toLocaleLowerCase();
-  categoryToParse.description = categoryToParse.description.toLowerCase();
+  categoryToParse.description = categoryToParse.description.trim();
   //Subcategories must be a list of unique elements and should not contain empty strings
   categoryToParse.subCategoryList = Array.from(
     new Set(
