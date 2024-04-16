@@ -61,7 +61,7 @@ export default function ImageSlider({ images }: Props) {
             height={900}
             src={src}
             alt="product image"
-            className={`absolute left-0 h-full  w-full rounded-lg object-contain transition-all duration-500 md:object-fill ${currentIndex === index ? "opacity-100" : "opacity-0"} `}
+            className={`absolute left-0 h-auto  w-auto rounded-lg object-contain transition-all duration-500 md:object-fill ${currentIndex === index ? "opacity-100" : "opacity-0"} `}
           />
         ))}
       </div>

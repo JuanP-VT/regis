@@ -28,7 +28,7 @@ export async function POST(req: Request) {
   //Validate
   const newCategory: Category = {
     name: body.name.trim().toLowerCase(),
-    description: body.description.trim().toLowerCase(),
+    description: body.description.trim(),
     subCategoryList: body.subCategoryList ?? [],
   };
   try {

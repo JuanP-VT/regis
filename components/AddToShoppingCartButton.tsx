@@ -12,7 +12,8 @@ export default function AddToShoppingCartButton({ storeItem }: Props) {
   const [animationIsPlaying, setAnimationIsPlaying] = useState(false);
   return (
     <Button
-      className="absolute bottom-0 flex w-full -translate-x-96 overflow-hidden text-sm transition-all duration-300 group-hover:-translate-x-0"
+      size={"sm"}
+      className="absolute bottom-0 flex w-full -translate-x-96 overflow-hidden rounded-xl bg-pink-300 text-xs transition-all duration-300 hover:bg-pink-400 group-hover:-translate-x-0"
       onClick={() => {
         setAnimationIsPlaying(true);
         const cart = new ShoppingCart();
@@ -23,13 +24,11 @@ export default function AddToShoppingCartButton({ storeItem }: Props) {
       }}
     >
       <div className="flex">
-        <p
-          className={`px-2 font-bold ${animationIsPlaying && "text-pink-300"}`}
-        >
-          {animationIsPlaying ? "Agregado Al Carrito!" : "Agregar Producto"}
+        <p className={`px-2 font-bold ${animationIsPlaying && "font-bold "}`}>
+          {animationIsPlaying ? "Agregado Al Carrito!" : "Agregar Al Carrito"}
         </p>
         <ShoppingCartCheckout
-          className={`  transition-all duration-700 ${animationIsPlaying ? "-translate-x-0 text-pink-300" : "-translate-x-96"}`}
+          className={`  transition-all duration-700 ${animationIsPlaying ? "-translate-x-0 " : "-translate-x-96"}`}
         />
       </div>
     </Button>

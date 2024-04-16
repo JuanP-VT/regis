@@ -40,8 +40,10 @@ export default function CategoryCard({ category, index }: Props) {
       <TableRow
         className={`${index % 2 === 0 ? "bg-slate-100" : "bg-zinc-100"}  `}
       >
-        <TableCell className="font-medium">{category.name}</TableCell>
-        <TableCell className="font-medium">{category.description}</TableCell>
+        <TableCell className="caption-top capitalize">
+          {category.name}
+        </TableCell>
+        <TableCell className="font-medium ">{category.description}</TableCell>
         <TableCell className="font-medium">{subCategoriesString}</TableCell>
 
         <TableCell className=" font-medium">

@@ -64,10 +64,10 @@ export default function CategoryNav({ categoryList }: Props) {
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <Link
-                    className="group  flex min-w-32  flex-col p-3  text-xs "
+                    className="group  flex min-w-48  flex-col p-3  text-xs "
                     href={`/catalog/category=${category._id}&subCategory=&page=1`}
                   >
-                    <p className="w-min border-b border-b-transparent text-xs capitalize  transition-all duration-500 hover:text-sky-500 group-hover:border-b-slate-400">
+                    <p className="w-auto border-b border-b-transparent text-xs capitalize  transition-all duration-500 hover:text-sky-500 group-hover:text-sky-700">
                       {category.name}
                     </p>
                   </Link>
@@ -78,7 +78,7 @@ export default function CategoryNav({ categoryList }: Props) {
                       href={`/catalog/category=${category._id}&subCategory=${subCategory.id}&page=1`}
                       className="group  flex min-w-32  flex-col p-3  text-sm"
                     >
-                      <p className="w-min border-b border-b-transparent  capitalize transition-all duration-500  hover:text-sky-500 group-hover:border-b-slate-400">
+                      <p className="w-auto border-b border-b-transparent  capitalize transition-all duration-500  hover:text-sky-500 group-hover:text-sky-700">
                         {subCategory.name}
                       </p>
                     </Link>
