@@ -11,23 +11,23 @@ type Props = {
 
 export default function CatalogItemCard({ storeItem }: Props) {
   return (
-    <div className=" h-80 w-80">
+    <div className=" h-80 w-96 ">
       <div className="group  relative h-60 cursor-pointer overflow-hidden">
         <Link href={`/product/${storeItem._id}`}>
           <Image
-            className=" absolute -z-10 h-full w-full self-center rounded-sm opacity-100 transition duration-1000 ease-in-out group-hover:opacity-0"
+            className=" absolute -z-10 h-auto w-auto self-center rounded-sm   opacity-100 transition duration-1000 ease-in-out group-hover:opacity-0"
             src={storeItem.imageUrlList[storeItem.mainImageIndex]}
             alt="Store Display View"
-            width={500}
-            height={500}
-          />{" "}
+            width={900}
+            height={900}
+          />
           <Image
-            className=" absolute -z-10 h-full w-full self-center rounded-sm opacity-0 transition duration-1000 ease-in-out group-hover:scale-110
+            className=" absolute -z-10 h-auto w-auto self-center rounded-sm opacity-0 transition duration-1000 ease-in-out group-hover:scale-110
              group-hover:opacity-100"
             src={storeItem.imageUrlList[storeItem.secondaryImageIndex]}
             alt="Store Display View"
-            width={500}
-            height={500}
+            width={900}
+            height={900}
           />
         </Link>
 
@@ -48,7 +48,12 @@ export default function CatalogItemCard({ storeItem }: Props) {
         )}
         <Link href={`/product/${storeItem._id}`}>
           {" "}
-          <Button className="bg-pink-300 p-2 px-5 text-xs">Ver Detalles</Button>
+          <Button
+            size={"sm"}
+            className="bg-pink-300 p-2 px-5 text-xs hover:bg-pink-500"
+          >
+            Ver Detalles
+          </Button>
         </Link>
       </div>
     </div>
