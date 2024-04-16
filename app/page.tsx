@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import { SparklesCore } from "@/components/Sparkles";
 import CategoryNav from "@/components/composed/CategoryNav";
 import { Button } from "@/components/ui/button";
@@ -16,34 +17,23 @@ export default async function HomePage() {
       <div>
         <div className="relative">
           <SparklesCore
-            particleDensity={200}
-            particleColor="#e6b7b0"
-            background="#fefdfb"
+            particleDensity={50}
+            particleColor="#912c1e"
+            background="#fffcfa"
             className="absolute -z-10 h-full w-full "
           />
           <div className="">
             <CategoryNav categoryList={categoryList} />
 
-            <div className="relative flex w-full flex-col items-center justify-center">
+            <div className="relative flex w-full flex-col items-center justify-center pt-5">
               <Image
-                src="/banner.jpg"
+                priority={true}
+                src="/banner.webp"
                 alt="logo"
-                width={3200}
-                height={800}
-                className="  self-center  rounded-lg object-cover object-left pt-5 sm:h-64 sm:object-contain    sm:object-center"
+                width={2000}
+                height={1200}
+                className="  mb-5 h-60    self-center object-cover  object-left  lg:h-96    lg:object-contain lg:object-center"
               />
-
-              <Link
-                href={"/catalog/category=&subCategory=&page=1"}
-                className="p-2"
-              >
-                <Button
-                  size={"sm"}
-                  className="  bottom-0  transform  bg-rose-500 hover:bg-sky-400 md:px-16"
-                >
-                  Visitar Tienda
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
@@ -63,6 +53,14 @@ export default async function HomePage() {
                     la mejor calidad y al mejor precio. <br /> ¡Visita nuestra
                     tienda!
                   </p>
+                  <Link href={"/catalog/category=&subCategory=&page=1"}>
+                    <Button
+                      size={"sm"}
+                      className="  mt-3  bg-rose-400 text-xs hover:bg-sky-400 md:px-16"
+                    >
+                      Visitar Tienda
+                    </Button>
+                  </Link>
                 </div>
                 <Image
                   alt="Banner"
@@ -75,6 +73,7 @@ export default async function HomePage() {
             </div>
           </section>
         </div>
+        <Footer />
       </div>
     );
   } catch (error) {

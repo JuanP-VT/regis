@@ -34,7 +34,7 @@ export default function CategoryNav({ categoryList }: Props) {
   );
   return (
     <>
-      <div className="relative  flex sm:hidden ">
+      <div className="absolute flex sm:hidden ">
         <CategoryNavMobile categoryList={categoryList} />
       </div>
       <div className="hidden sm:flex">
