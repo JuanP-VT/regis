@@ -34,10 +34,10 @@ export default function CategoryNav({ categoryList }: Props) {
   );
   return (
     <>
-      <div className="absolute flex sm:hidden ">
+      <div className="absolute flex sm:hidden">
         <CategoryNavMobile categoryList={categoryList} />
       </div>
-      <div className="hidden gap-x-1 sm:flex">
+      <div className="hidden gap-x-1 p-1 sm:flex">
         <Link
           className="bg-light-brown rounded-full p-3 text-xs font-semibold capitalize text-accent-foreground underline-offset-2
           transition-all duration-500 hover:text-sky-500 hover:underline "
