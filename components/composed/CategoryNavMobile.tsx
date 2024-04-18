@@ -23,17 +23,17 @@ export default function CategoryNavMobile({ categoryList }: Props) {
   );
   return (
     <div className="h-min w-min">
-      <Button variant="outline" className="z-50">
+      <Button variant="outline" className="bg-light-brown z-50">
         <MenuIcon
           onClick={() => setIsOpen(!isOpen)}
-          className={`absolute  z-50 m-1 cursor-pointer  `}
+          className={`absolute  z-50 m-1 cursor-pointer  text-blue-500`}
         />
       </Button>
       <div className={`absolute ${isOpen ? "z-50" : "-z-10"}`}>
         <div
-          className={`mt-7 flex min-w-60 flex-col rounded-lg border bg-slate-100 pb-5 ${isOpen ? "z-50 -translate-x-0" : "-z-10 -translate-x-full"} transition-all duration-500`}
+          className={` bg-light-brown flex min-w-60 flex-col rounded-lg  pb-5 ${isOpen ? "z-50 -translate-x-0" : "-z-10 -translate-x-full"} transition-all duration-500`}
         >
-          <p className="m-2 p-2 font-semibold">Categorías</p>
+          <p className="m-2 p-2   font-semibold ">Categorías</p>
           <Accordion type="single" collapsible className="w-full ">
             <Link
               onClick={() => {
@@ -41,15 +41,32 @@ export default function CategoryNavMobile({ categoryList }: Props) {
                   setIsOpen(false);
                 }, 100);
               }}
-              className="p-4  text-sm font-semibold capitalize text-accent-foreground underline-offset-2
+              className="flex w-full border-b border-b-slate-100 p-4 text-sm font-semibold capitalize text-accent-foreground underline-offset-2
                              transition-all duration-500 hover:text-sky-500 hover:underline "
               href={`/catalog/category=&subCategory=&page=1`}
             >
               Catálogo Completo
             </Link>
+            <div className="flex flex-col  px-2">
+              {categoriesWithNoSubcategories?.map((category, index) => (
+                <Link
+                  key={`category${index}`}
+                  onClick={() => {
+                    setTimeout(() => {
+                      setIsOpen(false);
+                    }, 100);
+                  }}
+                  className="border-b border-b-slate-200  p-3 text-sm font-semibold capitalize text-accent-foreground underline-offset-2
+                             transition-all duration-500 hover:text-sky-500 hover:underline "
+                  href={`/catalog/category=${category._id}&subCategory=&page=1`}
+                >
+                  {category.name}
+                </Link>
+              ))}
+            </div>
             {categoriesWithSubcategories?.map((category, index) => (
               <AccordionItem
-                className="border-b "
+                className="border-b border-b-slate-200"
                 key={`category${index}`}
                 value={category.name}
               >
@@ -87,23 +104,6 @@ export default function CategoryNavMobile({ categoryList }: Props) {
                 </AccordionContent>
               </AccordionItem>
             ))}
-            <div className="flex flex-col  px-2">
-              {categoriesWithNoSubcategories?.map((category, index) => (
-                <Link
-                  key={`category${index}`}
-                  onClick={() => {
-                    setTimeout(() => {
-                      setIsOpen(false);
-                    }, 100);
-                  }}
-                  className="border-b  p-3 text-sm font-semibold capitalize text-accent-foreground underline-offset-2
-                             transition-all duration-500 hover:text-sky-500 hover:underline "
-                  href={`/catalog/category=${category._id}&subCategory=&page=1`}
-                >
-                  {category.name}
-                </Link>
-              ))}
-            </div>
           </Accordion>
         </div>
       </div>
