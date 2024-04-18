@@ -37,9 +37,9 @@ export default function CategoryNav({ categoryList }: Props) {
       <div className="absolute flex sm:hidden ">
         <CategoryNavMobile categoryList={categoryList} />
       </div>
-      <div className="hidden sm:flex">
+      <div className="hidden gap-x-1 sm:flex">
         <Link
-          className="p-3  text-xs font-semibold capitalize text-accent-foreground underline-offset-2
+          className="bg-light-brown rounded-full p-3 text-xs font-semibold capitalize text-accent-foreground underline-offset-2
           transition-all duration-500 hover:text-sky-500 hover:underline "
           href={`/catalog/category=&subCategory=&page=1`}
         >
@@ -48,7 +48,7 @@ export default function CategoryNav({ categoryList }: Props) {
         {categoriesWithNoSubcategories?.map((category, index) => (
           <Link
             key={`option${index}`}
-            className="hover: p-3 text-xs font-semibold capitalize text-accent-foreground underline-offset-2
+            className="bg-light-brown rounded-full p-3 text-xs font-semibold capitalize text-accent-foreground underline-offset-2
           transition-all duration-500 hover:text-sky-500 hover:underline"
             href={`/catalog/category=${category._id}&subCategory=&page=1`}
           >
@@ -56,13 +56,16 @@ export default function CategoryNav({ categoryList }: Props) {
           </Link>
         ))}
         {categoriesWithSubcategories?.map((category, index) => (
-          <NavigationMenu key={`option${index}`}>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-xs capitalize">
+          <NavigationMenu
+            key={`option${index}`}
+            className="bg-light-brown rounded-full"
+          >
+            <NavigationMenuList className="">
+              <NavigationMenuItem className="">
+                <NavigationMenuTrigger className="bg-light-brown rounded-full text-xs capitalize">
                   {category.name}
                 </NavigationMenuTrigger>
-                <NavigationMenuContent>
+                <NavigationMenuContent className="bg-light-brown rounded-sm">
                   <Link
                     className="group  flex min-w-48  flex-col p-3  text-xs "
                     href={`/catalog/category=${category._id}&subCategory=&page=1`}
