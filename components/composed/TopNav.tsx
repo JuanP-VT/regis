@@ -57,7 +57,13 @@ export default function TopNav({ session }: Props) {
       <div className="ml-auto flex items-center gap-2  lg:gap-8">
         {session && session.user.role === "admin" && (
           <Link href="/admin">
-            <DatabaseIcon className="mt-1 h-4 w-4 scale-150 text-rose-400" />
+            <Image
+              src="/icon/heart-01.svg"
+              className="mt-1 h-4 w-4 scale-150 text-rose-400"
+              alt="Admin"
+              width={30}
+              height={30}
+            />
             <span className="sr-only">Admin</span>
           </Link>
         )}
