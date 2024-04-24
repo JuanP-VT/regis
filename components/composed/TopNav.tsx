@@ -1,7 +1,4 @@
 "use client";
-import { People } from "@mui/icons-material";
-import { Button } from "@/components/ui/button";
-import CartIcon from "@/public/icon/cart.svg";
 import Link from "next/link";
 import SignInButton from "./SignInButton";
 import { Session } from "next-auth";
@@ -18,7 +15,10 @@ type Props = {
 export default function TopNav({ session }: Props) {
   return (
     <header className="flex h-12 items-center border-b bg-melon px-1 md:px-6 lg:h-14 ">
-      <div className="flex gap-2 px-1 text-sm md:gap-8">
+      <div
+        style={{ fontFamily: "Wild Mango" }}
+        className="flex gap-2 px-1 text-sm font-light text-zinc-500 md:gap-8"
+      >
         <Link className="text-xs font-semibold sm:text-sm" href="/">
           Inicio
         </Link>

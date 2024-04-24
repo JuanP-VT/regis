@@ -55,12 +55,20 @@ export default async function HomePage() {
                   height={100}
                   alt="Welcome to the store"
                 />
-                <p className="m-2 text-center">
+                <p
+                  style={{ fontFamily: "Wild Mango" }}
+                  className="m-2 text-center "
+                >
                   Dedicada a la venta de archivos <br />
                   de corte en capas y vectores <br />
                   para tus bellos proyectos.
                 </p>
-                <p className="m-2 text-center">Conócenos</p>
+                <p
+                  style={{ fontFamily: "Insta Story Signature" }}
+                  className="m-2 text-center"
+                >
+                  Conócenos
+                </p>
               </div>
             </div>
             <div className="flex justify-center">
