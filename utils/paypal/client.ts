@@ -7,9 +7,19 @@ const configureEnvironment = function () {
   if (!clientId || !clientSecret) {
     throw new Error("Paypal client ID or secret not found");
   }
-  return process.env.NODE_ENV === "production"
-    ? new checkoutNodeJssdk.core.LiveEnvironment(clientId, clientSecret)
-    : new checkoutNodeJssdk.core.SandboxEnvironment(clientId, clientSecret);
+
+  // Change to 'sandbox' for testing, 'production' for production
+
+  /**
+  const liveEnvironment = new checkoutNodeJssdk.core.LiveEnvironment(
+    clientId,
+    clientSecret,
+  ); */
+  const sandboxEnvironment = new checkoutNodeJssdk.core.SandboxEnvironment(
+    clientId,
+    clientSecret,
+  );
+  return sandboxEnvironment;
 };
 
 const client = function () {
