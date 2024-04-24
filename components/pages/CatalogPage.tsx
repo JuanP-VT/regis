@@ -43,7 +43,7 @@ export default function CatalogPage({
       </div>
       <div className="flex flex-col items-center">
         <div className="max-w-[1100px]">
-          <div className="flex w-full  grid-cols-1 flex-col items-center justify-center gap-2 gap-y-5 p-5 md:grid md:grid-cols-2 lg:grid-cols-3">
+          <div className="flex w-full  grid-cols-1 flex-col items-center justify-center gap-4 gap-y-5 p-5 md:grid md:grid-cols-2 lg:grid-cols-3">
             {storeItems?.map((item, index) => (
               <CatalogItemCard key={index} storeItem={item} />
             ))}

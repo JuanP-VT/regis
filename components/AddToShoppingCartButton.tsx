@@ -13,7 +13,8 @@ export default function AddToShoppingCartButton({ storeItem }: Props) {
   return (
     <Button
       size={"sm"}
-      className="absolute bottom-0 flex w-full -translate-x-96 overflow-hidden rounded-xl bg-pink-300 text-xs transition-all duration-300 hover:bg-pink-400 group-hover:-translate-x-0"
+      className="absolute bottom-0 flex w-full -translate-x-96 overflow-hidden rounded-xl
+       bg-pink-300 text-xs transition-all duration-300 hover:bg-pink-400 group-hover:-translate-x-0"
       onClick={() => {
         setAnimationIsPlaying(true);
         const cart = new ShoppingCart();
