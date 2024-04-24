@@ -51,7 +51,7 @@ export default async function HomePage() {
                 <Image
                   className=""
                   src="/boton tienda digital-01.svg"
-                  width={300}
+                  width={230}
                   height={100}
                   alt="Welcome to the store"
                 />
