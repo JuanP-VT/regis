@@ -1,14 +1,14 @@
 "use client";
 import Link from "next/link";
-import { Button } from "../ui/button";
-import { ShoppingCart as ShoppingCartLucideIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import ShoppingCart from "@/utils/classes/ShoppingCart";
-
+import Image from "next/image";
 type Props = {};
 
 export default function ShoppingCartIcon({}: Props) {
   const [numberOfItems, setNumberOfItems] = useState(0);
+
+  // Custom storage event to trigger the update of the number of items in the cart
   useEffect(() => {
     const cart = new ShoppingCart();
     setNumberOfItems(cart.getItemCount());
@@ -21,19 +21,22 @@ export default function ShoppingCartIcon({}: Props) {
     };
   }, []);
   return (
-    <Link href="/cart">
-      <Button size="icon" variant="outline" className="relative">
-        {numberOfItems > 0 && (
-          <span
-            className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 
+    <Link href="/cart" className="relative h-8 w-8">
+      {numberOfItems > 0 && (
+        <span
+          className="absolute left-6 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 
               text-center text-[11px] text-white"
-          >
-            {numberOfItems}
-          </span>
-        )}
-        <ShoppingCartLucideIcon className="h-4 w-4" />
-        <span className="sr-only">Carrito</span>
-      </Button>
+        >
+          {numberOfItems}
+        </span>
+      )}
+      <Image
+        alt="Perfil"
+        layout="fill"
+        src="icon/bag.svg"
+        className="pointer-events-none h-full w-full object-contain"
+      />
+      <span className="sr-only">Carrito</span>
     </Link>
   );
 }
