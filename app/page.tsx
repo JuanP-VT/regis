@@ -63,12 +63,14 @@ export default async function HomePage() {
                   de corte en capas y vectores <br />
                   para tus bellos proyectos.
                 </p>
-                <p
-                  style={{ fontFamily: "Insta Story Signature" }}
-                  className="m-2 text-center"
-                >
-                  Conócenos
-                </p>
+                <Link href="/nosotros">
+                  <p
+                    style={{ fontFamily: "Insta Story Signature" }}
+                    className="m-2 text-center"
+                  >
+                    Conócenos
+                  </p>
+                </Link>
               </div>
             </div>
             <div className="flex justify-center">
