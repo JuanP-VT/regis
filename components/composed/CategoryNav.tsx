@@ -12,6 +12,7 @@ import Link from "next/link";
 import React from "react";
 import { cn } from "@/lib/utils";
 import CategoryNavMobile from "./CategoryNavMobile";
+import Image from "next/image";
 
 type Props = {
   categoryList: Category_ID[];
@@ -37,35 +38,56 @@ export default function CategoryNav({ categoryList }: Props) {
       <div className="absolute flex sm:hidden">
         <CategoryNavMobile categoryList={categoryList} />
       </div>
-      <div className="hidden gap-x-1 p-1 sm:flex">
+      <div className="hidden  gap-x-1 p-1 sm:flex">
         <Link
-          className="bg-light-brown rounded-full p-3 text-xs font-semibold capitalize text-accent-foreground underline-offset-2
+          className="relative  rounded-full bg-light-brown p-3 text-xs font-semibold capitalize text-accent-foreground underline-offset-2
           transition-all duration-500 hover:text-sky-500 hover:underline "
           href={`/catalog/category=&subCategory=&page=1`}
         >
-          Todos
+          <p>Catálogo Completo</p>
+          <Image
+            className="absolute right-0 top-10 h-5 w-full object-contain py-1 "
+            alt="bottom decoration"
+            src="/palitos-01.svg"
+            width={100}
+            height={20}
+          />
         </Link>
         {categoriesWithNoSubcategories?.map((category, index) => (
           <Link
             key={`option${index}`}
-            className="bg-light-brown rounded-full p-3 text-xs font-semibold capitalize text-accent-foreground underline-offset-2
-          transition-all duration-500 hover:text-sky-500 hover:underline"
+            className="relative  rounded-full bg-light-brown p-3 text-xs font-semibold capitalize text-accent-foreground underline-offset-2
+            transition-all duration-500 hover:text-sky-500 hover:underline "
             href={`/catalog/category=${category._id}&subCategory=&page=1`}
           >
-            {category.name}
+            <p> {category.name}</p>
+            <Image
+              className="absolute right-0 top-10 h-5 w-full object-contain py-1 "
+              alt="bottom decoration"
+              src="/palitos-01.svg"
+              width={100}
+              height={20}
+            />
           </Link>
         ))}
         {categoriesWithSubcategories?.map((category, index) => (
           <NavigationMenu
             key={`option${index}`}
-            className="bg-light-brown rounded-full"
+            className="rounded-full bg-light-brown"
           >
             <NavigationMenuList className="">
               <NavigationMenuItem className="">
-                <NavigationMenuTrigger className="bg-light-brown rounded-full text-xs capitalize">
-                  {category.name}
+                <NavigationMenuTrigger className="relative rounded-full bg-light-brown text-xs capitalize">
+                  <p> {category.name}</p>
+                  <Image
+                    className="absolute right-0 top-10 h-5 w-full object-contain py-1 "
+                    alt="bottom decoration"
+                    src="/palitos-01.svg"
+                    width={100}
+                    height={20}
+                  />
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="bg-light-brown rounded-sm">
+                <NavigationMenuContent className="rounded-sm bg-light-brown">
                   <Link
                     className="group  flex min-w-48  flex-col p-3  text-xs "
                     href={`/catalog/category=${category._id}&subCategory=&page=1`}
