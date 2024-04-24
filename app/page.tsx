@@ -27,12 +27,18 @@ export default async function HomePage() {
 
             <div className="relative flex w-full flex-col items-center justify-center pt-5">
               <Image
+                style={{
+                  userSelect: "none",
+                  WebkitUserSelect: "none",
+                  MozUserSelect: "none",
+                  msUserSelect: "none",
+                }}
                 priority={true}
                 src="/banner.webp"
                 alt="logo"
                 width={2000}
                 height={1200}
-                className="  mb-5 h-60    self-center object-cover  object-left  lg:h-96    lg:object-contain lg:object-center"
+                className="pointer-events-none mb-5 h-60   self-center object-cover  object-left  lg:h-96    lg:object-contain lg:object-center"
               />
             </div>
           </div>
@@ -41,6 +47,13 @@ export default async function HomePage() {
           <section className="flex w-full flex-col justify-center bg-[#e6d5c4] p-5 lg:flex-row lg:justify-around">
             <div className="flex flex-col items-center  justify-center md:flex-row">
               <Image
+                style={{
+                  userSelect: "none",
+                  WebkitUserSelect: "none",
+                  MozUserSelect: "none",
+                  msUserSelect: "none",
+                  pointerEvents: "none",
+                }}
                 className="h-40 w-64 object-contain"
                 src="/hola-01.webp"
                 width={600}
@@ -49,6 +62,13 @@ export default async function HomePage() {
               />
               <div className="flex flex-col text-sm">
                 <Image
+                  style={{
+                    userSelect: "none",
+                    WebkitUserSelect: "none",
+                    MozUserSelect: "none",
+                    msUserSelect: "none",
+                    pointerEvents: "none",
+                  }}
                   className=""
                   src="/boton tienda digital-01.svg"
                   width={230}
@@ -75,6 +95,13 @@ export default async function HomePage() {
             </div>
             <div className="flex justify-center">
               <Image
+                style={{
+                  userSelect: "none",
+                  WebkitUserSelect: "none",
+                  MozUserSelect: "none",
+                  msUserSelect: "none",
+                  pointerEvents: "none",
+                }}
                 src="logo studio-01.svg"
                 width={500}
                 height={300}

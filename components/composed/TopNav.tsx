@@ -17,7 +17,7 @@ export default function TopNav({ session }: Props) {
     <header className="flex h-12 items-center border-b bg-melon px-1 md:px-6 lg:h-14 ">
       <div className="flex gap-2 px-1 text-sm font-light text-pink-50 md:gap-8">
         <Link
-          className="border-b border-b-transparent text-xs  font-semibold hover:border-b-sky-200 hover:text-sky-200 sm:text-sm"
+          className=" border-b border-b-transparent text-xs  font-semibold hover:border-b-sky-200 hover:text-sky-200 sm:text-sm"
           href="/"
         >
           Inicio
@@ -29,25 +29,25 @@ export default function TopNav({ session }: Props) {
           Catálogo
         </Link>
         <Link
-          className="border-b border-b-transparent text-xs  font-semibold hover:border-b-sky-200 hover:text-sky-200 sm:text-sm"
+          className="hidden border-b border-b-transparent text-xs font-semibold  hover:border-b-sky-200 hover:text-sky-200 sm:inline sm:text-sm"
           href="/freebies"
         >
           Freebies
         </Link>
         <Link
-          className="border-b border-b-transparent text-xs  font-semibold hover:border-b-sky-200 hover:text-sky-200 sm:text-sm"
+          className="hidden border-b border-b-transparent text-xs font-semibold  hover:border-b-sky-200 hover:text-sky-200 sm:inline sm:text-sm"
           href="/sales"
         >
           Rebajas
         </Link>
         <Link
-          className="border-b border-b-transparent text-xs  font-semibold hover:border-b-sky-200 hover:text-sky-200 sm:text-sm"
+          className="hidden border-b border-b-transparent text-xs font-semibold  hover:border-b-sky-200 hover:text-sky-200 sm:inline sm:text-sm"
           href="/contact"
         >
           Contacto
         </Link>
         <Link
-          className="border-b border-b-transparent text-xs  font-semibold hover:border-b-sky-200 hover:text-sky-200 sm:text-sm"
+          className="hidden border-b border-b-transparent text-xs font-semibold  hover:border-b-sky-200 hover:text-sky-200 sm:inline sm:text-sm"
           href="/nosotros"
         >
           Nosotros
