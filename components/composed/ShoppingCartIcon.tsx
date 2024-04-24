@@ -32,7 +32,8 @@ export default function ShoppingCartIcon({}: Props) {
       )}
       <Image
         alt="Perfil"
-        layout="fill"
+        width={40}
+        height={40}
         src="icon/bag.svg"
         className="pointer-events-none h-full w-full object-contain"
       />
