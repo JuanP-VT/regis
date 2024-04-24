@@ -16,6 +16,8 @@ import { useEffect, useState } from "react";
 import { ArrowBack } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Session } from "next-auth";
+import SignInButton from "../composed/SignInButton";
 
 /**
  * ShoppingCartPage Component
@@ -24,7 +26,11 @@ import { toast } from "sonner";
  *
  * @returns {JSX.Element} ShoppingCartPage Component
  */
-export default function ShoppingCartPage() {
+
+type Props = {
+  session: Session | null;
+};
+export default function ShoppingCartPage({ session }: Props) {
   const router = useRouter();
   const [Cart, setCart] = useState<ShoppingCart>();
   useEffect(() => {
@@ -119,33 +125,42 @@ export default function ShoppingCartPage() {
                     clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
                   }}
                 >
-                  <PayPalButtons
-                    style={{
-                      color: "gold",
-                    }}
-                    createOrder={async () => {
-                      const res = await fetch("/api/paypal/checkout", {
-                        method: "POST",
-                        body: JSON.stringify({ cart: Cart.getCart() }),
-                      });
-                      const order = await res.json();
-                      return order.id;
-                    }}
-                    onApprove={async (data) => {
-                      const success = await paypalCaptureOrder(data.orderID);
-                      if (success) {
-                        toast("Compra Exitosa 🎉");
-                        Cart.setRecentPurchase(true);
-                        setTimeout(() => {
-                          router.push("/thanks");
-                        }, 1000);
-                      } else {
-                        toast(
-                          "Hubo un error al procesar tu compra, intenta de nuevo",
-                        );
-                      }
-                    }}
-                  />
+                  {session ? (
+                    <PayPalButtons
+                      style={{
+                        color: "gold",
+                      }}
+                      createOrder={async () => {
+                        const res = await fetch("/api/paypal/checkout", {
+                          method: "POST",
+                          body: JSON.stringify({ cart: Cart.getCart() }),
+                        });
+                        const order = await res.json();
+                        return order.id;
+                      }}
+                      onApprove={async (data) => {
+                        const success = await paypalCaptureOrder(data.orderID);
+                        if (success) {
+                          toast("Compra Exitosa 🎉");
+                          Cart.setRecentPurchase(true);
+                          setTimeout(() => {
+                            router.push("/thanks");
+                          }, 1000);
+                        } else {
+                          toast(
+                            "Hubo un error al procesar tu compra, intenta de nuevo",
+                          );
+                        }
+                      }}
+                    />
+                  ) : (
+                    <div>
+                      <p className="text-xs text-slate-600">
+                        Inicie sesión para proceder al pago
+                      </p>
+                      <SignInButton session={session} />
+                    </div>
+                  )}
                 </PayPalScriptProvider>
               </div>
             )}
