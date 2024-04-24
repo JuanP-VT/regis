@@ -11,7 +11,7 @@ type Props = {
 export default function SignInButton({ session }: Props) {
   return (
     <Button
-      className="rounded-xl border-rose-100 bg-sky-200 px-3 text-xs hover:bg-sky-300 "
+      className="rounded-xl border-rose-100 bg-white px-3 text-xs text-amber-600 hover:bg-sky-100 hover:text-amber-600"
       size="sm"
       variant="outline"
       onClick={session ? () => signOut() : () => signIn()}
