@@ -38,38 +38,38 @@ export default async function HomePage() {
           </div>
         </div>
         <div className=" rounded-lg bg-zinc-200">
-          <section className="group w-full">
-            <div className="container px-4 md:px-6">
-              <div className="grid items-center gap-6 lg:grid-cols-[1fr_600px] lg:gap-12 xl:grid-cols-[1fr_800px]">
-                <div className="space-y-2">
-                  <div className="mt-2 inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm transition-all duration-1000 group-hover:bg-sky-200 dark:bg-gray-800">
-                    Archivos Digitales
-                  </div>
-                  <h1 className="pt-2 text-3xl font-bold tracking-tighter sm:text-5xl">
-                    Los Mejores Diseños
-                  </h1>
-                  <p className="max-w-[600px] text-gray-500 dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                    En Regis&GaelStudio creamos los mejores diseños para ti, con
-                    la mejor calidad y al mejor precio. <br /> ¡Visita nuestra
-                    tienda!
-                  </p>
-                  <Link href={"/catalog/category=&subCategory=&page=1"}>
-                    <Button
-                      size={"sm"}
-                      className="  mt-3  bg-rose-400 text-xs hover:bg-sky-400 md:px-16"
-                    >
-                      Visitar Tienda
-                    </Button>
-                  </Link>
-                </div>
+          <section className="flex w-full flex-col justify-center bg-[#e6d5c4] p-5 lg:flex-row lg:justify-around">
+            <div className="flex flex-col items-center  justify-center md:flex-row">
+              <Image
+                className="h-40 w-64 object-contain"
+                src="/hola-01.webp"
+                width={600}
+                height={600}
+                alt="Welcome to the store"
+              />
+              <div className="flex flex-col text-sm">
                 <Image
-                  alt="Banner"
-                  className="aspect-video overflow-hidden rounded-full object-contain object-center p-3 "
-                  height="450"
-                  src="/logo.jfif"
-                  width="600"
+                  className=""
+                  src="/boton tienda digital-01.svg"
+                  width={300}
+                  height={100}
+                  alt="Welcome to the store"
                 />
+                <p className="m-2 text-center">
+                  Dedicada a la venta de archivos <br />
+                  de corte en capas y vectores <br />
+                  para tus bellos proyectos.
+                </p>
+                <p className="m-2 text-center">Conócenos</p>
               </div>
+            </div>
+            <div className="flex justify-center">
+              <Image
+                src="logo studio-01.svg"
+                width={500}
+                height={300}
+                alt="Welcome to the store"
+              />
             </div>
           </section>
         </div>
