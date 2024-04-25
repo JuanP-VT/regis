@@ -86,7 +86,7 @@ export default async function HomePage() {
                 <Link href="/nosotros">
                   <p
                     style={{ fontFamily: "Insta Story Signature" }}
-                    className="m-2 text-center"
+                    className="m-2 text-center text-2xl"
                   >
                     Conócenos
                   </p>
