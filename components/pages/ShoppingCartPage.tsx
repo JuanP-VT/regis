@@ -60,7 +60,7 @@ export default function ShoppingCartPage({ session }: Props) {
       <div className="w-full max-w-[1200px] lg:min-w-[900px]">
         <Card>
           <CardHeader className="pb-4">
-            <CardTitle>Carrito De Compras</CardTitle>
+            <CardTitle className="ml-4 sm:ml-0">Carrito De Compras</CardTitle>
             <CardDescription>
               Tienes {Cart?.getItemCount()} Productos En El Carrito
             </CardDescription>
@@ -87,11 +87,14 @@ export default function ShoppingCartPage({ session }: Props) {
                           {(
                             item.price -
                             (item.price * item.discountPercentage) / 100
-                          ).toFixed(2)}
+                          ).toFixed(2)}{" "}
+                          MXN
                         </div>
                       )}
                       {item.discountPercentage <= 0 && (
-                        <div className="font-semibold">${item.price}</div>
+                        <div className="font-semibold">
+                          ${item.price.toFixed(2)} MXN
+                        </div>
                       )}
                       <div className="flex items-center ">
                         <Button size="sm" variant="outline">
@@ -117,7 +120,7 @@ export default function ShoppingCartPage({ session }: Props) {
                 <div className=" ">
                   <div>Total</div>
                   <div className="font-semibold">
-                    {Cart?.getTotalCost().toFixed(2)} $MX
+                    {Cart?.getTotalCost().toFixed(2)} $MXN
                   </div>
                 </div>
                 <PayPalScriptProvider
