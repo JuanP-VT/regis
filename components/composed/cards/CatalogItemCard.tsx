@@ -11,7 +11,7 @@ type Props = {
 
 export default function CatalogItemCard({ storeItem }: Props) {
   return (
-    <div className="h-80 w-96 ">
+    <div className="sm:h-80 sm:w-96 ">
       <div className="group relative h-60 w-80 cursor-pointer overflow-hidden">
         <Link href={`/product/${storeItem._id}`}>
           <Image

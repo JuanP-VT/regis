@@ -35,7 +35,7 @@ export default function CatalogPage({
     );
   }
   return (
-    <div className="flex flex-col justify-center ">
+    <div className="flex flex-col justify-center pt-10">
       <div className="flex justify-center border-b-2 border-b-slate-100 pb-7 text-3xl capitalize">
         {!subCategory && category && <h1>Categoría - {category}</h1>}
         {subCategory && <h1>Categoría - {subCategory}</h1>}
