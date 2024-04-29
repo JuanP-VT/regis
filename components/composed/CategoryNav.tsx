@@ -40,8 +40,8 @@ export default function CategoryNav({ categoryList }: Props) {
       </div>
       <div className="hidden  gap-x-1 p-1 sm:flex">
         <Link
-          className="relative  rounded-full bg-light-brown p-3 text-xs font-semibold capitalize text-accent-foreground underline-offset-2
-          transition-all duration-500 hover:text-sky-500 hover:underline "
+          className="relative  rounded-full bg-light-brown p-3 text-xs font-semibold capitalize text-accent-foreground 
+          transition-all duration-500 hover:text-sky-500  "
           href={`/catalog/category=&subCategory=&page=1`}
         >
           <p>Catálogo Completo</p>
@@ -56,8 +56,8 @@ export default function CategoryNav({ categoryList }: Props) {
         {categoriesWithNoSubcategories?.map((category, index) => (
           <Link
             key={`option${index}`}
-            className="relative  rounded-full bg-light-brown p-3 text-xs font-semibold capitalize text-accent-foreground underline-offset-2
-            transition-all duration-500 hover:text-sky-500 hover:underline "
+            className="relative  rounded-full bg-light-brown p-3 text-xs font-semibold capitalize text-accent-foreground 
+            transition-all duration-500 hover:text-sky-500  "
             href={`/catalog/category=${category._id}&subCategory=&page=1`}
           >
             <p> {category.name}</p>
