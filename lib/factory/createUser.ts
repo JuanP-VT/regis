@@ -28,5 +28,6 @@ export default function createUser(
     email,
     role: Role.USER,
     purchasedItems: [],
+    freebies: [],
   };
 }
