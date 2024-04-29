@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Session } from "next-auth";
 import { useState } from "react";
 import { toast } from "sonner";
+import { signIn } from "next-auth/react";
 
 type Props = {
   storeItem: StoreItemDB_ID;
@@ -57,7 +58,7 @@ export default function FreebieCard({ storeItem, session }: Props) {
         <Button
           disabled={isLoading || userHasFreebie}
           className="absolute bottom-0 w-full -translate-x-96 bg-rose-300 transition-all duration-500 hover:bg-rose-400 group-hover:-translate-x-0"
-          onClick={() => handleRequest()}
+          onClick={session?.user ? handleRequest : () => signIn()}
         >
           {userHasFreebie ? "Freebie Reclamado" : "Reclamar Freebie"}
         </Button>
