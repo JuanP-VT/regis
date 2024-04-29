@@ -2,12 +2,12 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import z from "zod";
 import { OPTIONS } from "../auth/[...nextauth]/nextAuthOptions";
-import { purchaseOrderModel } from "@/lib/models/purchaseOrder";
-import { PurchaseOrder } from "@/types/PurchaseOrder";
 import { AwsS3Client } from "@/lib/awsS3Client";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import dbConnect from "@/lib/dbConnect";
+import { UserModel } from "@/lib/models/user";
+import { User_ID } from "@/types/user";
 export async function POST(req: Request) {
   //Authenticate user
   const session = await getServerSession(OPTIONS);
@@ -36,18 +36,23 @@ export async function POST(req: Request) {
     }
   }
   //Check that user has purchased the file
-  await dbConnect();
-  const userPurchaseOrders = (await purchaseOrderModel.find({
-    userID: session.user._id,
-  })) as PurchaseOrder[];
+  try {
+    await dbConnect();
+    const user = (await UserModel.findById(session.user._id)) as User_ID | null;
+    const userHasProduct =
+      user?.purchasedItems.includes(fileName) ||
+      user?.freebies.includes(fileName);
 
-  const findOrder = userPurchaseOrders
-    .flatMap((order) => order.purchaseUnits)
-    .find((unit) => unit.referenceID === fileName);
-  if (!findOrder) {
+    if (!userHasProduct) {
+      return NextResponse.json(
+        { message: "No tienes acceso a este archivo" },
+        { status: 403 },
+      );
+    }
+  } catch (error) {
     return NextResponse.json(
-      { message: "No tienes acceso a este archivo" },
-      { status: 403 },
+      { message: "Error al conectar a la base de datos" },
+      { status: 500 },
     );
   }
   //Connect to s3 bucket and download file
