@@ -4,6 +4,8 @@ import { OPTIONS } from "../api/auth/[...nextauth]/nextAuthOptions";
 import { StoreItemModel } from "@/lib/models/storeItem";
 import FreebiesPage from "@/components/pages/FreebiesPage";
 import { StoreItemDB_ID } from "@/types/storeItemDB";
+import { Category_ID } from "@/types/category";
+import { categoryModel } from "@/lib/models/category";
 
 export default async function Freebies() {
   const session = await getServerSession(OPTIONS);
@@ -13,5 +15,13 @@ export default async function Freebies() {
     $or: [{ price: 0 }, { discountPercentage: 100 }],
   });
   const freebieList = JSON.parse(JSON.stringify(freebies)) as StoreItemDB_ID[]; //parse and stringify to remove mongoose methods
-  return <FreebiesPage freebies={freebieList} session={session} />;
+  const categoryData = (await categoryModel.find({}).lean()) as Category_ID[];
+  const categoryList = JSON.parse(JSON.stringify(categoryData));
+  return (
+    <FreebiesPage
+      freebies={freebieList}
+      session={session}
+      categoryList={categoryList}
+    />
+  );
 }
