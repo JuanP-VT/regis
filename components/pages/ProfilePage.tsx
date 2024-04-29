@@ -10,26 +10,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { PurchaseOrder, PurchaseUnit } from "@/types/PurchaseOrder";
 import { User_ID } from "@/types/user";
 import { toast } from "sonner";
 type Props = {
   user: User_ID;
-  purchaseOrders: PurchaseOrder[];
 };
 
-export default function ProfilePage({ user, purchaseOrders }: Props) {
-  const purchasedUnits = purchaseOrders.flatMap((order) => order.purchaseUnits);
-  //Unique list
-  let uniquePurchaseUnits = purchasedUnits.reduce(
-    (unique: PurchaseUnit[], unit: PurchaseUnit) => {
-      if (!unique.some((u) => u.referenceID === unit.referenceID)) {
-        unique.push(unit);
-      }
-      return unique;
-    },
-    [],
-  );
+export default function ProfilePage({ user }: Props) {
+  const userProducts = [...user.purchasedItems, ...user.freebies];
   async function handleDownload(fileName: string) {
     const res = await fetch(`/api/download`, {
       method: "POST",
@@ -96,20 +84,20 @@ export default function ProfilePage({ user, purchaseOrders }: Props) {
         </CardHeader>
         <CardContent className="p-0">
           <div className="grid gap-4">
-            {uniquePurchaseUnits.map((unit, index) => (
+            {userProducts.map((item, index) => (
               <div
                 key={`order` + index}
                 className="flex items-center gap-4 p-4"
               >
                 <DownloadIcon className="h-8 w-8" />
                 <div className="grid gap-0.5">
-                  <h3 className="font-semibold"> {unit.referenceID}</h3>
+                  <h3 className="font-semibold"> {item}</h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Archivo {index + 1}
                   </p>
                 </div>
                 <Button
-                  onClick={() => handleDownload(unit.referenceID)}
+                  onClick={() => handleDownload(item)}
                   className="ml-auto"
                   size="sm"
                 >

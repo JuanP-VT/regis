@@ -15,18 +15,8 @@ export default async function Page({}: Props) {
     if (!session) {
       return <div>Unauthorized</div>;
     }
-    await dbConnect();
-    const userPurchases = (await purchaseOrderModel.find({
-      userID: session.user._id,
-    })) as PurchaseOrder[];
-    const formatUserPurchases = JSON.parse(JSON.stringify(userPurchases));
 
-    return (
-      <ProfilePageProducts
-        purchaseOrders={formatUserPurchases}
-        user={session.user}
-      />
-    );
+    return <ProfilePageProducts user={session.user} />;
   } catch (error) {
     return <div>Error Al Autentificar</div>;
   }
