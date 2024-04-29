@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
   },
   profileImage: String, // URL of the user's profile image
   purchasedItems: [String], // Array of Filenames  purchased by the user
+  freebies: [String], // Array of Filenames of freebies claimed by the user
 });
 
 // Check if the 'User' model has already been compiled. If it has, use the existing model.

@@ -10,6 +10,7 @@ export interface User {
   role: Role;
   profileImage: string;
   purchasedItems: string[];
+  freebies: string[];
   email: string | undefined | null;
 }
 export interface User_ID extends User {

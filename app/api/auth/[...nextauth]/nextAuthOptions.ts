@@ -47,6 +47,9 @@ export const OPTIONS: NextAuthOptions = {
       })) as User_ID;
       token.role = dbUser?.role; // Add the user role to the token
       token._id = dbUser?._id.toString();
+      token.purchasedItems = dbUser?.purchasedItems;
+      token.freebies = dbUser?.freebies;
+
       return token;
     },
     /* This function is triggered whenever a session is accessed. It adds the user's ID from the token to the session object. */
@@ -56,6 +59,8 @@ export const OPTIONS: NextAuthOptions = {
         session.user.profileImage = token.picture ?? "";
         session.user.role = token.role as Role.USER | Role.ADMIN;
         session.user._id = token._id as string;
+        session.user.purchasedItems = token.purchasedItems as string[];
+        session.user.freebies = token.freebies as string[];
       }
       return session;
     },

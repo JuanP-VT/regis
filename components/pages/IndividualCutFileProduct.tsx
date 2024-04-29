@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import ShoppingCart from "@/utils/classes/ShoppingCart";
 import { toast } from "sonner";
 import TiptapReadOnly from "../composed/Text Editor/TipTapReadOnly";
+import { Session } from "next-auth";
 
 /**
  *
@@ -24,13 +25,36 @@ import TiptapReadOnly from "../composed/Text Editor/TipTapReadOnly";
  */
 type Props = {
   storeItem: StoreItemDB_ID;
+  session: Session | null;
 };
-export default function IndividualCutFileProduct({ storeItem }: Props) {
+export default function IndividualCutFileProduct({
+  storeItem,
+  session,
+}: Props) {
   const router = useRouter();
-
+  const userHasProduct =
+    session?.user?.purchasedItems.includes(storeItem.fileName) ||
+    session?.user.freebies.includes(storeItem.fileName);
+  async function handleRequest() {
+    const res = await fetch("/api/claim-freebie/", {
+      method: "POST",
+      body: JSON.stringify({ itemId: storeItem._id }),
+    });
+    const data = await res.json();
+    toast("", {
+      description: `${data.message}`,
+      action: {
+        label: "Cerrar",
+        onClick: () => {},
+      },
+    });
+    setTimeout(() => {
+      location.reload();
+    }, 1000);
+  }
   return (
     <div>
-      <div className="relative flex  flex-col-reverse gap-5 md:justify-center lg:flex-row">
+      <div className="relative mt-5  flex flex-col-reverse gap-5 md:justify-center lg:flex-row">
         <ArrowLeft
           className="absolute left-10 top-2 z-20 cursor-pointer hover:text-rose-500"
           onClick={(event) => {
@@ -54,23 +78,36 @@ export default function IndividualCutFileProduct({ storeItem }: Props) {
               ))}
           </div>
           <p className="text-end md:max-w-2xl">{storeItem.storeItemName}</p>
-          <Button
-            className="mt-2 max-w-96 rounded-full bg-sky-300 hover:bg-sky-500"
-            variant="outline"
-            onClick={() => {
-              const cart = new ShoppingCart();
-              cart.addToCart(storeItem);
-              toast("Agregado Al Carrito", {
-                description: `${storeItem.storeItemName.slice(0, 50)}... ha sido agregado al carrito!`,
-                action: {
-                  label: "Cerrar",
-                  onClick: () => {},
-                },
-              });
-            }}
-          >
-            Agregar Al Carrito
-          </Button>
+          {/**  If the item is free or has a 100% discount, display a download button */}
+          {storeItem.price !== 0 && storeItem.discountPercentage !== 100 ? (
+            <Button
+              disabled={userHasProduct}
+              className="mt-2 max-w-96 rounded-full bg-sky-300 hover:bg-sky-500"
+              variant="outline"
+              onClick={() => {
+                const cart = new ShoppingCart();
+                cart.addToCart(storeItem);
+                toast("Agregado Al Carrito", {
+                  description: `${storeItem.storeItemName.slice(0, 50)}... ha sido agregado al carrito!`,
+                  action: {
+                    label: "Cerrar",
+                    onClick: () => {},
+                  },
+                });
+              }}
+            >
+              {userHasProduct ? "Producto Comprado" : "Agregar Al Carrito"}
+            </Button>
+          ) : (
+            <Button
+              disabled={userHasProduct}
+              className="mt-2 max-w-96 rounded-full bg-sky-300 hover:bg-sky-500"
+              variant="outline"
+              onClick={() => handleRequest()}
+            >
+              {userHasProduct ? "Freebie Reclamado" : "Reclamar Freebie"}
+            </Button>
+          )}
 
           <div className="mt-3 flex flex-col">
             <Accordion type="single" collapsible className="mt-2 md:w-96">

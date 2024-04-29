@@ -47,6 +47,10 @@ export default async function page({ params }: { params: { slug: string } }) {
     const storeItems = JSON.parse(
       JSON.stringify(mongooseStoreItems),
     ) as StoreItemDB_ID[];
+    //Remove freebies from catalog
+    const storeItemsNoFreebies = storeItems.filter(
+      (item) => item.price !== 0 && item.discountPercentage !== 100,
+    );
     // Calculate total number of items for pagination metadata
     const totalItems = await StoreItemModel.countDocuments(filter);
     const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -71,7 +75,7 @@ export default async function page({ params }: { params: { slug: string } }) {
     return (
       <CatalogPage
         pagination={pagination}
-        storeItems={storeItems}
+        storeItems={storeItemsNoFreebies}
         category={categoryName}
         subCategory={subCategoryName}
         categoryID={categoryID}

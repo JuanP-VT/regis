@@ -15,7 +15,7 @@ export default function ImageSlider({ images }: Props) {
   return (
     <div className="flex   w-full border-b p-1">
       <div className=" relative mr-2  flex flex-col border-r">
-        <div className="min-w-18 sticky top-14 flex flex-col ">
+        <div className="min-w-18 sticky top-16 flex flex-col pt-5 ">
           {images.map((src, index) => (
             <FrameButton
               image={src}
