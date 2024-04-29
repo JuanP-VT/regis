@@ -56,7 +56,7 @@ export default function IndividualCutFileProduct({
     <div>
       <div className="relative mt-5  flex flex-col-reverse gap-5 md:justify-center lg:flex-row">
         <ArrowLeft
-          className="absolute left-10 top-2 z-20 cursor-pointer hover:text-rose-500"
+          className="absolute right-10 top-2 z-20 cursor-pointer hover:text-rose-500"
           onClick={(event) => {
             event.preventDefault();
             router.back();
@@ -70,14 +70,14 @@ export default function IndividualCutFileProduct({
             price={storeItem.price}
             discountPercentage={storeItem.discountPercentage}
           />
-          <div className="flex justify-end py-2 ">
+          <div className="flex  py-2 ">
             {Array(5)
               .fill(0)
               .map((_, index) => (
                 <StarIcon className="h-5 w-5 text-rose-300" key={index} />
               ))}
           </div>
-          <p className="text-end md:max-w-2xl">{storeItem.storeItemName}</p>
+          <p className="">{storeItem.storeItemName}</p>
           {/**  If the item is free or has a 100% discount, display a download button */}
           {storeItem.price !== 0 && storeItem.discountPercentage !== 100 ? (
             <Button
@@ -147,7 +147,7 @@ function PriceTag({ price, discountPercentage }: PriceTagProps) {
   const priceAfterDiscount = price - (price * discountPercentage) / 100;
   if (discountPercentage === 0) {
     return (
-      <p className=" text-end text-4xl font-semibold text-green-700">
+      <p className="text-center text-4xl font-semibold text-green-700 sm:text-start">
         MX${price.toFixed(2)}
       </p>
     );
