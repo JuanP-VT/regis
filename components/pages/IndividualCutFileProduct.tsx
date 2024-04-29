@@ -54,7 +54,7 @@ export default function IndividualCutFileProduct({
   }
   return (
     <div>
-      <div className="relative flex  flex-col-reverse gap-5 md:justify-center lg:flex-row">
+      <div className="relative mt-5  flex flex-col-reverse gap-5 md:justify-center lg:flex-row">
         <ArrowLeft
           className="absolute left-10 top-2 z-20 cursor-pointer hover:text-rose-500"
           onClick={(event) => {
