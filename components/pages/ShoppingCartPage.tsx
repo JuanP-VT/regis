@@ -39,6 +39,7 @@ export default function ShoppingCartPage({ session }: Props) {
   if (!process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID) {
     throw new Error("Missing PayPal client ID");
   }
+
   async function paypalCaptureOrder(orderID: string) {
     try {
       const response = await fetch("/api/paypal/capture", {
@@ -69,7 +70,10 @@ export default function ShoppingCartPage({ session }: Props) {
             <div className="border-t">
               <div className="grid gap-4 p-4">
                 {Cart?.getCart().map((item, index) => (
-                  <div key={`item${index}`} className="flex items-start gap-4">
+                  <div
+                    key={`item${index}`}
+                    className={`flex items-start gap-4 ${session?.user.purchasedItems.includes(item.fileName) && "bg-red-50"} rounded-xl`}
+                  >
                     <div className="w-24">
                       <Image
                         alt="Thumbnail"
@@ -97,6 +101,13 @@ export default function ShoppingCartPage({ session }: Props) {
                         </div>
                       )}
                       <div className="flex items-center ">
+                        {session?.user.purchasedItems.includes(
+                          item.fileName,
+                        ) && (
+                          <p className="p-2 text-xs text-red-500 underline">
+                            Ya has comprado este producto
+                          </p>
+                        )}
                         <Button size="sm" variant="outline">
                           <TrashIcon
                             onClick={() => {
