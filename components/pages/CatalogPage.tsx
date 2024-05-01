@@ -3,8 +3,10 @@
 import { StoreItemDB_ID } from "@/types/storeItemDB";
 import CatalogItemCard from "../composed/cards/CatalogItemCard";
 import Pagination from "../composed/Pagination";
+import { Session } from "next-auth";
 
 type Props = {
+  session: Session | null;
   storeItems: StoreItemDB_ID[];
   category: string;
   subCategory: string;
@@ -20,6 +22,7 @@ type Props = {
 };
 
 export default function CatalogPage({
+  session,
   storeItems,
   category,
   categoryID,
@@ -45,7 +48,7 @@ export default function CatalogPage({
         <div className="max-w-[1100px]">
           <div className="flex w-full  grid-cols-1 flex-col items-center justify-center gap-4 gap-y-5 p-5 md:grid md:grid-cols-2 lg:grid-cols-3">
             {storeItems?.map((item, index) => (
-              <CatalogItemCard key={index} storeItem={item} />
+              <CatalogItemCard key={index} storeItem={item} session={session} />
             ))}
           </div>
           <Pagination
