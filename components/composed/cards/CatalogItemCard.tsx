@@ -2,17 +2,24 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { StoreItemDB_ID } from "@/types/storeItemDB";
 import Image from "next/image";
-import addToShoppingCart from "@/utils/addToShoppingCart";
 import AddToShoppingCartButton from "@/components/AddToShoppingCartButton";
+import FreebieCard from "./FreebieCard";
+import { Session } from "next-auth";
 
 type Props = {
   storeItem: StoreItemDB_ID;
+  session?: Session | null;
 };
-
-export default function CatalogItemCard({ storeItem }: Props) {
+//Card to represent a store item in the catalog
+//if store item is a freebie (price:0 or discount:100) then it displays a freebie card component instead
+export default function CatalogItemCard({ storeItem, session }: Props) {
+  //return freebie card if store item is a freebie
+  if (storeItem.price === 0 || storeItem.discountPercentage === 100) {
+    return <FreebieCard storeItem={storeItem} session={session} />;
+  }
   return (
-    <div className="sm:h-80 sm:w-96 ">
-      <div className="group relative h-60 w-80 cursor-pointer overflow-hidden">
+    <div className="sm:h-80 sm:w-80 ">
+      <div className="group relative h-60 w-full cursor-pointer overflow-hidden">
         <Link href={`/product/${storeItem._id}`}>
           <Image
             className=" absolute -z-10 h-auto w-auto self-center rounded-sm   opacity-100 transition duration-1000 ease-in-out group-hover:opacity-0"
