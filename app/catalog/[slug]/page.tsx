@@ -1,12 +1,16 @@
+import { OPTIONS } from "@/app/api/auth/[...nextauth]/nextAuthOptions";
 import CatalogPage from "@/components/pages/CatalogPage";
 import dbConnect from "@/lib/dbConnect";
 import { categoryModel } from "@/lib/models/category";
 import { StoreItemModel } from "@/lib/models/storeItem";
 import { Category_ID } from "@/types/category";
 import { StoreItemDB_ID } from "@/types/storeItemDB";
+import { getServerSession } from "next-auth";
 import z from "zod";
 
 export default async function page({ params }: { params: { slug: string } }) {
+  const session = await getServerSession(OPTIONS);
+  // Parse URL Params
   const paramObject = new URLSearchParams(decodeURIComponent(params.slug));
   const categoryID = paramObject.get("category") ?? "";
   const subCategoryID = paramObject.get("subCategory") ?? "";
@@ -47,10 +51,7 @@ export default async function page({ params }: { params: { slug: string } }) {
     const storeItems = JSON.parse(
       JSON.stringify(mongooseStoreItems),
     ) as StoreItemDB_ID[];
-    //Remove freebies from catalog
-    const storeItemsNoFreebies = storeItems.filter(
-      (item) => item.price !== 0 && item.discountPercentage !== 100,
-    );
+
     // Calculate total number of items for pagination metadata
     const totalItems = await StoreItemModel.countDocuments(filter);
     const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -75,11 +76,12 @@ export default async function page({ params }: { params: { slug: string } }) {
     return (
       <CatalogPage
         pagination={pagination}
-        storeItems={storeItemsNoFreebies}
+        storeItems={storeItems}
         category={categoryName}
         subCategory={subCategoryName}
         categoryID={categoryID}
         subCategoryID={subCategoryID}
+        session={session}
       />
     );
   } catch (error) {
