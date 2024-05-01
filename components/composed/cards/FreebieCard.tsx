@@ -9,9 +9,10 @@ import { signIn } from "next-auth/react";
 
 type Props = {
   storeItem: StoreItemDB_ID;
-  session: Session | null;
+  session?: Session | null;
 };
 
+//Card to represent a freebie store item in the catalog
 export default function FreebieCard({ storeItem, session }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const userHasFreebie = session?.user.freebies.includes(storeItem.fileName);
@@ -35,18 +36,18 @@ export default function FreebieCard({ storeItem, session }: Props) {
     }, 1000);
   }
   return (
-    <div className="sm:h-80 sm:w-96 ">
-      <div className="group relative h-60 w-80 cursor-pointer overflow-hidden sm:w-full">
+    <div className="sm:h-80 sm:w-80 ">
+      <div className="group relative h-60 w-full cursor-pointer overflow-hidden sm:w-full">
         <Link href={`/product/${storeItem._id}`}>
           <Image
-            className=" absolute -z-10 h-auto w-auto self-center rounded-sm   opacity-100 transition duration-1000 ease-in-out group-hover:opacity-0"
+            className="absolute -z-10 h-auto w-auto self-center rounded-sm   opacity-100 transition duration-1000 ease-in-out group-hover:opacity-0"
             src={storeItem.imageUrlList[storeItem.mainImageIndex]}
             alt="Store Display View"
             width={900}
             height={900}
           />
           <Image
-            className=" absolute -z-10 h-auto w-auto self-center rounded-sm opacity-0 transition duration-1000 ease-in-out group-hover:scale-110
+            className="absolute -z-10 h-auto w-auto self-center rounded-sm opacity-0 transition duration-1000 ease-in-out group-hover:scale-110
              group-hover:opacity-100"
             src={storeItem.imageUrlList[storeItem.secondaryImageIndex]}
             alt="Store Display View"
