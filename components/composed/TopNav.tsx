@@ -40,18 +40,6 @@ export default function TopNav({ session }: Props) {
         >
           Rebajas
         </Link>
-        <Link
-          className="hidden  text-xs font-semibold hover:text-sky-200 sm:inline sm:text-sm"
-          href="/contact"
-        >
-          Contacto
-        </Link>
-        <Link
-          className="hidden  text-xs font-semibold hover:text-sky-200 sm:inline sm:text-sm"
-          href="/nosotros"
-        >
-          Nosotros
-        </Link>
       </div>
 
       <div className="ml-auto flex items-center gap-2  lg:gap-8">
