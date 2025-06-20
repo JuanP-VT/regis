@@ -136,8 +136,6 @@ export default function IndividualCutFileProduct({
           </div>
         </div>
       </div>
-      <div className="mt-10 flex h-96 border">Placeholder Review Section</div>
-      <div className="flex h-96 border">Placeholder ADS Section</div>
     </div>
   );
 }
